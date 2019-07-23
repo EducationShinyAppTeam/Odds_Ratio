@@ -88,15 +88,16 @@ shinyUI(fluidPage(
                                                    tags$a(href='http://stat.psu.edu/',tags$img(src='logo.png', align = "left", width = 180)),
                                                    br(),br(),br(),
                                                    h3(strong("About:")),
-                                                   h4('This app displays the confident interval of odds ratio.'),
+                                                   h4('This app help understand odds ratio through simulating confidence intervals and displaying real life data.'),
                                                    br(),
                                                    div(style = "text-align: center",
                                                        actionButton("pre","Prerequisite",icon("bolt"),style='padding:10px; font-size:100%',class="circle grow")),
                                                    br(),
                                                    h3(strong('Instructions:')),
-                                                   h4(tags$li('Click Go button to enter the explore page. ')),
+                                                   h4(tags$li('Click explore button to enter the explore page. ')),
                                                    h4(tags$li('Use the radio buttons to select different variables and see the changes in the interaction plot. Or use slider bars to change the parameters. ')),
-                                                   h4(tags$li('After working with the explore section, you can start the matching analysis to test your understanding of the concepts. You can use "i" button for instruction and "?" for hints.')),
+                                                   h4(tags$li('After working with the explore section, you can go to the real life analysis page to see what odds ratio can do in basic analysis of experimental data. One thing to mention is , in the real life data, that each line of data represents one individule experiment.')),
+                                                   h4(tags$li('You can use "i" button for instruction.')),
                                
                                                    div(style = "text-align: center",
                                                        actionButton("go","Explore",icon("bolt"),class="circle grow")),
@@ -254,7 +255,7 @@ shinyUI(fluidPage(
                                                          textOutput("nsclc")
                                                        ),
                                                        conditionalPanel(
-                                                         condition = "input.sets == 'avq'|input.sets== 'amve'",
+                                                         condition = "input.sets == 'avq'|input.sets== 'amvq'",
                                                          tags$style("#mala{ font-size: 20px; }" ),
                                                          textOutput("mala")
                                                          ),
