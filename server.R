@@ -18,7 +18,6 @@ library(tidyverse)
 library(broom)
 library(forestplot)
 library(vcd)
-library(magick)
 #read in dataset
 
 

@@ -112,13 +112,13 @@ shinyUI(fluidPage(
                                                    h3('What is odds ratio?'),
                                                    h4('An odds ratio is a measure of association between the presence or absence of two properties.'),
                                                    h3('How to calculate the confident interval of an odds ratio?'),
-                                                   tags$img(src = 'table.png'),
-                                                   tags$img(src = 'knowledge.png',style = "width: 85%;"),
+                                                   tags$img(src = 'table.PNG'),
+                                                   tags$img(src = 'knowledge.PNG',style = "width: 85%;"),
                                                    br(),
                                                    h3('Example'),
                                                    h4('Here is the contingency table from a case-control study of smoking and lung cancer:'),
                                                    br(),
-                                                   tags$img(src = 'sample_question.png'),   
+                                                   tags$img(src = 'sample_question.PNG'),   
                                                    br(),
                                                    br(),
                                                    tags$li(h4("The odds of lung cancer for smokers is calculated as 647/622 = 1.04")),
@@ -144,9 +144,9 @@ shinyUI(fluidPage(
                                                      sidebarPanel(
                                                        h3(strong("True Population:")),
                                                        h4("Percentage: "),
-                                                       img(src="2016Diff.png",height = "100%", width = "90%",algin = "middle"),
+                                                       img(src="2016Diff.PNG",height = "100%", width = "90%",algin = "middle"),
                                                        h4("Count: "),
-                                                       img(src="2016Count.png",height = "100%", width = "90%",algin = "middle"),
+                                                       img(src="2016Count.PNG",height = "100%", width = "90%",algin = "middle"),
                                                        br(), br(),
                                                        h4(p(("Odds of Pennsylvania residents for University Park:       1.47 "), 
                                                             style="white-space: pre-wrap")),
@@ -280,7 +280,7 @@ shinyUI(fluidPage(
                                                         condition = "input.sets == 'gve'",
                                                         h3(p(strong("Gefitinib vs. Erlotinib"), 
                                                              style="text-align: center")),
-                                                        img(src="gve.png",height = "100%", width = "80%",algin = "middle")
+                                                        img(src="gve.PNG",height = "100%", width = "80%",algin = "middle")
                                                         ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'avq'",
@@ -288,7 +288,7 @@ shinyUI(fluidPage(
                                                            style="text-align: center")),
                                                       h4(p(strong("(uncomplicated malaria in pregnancy)"), 
                                                            style="text-align: center")), 
-                                                      img(src="avq.png",height = "100%", width = "80%",algin = "middle")
+                                                      img(src="avq.PNG",height = "100%", width = "80%",algin = "middle")
                                                       ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'amvq'",
@@ -296,25 +296,25 @@ shinyUI(fluidPage(
                                                            style="text-align: center")),
                                                       h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"), 
                                                            style="text-align: center")), 
-                                                      img(src="amvq.png",height = "100%", width = "80%",algin = "middle")
+                                                      img(src="amvq.PNG",height = "100%", width = "80%",algin = "middle")
                                                     ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'mea'",
                                                       h3(p(strong("MMRV vs. MMR+V Against Measles"), 
                                                            style="text-align: center")),
-                                                      img(src="mea.png",height = "100%", width = "80%",algin = "middle")
+                                                      img(src="mea.PNG",height = "100%", width = "80%",algin = "middle")
                                                     ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'mum'",
                                                       h3(p(strong("MMRV vs. MMR+V Against Mumps"), 
                                                            style="text-align: center")),
-                                                      img(src="mum.png",height = "100%", width = "80%",algin = "middle")
+                                                      img(src="mum.PNG",height = "100%", width = "80%",algin = "middle")
                                                     ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'rub'",
                                                       h3(p(strong("Artemether vs. Quinine"), 
                                                            style="text-align: center")),
-                                                      img(src="rub.png",height = "100%", width = "80%",algin = "middle")
+                                                      img(src="rub.PNG",height = "100%", width = "80%",algin = "middle")
                                                     )
                                                               )
                                                    
