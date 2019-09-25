@@ -46,7 +46,7 @@ shinyUI(fluidPage(
                     #change the color,bacground color & word styles of buttons, icons & words
                     dashboardBody(
                                   #change header font
-                                  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "/Feature.css")),
+                                  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css")),
                                 
                                   #change icon color
                                   tags$head(tags$style(".fa-home {color:#ffffff}"),
