@@ -364,8 +364,8 @@ shinyServer(function(input, output,session) {
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
               plot.title = element_text(size=18),
-              axis.title.x = element_text(size=16),
-              axis.title.y = element_text(size=16))
+              axis.title.x = element_text(size=14),
+              axis.title.y = element_text(size=14))
     }
  
       else{
@@ -393,8 +393,8 @@ shinyServer(function(input, output,session) {
             axis.text.y = element_blank(),
             axis.ticks.y = element_blank(),
             plot.title = element_text(size=18),
-            axis.title.x = element_text(size=16),
-            axis.title.y = element_text(size=16))
+            axis.title.x = element_text(size=14),
+            axis.title.y = element_text(size=14))
     }
     
   })
