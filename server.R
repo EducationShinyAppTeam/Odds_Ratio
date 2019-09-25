@@ -352,13 +352,14 @@ shinyServer(function(input, output,session) {
               size = idx == selectedSample()
           )) +
         geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 0.5) +
+        geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
         scale_color_manual(values = c("FALSE" = "#ff864c", "TRUE" = "#916cdf"), guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel1, "% Confidence Intervals"),
-             x = "",y="black vertical line shows null theta",hjust = 5, vjust = 1) +
+             x = "",y="black vertical line for null theta & green vertical line for true odds ratio",hjust = 5, vjust = 1) +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
@@ -380,13 +381,14 @@ shinyServer(function(input, output,session) {
             size = idx == selectedSample()
         )) +
       geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 0.5) +
+      geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
       coord_flip() +
       scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
       scale_color_manual(values = c("FALSE" = "#ff864c", "TRUE" = "#916cdf"), guide = FALSE) +
       scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
       lims(y = c(-0.01,4.55)) +
       labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
-           x = "",y="black vertical line shows null theta",hjust = 5, vjust = 1) +
+           x = "",y="black vertical line for null theta & green vertical line for true odds ratio",hjust = 5, vjust = 1) +
       theme(legend.position = "none",
             axis.text.y = element_blank(),
             axis.ticks.y = element_blank(),

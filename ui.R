@@ -46,7 +46,7 @@ shinyUI(fluidPage(
                     #change the color,bacground color & word styles of buttons, icons & words
                     dashboardBody(
                                   #change header font
-                                  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css")),
+                                  tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "/Feature.css")),
                                 
                                   #change icon color
                                   tags$head(tags$style(".fa-home {color:#ffffff}"),
@@ -88,49 +88,55 @@ shinyUI(fluidPage(
                                                    tags$a(href='http://stat.psu.edu/',tags$img(src='logo.png', align = "left", width = 180)),
                                                    br(),br(),br(),
                                                    h3(strong("About:")),
-                                                   h4('This app help understand odds ratio through simulating confidence intervals and displaying real life data.'),
+                                                   p('This app explores confidence intervals for odds ratios and their use in the meta-analysis of real data.'),
                                                    br(),
                                                    div(style = "text-align: center",
                                                        actionButton("pre","Prerequisite",icon("bolt"),style='padding:10px; font-size:100%',class="circle grow")),
                                                    br(),
                                                    h3(strong('Instructions:')),
-                                                   h4(tags$li('Click explore button to enter the explore page. ')),
-                                                   h4(tags$li('Use the radio buttons to select different variables and see the changes in the interaction plot. Or use slider bars to change the parameters. ')),
-                                                   h4(tags$li('After working with the explore section, you can go to the real life analysis page to see what odds ratio can do in basic analysis of experimental data. One thing to mention is , in the real life data, that each line of data represents one individule experiment.')),
-                                                   h4(tags$li('You can use "i" button for instruction.')),
+                                                   tags$ul(
+                                                     tags$li('Click the explore button to enter the explore page. '),
+                                                     tags$li('Explore either the equal sample size or different sample size situation. Then use the slider bars to change the confidence level or sample size(s).'),
+                                                     tags$li('After working with the explore section, have a look at the summaries of real data. Note that each line of data represents a different individual experiment.')
+                                                   ),
+                                                  
                                
                                                    div(style = "text-align: center",
                                                        actionButton("go","Explore",icon("bolt"),class="circle grow")),
                                                    br(),
                                                    h3(strong('Acknowledgements:')),
-                                                   h4("This app was developed and coded by Jingjun Wang.")
+                                                   p("This app was developed and coded by Jingjun Wang.")
                                                   ),
                          
                                            # pre-requisite page
                                            tabItem(tabName="prereq", withMathJax(),
                                                    h3(strong('Background')),
                                                    h3('What is odds ratio?'),
-                                                   h4('An odds ratio is a measure of association between the presence or absence of two properties.'),
-                                                   h3('How to calculate the confident interval of an odds ratio?'),
-                                                   tags$img(src = 'table.PNG'),
-                                                   tags$img(src = 'knowledge.PNG',style = "width: 85%;"),
+                                                   p('An odds ratio relates the odds of an event under two different conditions. For example if two-thirds of women ate vegetables at lunch today (odds of 2 to 1), while only one-third of men ate vegetables (odds of 1 to 2) - then the odds for women are four times as great as the odds for men (so 4 is the odds ratio).'),
+                                                   h3('How to calculate the confidence interval of an odds ratio?'),
+                                                   tags$img(src = 'newtable.PNG',width ="30%"),
+                                                   p("The natural estimator of \\(\\theta\\) is the sample cross-product ratio, \\(\\widehat{\\theta}=\\frac{ad}{bc}\\)"),
+                                                   p("The properties of \\(\\hat{\\theta}\\) are easily established under multinomial sampling, but the same properties will hold under Poisson or product-multinomial sampling with either the row totals or column totals (but not both) regarded as fixed."),
+                                                   p("As with the relative risk, the log-odds ratio \\(\\log\\hat{\\theta}\\) has a better normal approximation than \\(\\hat{\\theta}\\) does. Therefore, we usually obtain a confidence interval on the log scale (log here means natural log). The estimated variance of \\(\\log\\hat{\\theta}\\) is easy to remember,"),
+                                                   p(("\\(\\widehat{V}(\\log\\widehat{\\theta})=\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}+\\frac{1}{d}\\)"),style="text-align: center"),
+                                                   p("and we get a 95% confidence interval for \\(\\theta\\) by exponentiating the endpoints of"),
+                                                   p(("\\(\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}+\\frac{1}{d}}\\)"),style="text-align: center"),
                                                    br(),
                                                    h3('Example'),
-                                                   h4('Here is the contingency table from a case-control study of smoking and lung cancer:'),
+                                                   p('Here is the contingency table from a case-control study of smoking and lung cancer:'),
                                                    br(),
-                                                   tags$img(src = 'sample_question.PNG'),   
+                                                   tags$img(src = 'sample_question.PNG',width ="30%"),   
                                                    br(),
                                                    br(),
-                                                   tags$li(h4("The odds of lung cancer for smokers is calculated as 647/622 = 1.04")),
-
+                                                   p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}{662}= 1.04\\) "),
                                                    br(),
-                                                   tags$li(h4('The odds of lung cancer for non-smokers is 2/27 = 0.07.')),
+                                                   p('The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\) .'),
                                                    br(),
-                                                   tags$li(h4('It is the ratio of the odds of lung cancer in smokers divided by the odds of lung cancer in non-smokers: (647/622)/(2/27) = 14.04. ')),
+                                                   p('It is the ratio of the odds of lung cancer in smokers divided by the odds of lung cancer in non-smokers: \\(\\frac{\\frac{647}{662}}{\\frac{2}{27}}= 14.04\\). '),
                                                    br(),
-                                                   tags$li(h4('Here, the odds ratio is greater than 1.')),
+                                                   p('Here, the odds ratio is greater than 1.'),
                                                    br(),
-                                                   h4('Being a smoker is considered to be associated with having lung cancer since smoking raises the odds of having lung cancer'),
+                                                   p('Being a smoker is considered to be associated with having lung cancer since smoking raises the odds of having lung cancer'),
                                                    br(),
                                                    div(style = "text-align: center",
                                                        actionButton("start1","Go to the overview",icon("bolt"),style='padding:10px; font-size:100%',class="circle grow"))
@@ -143,16 +149,16 @@ shinyUI(fluidPage(
                                                    sidebarLayout(
                                                      sidebarPanel(
                                                        h3(strong("True Population:")),
-                                                       h4("Percentage: "),
-                                                       img(src="2016Diff.PNG",height = "100%", width = "90%",algin = "middle"),
                                                        h4("Count: "),
                                                        img(src="2016Count.PNG",height = "100%", width = "90%",algin = "middle"),
+                                                       h4("Percentage: "),
+                                                       img(src="2016Diff.PNG",height = "100%", width = "90%",algin = "middle"),
                                                        br(), br(),
-                                                       h4(p(("Odds of Pennsylvania residents for University Park:       1.47 "), 
+                                                       (p(("Odds of Pennsylvania residents for University Park:       1.47 "), 
                                                             style="white-space: pre-wrap")),
-                                                       h4(p(("Odds of Pennsylvania residents for other campuses:     5.42 "),
+                                                       (p(("Odds of Pennsylvania residents for other campuses:     5.42 "),
                                                             style="white-space: pre-wrap")),
-                                                       h4(p(("Odds ratio (theta) :                                                                    0.27"),
+                                                       (p(("Odds ratio (θ) :    \\(\\frac{1.47}{5.42}= 0.27\\)"),
                                                             style="white-space: pre-wrap")),
                                                        
                                                        br(),
@@ -203,10 +209,10 @@ shinyUI(fluidPage(
                                                                              "The orange lines indicate a confidence interval that smaller or greater than 1 and the purple lines indicate confidence intervas containing 1. Click on an interval to see detailed information on the right-hand side for the chosen sample.",
                                                                              trigger="hover",placement="bottom")),
                                                          sidebarPanel(
-                                                           h3(strong("Sample Percentages:")),
-                                                           span(tableOutput("sampleinfotable1"), style="font-size: 18px"),
                                                            h3(strong("Sample Counts:")),
                                                            span(tableOutput("sampleinfotable2"), style="font-size: 18px"),
+                                                           h3(strong("Sample Percentages:")),
+                                                           span(tableOutput("sampleinfotable1"), style="font-size: 18px"),
                                                            h3(strong("Sample Odds Ratio:")),
                                                            span(textOutput("sampleinforatio"), style="font-size: 18px"))
                                                          ),
@@ -272,6 +278,8 @@ shinyUI(fluidPage(
                                                          condition = "input.sets == 'gvc'",
                                                          h3(p(strong("Gefitinib vs. Chemotherapy"), 
                                                               style="text-align: center")),
+                                                         h4(p(("Those two studies come from two individual studies."), 
+                                                              style="text-align: center")),
                                                           uiOutput("plot1")
                                                          #a=img(src="gvc.png",height = "100%", width = "80%",algin = "middle")
                                                          
@@ -279,6 +287,8 @@ shinyUI(fluidPage(
                                                     conditionalPanel(
                                                         condition = "input.sets == 'gve'",
                                                         h3(p(strong("Gefitinib vs. Erlotinib"), 
+                                                             style="text-align: center")),
+                                                        h4(p(("Those three studies come from three individual studies."), 
                                                              style="text-align: center")),
                                                         img(src="gve.PNG",height = "100%", width = "80%",algin = "middle")
                                                         ),
@@ -288,6 +298,8 @@ shinyUI(fluidPage(
                                                            style="text-align: center")),
                                                       h4(p(strong("(uncomplicated malaria in pregnancy)"), 
                                                            style="text-align: center")), 
+                                                      h4(p(("Those three studies come from three individual studies."), 
+                                                           style="text-align: center")),
                                                       img(src="avq.PNG",height = "100%", width = "80%",algin = "middle")
                                                       ),
                                                     conditionalPanel(
@@ -296,11 +308,15 @@ shinyUI(fluidPage(
                                                            style="text-align: center")),
                                                       h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"), 
                                                            style="text-align: center")), 
+                                                      h4(p(("Those seven studies come from seven individual studies."), 
+                                                           style="text-align: center")),
                                                       img(src="amvq.PNG",height = "100%", width = "80%",algin = "middle")
                                                     ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'mea'",
                                                       h3(p(strong("MMRV vs. MMR+V Against Measles"), 
+                                                           style="text-align: center")),
+                                                      h4(p(("Those nine studies come from nine individual studies."), 
                                                            style="text-align: center")),
                                                       img(src="mea.PNG",height = "100%", width = "80%",algin = "middle")
                                                     ),
@@ -308,11 +324,15 @@ shinyUI(fluidPage(
                                                       condition = "input.sets == 'mum'",
                                                       h3(p(strong("MMRV vs. MMR+V Against Mumps"), 
                                                            style="text-align: center")),
+                                                      h4(p(("Those eleven studies come from eleven individual studies."), 
+                                                           style="text-align: center")),
                                                       img(src="mum.PNG",height = "100%", width = "80%",algin = "middle")
                                                     ),
                                                     conditionalPanel(
                                                       condition = "input.sets == 'rub'",
                                                       h3(p(strong("Artemether vs. Quinine"), 
+                                                           style="text-align: center")),
+                                                      h4(p(("Those five studies come from five individual studies."), 
                                                            style="text-align: center")),
                                                       img(src="rub.PNG",height = "100%", width = "80%",algin = "middle")
                                                     )
