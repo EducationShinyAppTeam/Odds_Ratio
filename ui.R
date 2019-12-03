@@ -437,7 +437,7 @@ tabItem(tabName = "analysis",
             h3(strong("Choose a Dataset Below")),
             selectInput(
               "sets",
-              NA,
+              NULL,
               list(
                 "Non-Small Cell Lung Cancer Treatment" =
                   c(
