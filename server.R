@@ -8,7 +8,6 @@ library(simstudy)
 library(shinyalert)
 library(shinyWidgets)
 library(ggplot2)
-library(mosaic)
 library(dplyr)
 library(data.table)
 library(scales)
@@ -16,8 +15,8 @@ library(Hmisc)
 library(colorspace)
 library(tidyverse)
 library(broom)
-library(forestplot)
-library(vcd)
+library(rmeta)
+
 #read in dataset
 
 
@@ -30,7 +29,7 @@ shinyServer(function(input, output,session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = " Move the sliders to see their effect on the diagnostic plots.",
+      text = "This app explores confidence intervals for odds ratios and their use in the meta-analysis of real data.",
       type = "info"
     )
   })
@@ -42,12 +41,12 @@ shinyServer(function(input, output,session) {
   observeEvent(input$start1,{
     updateTabItems(session,"tabs","instruction")
   })
-    
+  
   observeEvent(input$go,{
     updateTabItems(session,"tabs","explore")
   })
   
-
+  
   observeEvent(input$analysis,{
     updateTabItems(session,"tabs","analysis")
   })
@@ -70,16 +69,16 @@ shinyServer(function(input, output,session) {
   observeEvent(input$begin, {
     updateButton(session, "submit", disabled = TRUE)
   })
-
- 
-  
-
   
   
-#exploring
+  
+  
+  
+  
+  #exploring
   ####################################################################
   #####################################################################
-
+  
   
   # print greek letter
   
@@ -137,7 +136,7 @@ shinyServer(function(input, output,session) {
     
   })
   #generate 50 new sample
-
+  
   UPS50P <- reactive({
     input$newSample
     # rbinom(n=dN1(), 1, 0.595)
@@ -157,13 +156,13 @@ shinyServer(function(input, output,session) {
       summarise(
         Count1 = sum(x))
   })
-
+  
   ups50n <- reactive({
     data.frame(idx = rep(1:50), 
                Count2 = input$nSamp1-ups50p()[,2])
   })
   
-
+  
   
   UWS50P <- reactive({
     input$newSample
@@ -177,7 +176,7 @@ shinyServer(function(input, output,session) {
       mutate(idx = rep(1:50, each = dN2()))
   })
   
-
+  
   
   uws50p <- reactive({
     UWS50P() %>%
@@ -185,14 +184,14 @@ shinyServer(function(input, output,session) {
       summarise(
         Count3 = sum(x))
   })
-
+  
   
   uws50n <- reactive({
     data.frame(idx = rep(1:50), 
                input$nSamp2-uws50p()[,2])
-
+    
   })
-
+  
   data50_1 <- reactive({
     merge(ups50p(),uws50p())
   })
@@ -203,7 +202,7 @@ shinyServer(function(input, output,session) {
     merge(data50_1(),data50_2(), by="idx")
   })
   
-
+  
   #generate 50 new sample (combined sample size)
   
   UPS50P_3 <- reactive({
@@ -247,7 +246,7 @@ shinyServer(function(input, output,session) {
       summarise(
         Count3 = sum(x))
   })
- 
+  
   uws50n_3 <- reactive({
     data.frame(idx = rep(1:50), 
                input$nSamp3-uws50p_3()[,2])
@@ -259,12 +258,12 @@ shinyServer(function(input, output,session) {
   data50_2_3 <- reactive({
     merge(ups50n_3(),uws50n_3())
   })
-   
-   newdata50 <- reactive({
-     merge(data50_1_3(),data50_2_3(), by="idx")
-   })
-
-
+  
+  newdata50 <- reactive({
+    merge(data50_1_3(),data50_2_3(), by="idx")
+  })
+  
+  
   
   
   #calculate the interval
@@ -278,7 +277,7 @@ shinyServer(function(input, output,session) {
                lowerbound,
                upperbound,
                cover = (lowerbound < 1) & (1 < upperbound))
-
+    
   })
   
   newIntervals <- reactive({
@@ -293,7 +292,7 @@ shinyServer(function(input, output,session) {
                cover = (lowerbound < 1) & (1 < upperbound))
     
   })
-
+  
   output$show1 <- renderTable({
     newIntervals()
     
@@ -313,7 +312,7 @@ shinyServer(function(input, output,session) {
     }
     selected_sample
   })
- # selected sample 
+  # selected sample 
   OneSample <- reactive({
     data50() %>%
       filter( idx == selectedSample() )
@@ -367,40 +366,40 @@ shinyServer(function(input, output,session) {
               axis.title.x = element_text(size=14),
               axis.title.y = element_text(size=14))
     }
- 
-      else{
-    validate(
-      need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
-           message = "Please input sample size")
-    )
-
-    ggplot(data = Intervals()) +
-      geom_pointrange(
-        aes(x=idx, ymin = lowerbound, ymax = upperbound, y = sampleRatio, colour = cover,
-            alpha = idx == selectedSample(),
-            size = idx == selectedSample()
-        )) +
-      geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 0.5) +
-      geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
-      coord_flip() +
-      scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-      scale_color_manual(values = c("FALSE" = "#ff864c", "TRUE" = "#916cdf"), guide = FALSE) +
-      scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
-      lims(y = c(-0.01,4.55)) +
-      labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
-           x = "",y="black vertical line for null theta & green vertical line for true odds ratio",hjust = 5, vjust = 1) +
-      theme(legend.position = "none",
-            axis.text.y = element_blank(),
-            axis.ticks.y = element_blank(),
-            plot.title = element_text(size=18),
-            axis.title.x = element_text(size=14),
-            axis.title.y = element_text(size=14))
+    
+    else{
+      validate(
+        need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
+             message = "Please input sample size")
+      )
+      
+      ggplot(data = Intervals()) +
+        geom_pointrange(
+          aes(x=idx, ymin = lowerbound, ymax = upperbound, y = sampleRatio, colour = cover,
+              alpha = idx == selectedSample(),
+              size = idx == selectedSample()
+          )) +
+        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 0.5) +
+        geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
+        coord_flip() +
+        scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#ff864c", "TRUE" = "#916cdf"), guide = FALSE) +
+        scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
+        lims(y = c(-0.01,4.55)) +
+        labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
+             x = "",y="black vertical line for null theta & green vertical line for true odds ratio",hjust = 5, vjust = 1) +
+        theme(legend.position = "none",
+              axis.text.y = element_blank(),
+              axis.ticks.y = element_blank(),
+              plot.title = element_text(size=18),
+              axis.title.x = element_text(size=14),
+              axis.title.y = element_text(size=14))
     }
     
   })
   
   
- # sample display
+  # sample display
   output$sampleinfotable1 = renderTable({
     if (input$tabset == "Same Sample Size"){
       validate(
@@ -413,7 +412,7 @@ shinyServer(function(input, output,session) {
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
-
+    
     else{
       validate(
         need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
@@ -438,14 +437,14 @@ shinyServer(function(input, output,session) {
       ctable
     }
     else{
-    validate(
-      need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
-           message = "Please input sample size")
-    )
-    ctable <- matrix(c(OneSample()[,2], OneSample()[,3], OneSample()[,4], OneSample()[,5]), ncol=2, 
-                     dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
-    rownames(ctable) = c("University Park","Other Campuses")
-    ctable
+      validate(
+        need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
+             message = "Please input sample size")
+      )
+      ctable <- matrix(c(OneSample()[,2], OneSample()[,3], OneSample()[,4], OneSample()[,5]), ncol=2, 
+                       dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
+      rownames(ctable) = c("University Park","Other Campuses")
+      ctable
     }
   })
   
@@ -459,18 +458,18 @@ shinyServer(function(input, output,session) {
       cratio
     }
     else{
-    validate(
-      need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
-           message = "Please input sample size")
-    )
-    cratio<-round(((OneSample()[,2])*(OneSample()[,5])/(OneSample()[,3]*OneSample()[,4])), 2)
-    cratio
+      validate(
+        need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
+             message = "Please input sample size")
+      )
+      cratio<-round(((OneSample()[,2])*(OneSample()[,5])/(OneSample()[,3]*OneSample()[,4])), 2)
+      cratio
     }
   })
-
   
-########forestplot########
-
+  
+  ########forestplot########
+  
   makeDatatabletoList <- function(mytable){
     mylist = c()
     rnum <- nrow(mytable)
@@ -479,7 +478,8 @@ shinyServer(function(input, output,session) {
     }
     mylist
   }
-  makeForestPlotForRCTs <- function(mylist, referencerow=2)
+  
+  makeTable <- function(mylist, referencerow=2)
   {
     require("rmeta")
     numstrata <- length(mylist)
@@ -512,48 +512,99 @@ shinyServer(function(input, output,session) {
     names <- as.character(seq(1,numstrata))
     myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level=0.95, names=names,statistic="OR")
     
+    
     tabletext<-cbind(c("","Study",myMH$names,NA,"Summary"),
                      c("Treatment","(effective)",ptrt,NA,NA),
                      c("Treatment","(non-effective)",pctrl, NA,NA),
                      c("Control","(effective)",(ntrt-ptrt),NA,NA),
                      c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
                      c("","OR",format((exp(myMH$logOR)),digits=3),NA,format((exp(myMH$logMH)),digits=3)))
- 
-    m<- c(NA,NA,exp(myMH$logOR),NA,exp(myMH$logMH))
-    l<- exp(c(NA,NA,myMH$logOR,NA,myMH$logMH)-c(NA,NA,myMH$selogOR,NA,myMH$selogMH)*1.96)
-    u<- exp(c(NA,NA,myMH$logOR,NA,myMH$logMH)+c(NA,NA,myMH$selogOR,NA,myMH$selogMH)*1.96)
-
-    forestplot(tabletext,m,l,u,zero=1,is.summary=c(TRUE,TRUE,rep(FALSE,(length(mylist)+1)),TRUE),
-               col=meta.colors(box="#916cdf",line="#34186f", summary="#ff864c"),
-               xlab="\nOdds ratio with 95% confidence interval\n(<1=no effect, 1=treatment has effect)", 
-               clip=c(-0.1,1000), boxsize = 1.5)
   }
+  
+  
+  makeForestPlot <- function(mylist, referencerow=2)
+  {
+    require("rmeta")
+    numstrata <- length(mylist)
+    # make an array "ntrt" of the number of people in the exposed group, in each stratum
+    # make an array "nctrl" of the number of people in the unexposed group, in each stratum
+    # make an array "ptrt" of the number of people in the exposed group that have the disease,
+    # in each stratum
+    # make an array "pctrl" of the number of people in the unexposed group that have the disease,
+    # in each stratum
+    ntrt <- vector()
+    nctrl <- vector()
+    ptrt <- vector()
+    pctrl <- vector()
+    if (referencerow == 1) { nonreferencerow <- 2 }
+    else                   { nonreferencerow <- 1 }
+    for (i in 1:numstrata)
+    {
+      mymatrix <- mylist[[i]]
+      DiseaseUnexposed <- mymatrix[referencerow,1]
+      ControlUnexposed <- mymatrix[referencerow,2]
+      totUnexposed <- DiseaseUnexposed + ControlUnexposed
+      nctrl[i] <- totUnexposed
+      pctrl[i] <- DiseaseUnexposed
+      DiseaseExposed <- mymatrix[nonreferencerow,1]
+      ControlExposed <- mymatrix[nonreferencerow,2]
+      totExposed <- DiseaseExposed + ControlExposed
+      ntrt[i] <- totExposed
+      ptrt[i] <- DiseaseExposed
+    }
+    names <- as.character(seq(1,numstrata))
+    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level=0.95, names=names,statistic="OR")
+    
+    # metaplot(myMH$logOR, myMH$selogOR, nn=myMH$selogOR^-2, myMH$names,
+    #          summn=myMH$logMH, sumse=myMH$selogMH, sumnn=myMH$selogMH^-2,
+    #          logeffect=T, colors=meta.colors(box="#34186f",lines="blue", zero ="red", 
+    #                                          summary="#ff864c", text="black"))
+    
+    # tabletext_less<-cbind(c("","Study",myMH$names,NA,"Summary"))
+    # 
+    # m<- c(NA,NA,exp(myMH$logOR),NA,exp(myMH$logMH))
+    # l<- exp(c(NA,NA,myMH$logOR,NA,myMH$logMH)-c(NA,NA,myMH$selogOR,NA,myMH$selogMH)*1.96)
+    # u<- exp(c(NA,NA,myMH$logOR,NA,myMH$logMH)+c(NA,NA,myMH$selogOR,NA,myMH$selogMH)*1.96)
+    # 
+    # forestplot(tabletext_less,m,l,u,zero=1,is.summary=c(TRUE,TRUE,rep(FALSE,(length(mylist)+1)),TRUE),
+    #            col=meta.colors(box="#916cdf",line="#34186f", summary="#ff864c"),
+    #            xlab="\nOdds ratio with 95% confidence interval\n(<1=no effect, 1=treatment has effect)", 
+    #            clip=c(-0.01,1000), boxsize = 1.5)
+  }
+  
+  
+  
+  
   
   ## Non-Small Cell Lung Cancer Treatment introduction
   output$nsclc=renderText("About 80% to 85% of lung cancers are non-small cell lung cancer (NSCLC). The typical treatments include chemotherapy, radiation therapy and targeted therapy. 
                           Gefitinib and Erlotinib are two kind of medicine used in NSCLC targeted therapy. In the two comparisons, Gefitinib represents treatment groups.")
-
-   # drug 1: Gefitinib vs chemotherapy
+  
+  # drug 1: Gefitinib vs chemotherapy
   gvc1 <- matrix(c(42,37,48,53),nrow=2,byrow=TRUE)
   gvc2 <- matrix(c(18,12,26,32),nrow=2,byrow=TRUE)
   gvc_list = list(gvc1, gvc2)
   # makeForestPlotForRCTs(gvc_list)
-           
+  
   output$plot1 = renderUI({
     img(src = "gvc.PNG", width = "80%", algin = "middle")
   })
-  #output$plot1 = renderImage(c(src="gvc.png",height = "100%", width = "80%",algin = "middle"))
+  # output$table1 = renderPlot(makeTable(gvc_list))
+  # output$plot1 = renderPlot(makeForestPlot(gvc_list))
   
   # drug 2: Gefitinib vs Erlotinib 
   gve1 <- matrix(c(28,6,22,12),nrow=2,byrow=TRUE)
   gve2 <- matrix(c(36,14,38,12),nrow=2,byrow=TRUE)
   gve3 <- matrix(c(16,19,21,14),nrow=2,byrow=TRUE)
   gve_list = list(gve1, gve2, gve3)
-  #  makeForestPlotForRCTs(gve_list)
+  #  makeForestPlot(gve_list)
   output$plot2 = renderUI({
     img(src = "gve.PNG", width = "80%", algin = "middle")
   })
   
+  observeEvent(input$comments1, {
+    toggle(id= "nsclc_comments")
+  })
   
   ## Malaria Treatment
   output$mala = renderText("Artemisinin is a plant-derived compound, isolated from the Artemisia annua, sweet wormwood a herb employed in Chinese herbal medicine. 
@@ -586,6 +637,9 @@ shinyServer(function(input, output,session) {
     img(src = "amvq.PNG", width = "85%", algin = "middle")
   })
   
+  observeEvent(input$comments2, {
+    toggle(id= "mala_comments")
+  })
   ## Vaccines Immunogenicity
   
   output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV) vaccine is expected to facilitate universal immunization against these 4 diseases. 
@@ -611,7 +665,7 @@ shinyServer(function(input, output,session) {
     img(src = "mea.PNG", width = "90%", algin = "middle")
   })
   
-
+  
   # makeForestPlotForRCTs(mea_list)
   
   
@@ -656,9 +710,11 @@ shinyServer(function(input, output,session) {
   })
   # makeForestPlotForRCTs(rub_list)
   
+  observeEvent(input$comments3, {
+    toggle(id= "vacc_comments")
+  })
+  #check answer
   
-#check answer
- 
   
-#closing for SERVER DON'T DELET####      
+  #closing for SERVER DON'T DELET####      
 })
