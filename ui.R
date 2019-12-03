@@ -538,9 +538,9 @@ tabItem(tabName = "analysis",
                                               text=c(
                                                 "The first analysis in this section generally compares the effect of targeted therapy and chemotherapy. `Summary OR = 1.4` which is greater than 1. However, the CI of the `Summary OR` contains 1. So we fail to reject that the effectiveness of the two ways of treatments is about equal in this case.
                                                 
-                                                Then the second comparison as shown above is between two medicine within targeted therapy treatment. This time, `Summary OR = 0.961`. However, the CI of the `Summary OR` contains 1. So we fail to reject that the effectiveness of the two medicine is about equal in this case.
+Then the second comparison as shown above is between two medicine within targeted therapy treatment. This time, `Summary OR = 0.961`. However, the CI of the `Summary OR` contains 1. So we fail to reject that the effectiveness of the two medicine is about equal in this case.
                                                 
-                                                In two analyses, we both fail to reject the null. However, targeted therapy in general is better than chemotherapy."
+In two analyses, we both fail to reject the null. However, targeted therapy in general is better than chemotherapy."
                                               )))
                                               )
                                               )
@@ -588,9 +588,7 @@ tabItem(tabName = "analysis",
                 wellPanel(id = "mala_comments",
                           HTML(markdownToHTML(fragment.only=TRUE, 
                                               text=c(
-                                                "The first analysis in this section compares the effect of artesunate-based therapies and quinine in treating uncomplicated malaria in pregnancy. Although we only have data from three studies, the advantage of using artesunate-based therapies is obvious: `Summary OR = 7.59` which is greater than 1. 
-                                                
-                                                Then the second analysis as shown above is between artemether and quinine in treating cerebral malaria in African children less than 15 years of age. This time, `Summary OR = 0.933`. However, the CI of the `Summary OR` contains 1. So the effectiveness of the two medicine is about equal in this case."
+                                                "The first analysis in this section compares the effect of artesunate-based therapies and quinine in treating uncomplicated malaria in pregnancy. Although we only have data from three studies, the advantage of using artesunate-based therapies is obvious: `Summary OR = 7.59` which is greater than 1. Then the second analysis as shown above is between artemether and quinine in treating cerebral malaria in African children less than 15 years of age. This time, `Summary OR = 0.933`. However, the CI of the `Summary OR` contains 1. So the effectiveness of the two medicine is about equal in this case."
                                               )))
                                               )
                                               )
@@ -646,9 +644,7 @@ tabItem(tabName = "analysis",
                 wellPanel(id = "vacc_comments",
                           HTML(markdownToHTML(fragment.only=TRUE, 
                                               text=c(
-                                                "The three analyses in this section compare the MMRV vaccine and the MMR + V vaccine in preventing measles, mumps, and rubella. 
-                                                
-                                                Intuitively, we would assume that the effectiveness of the two kinds of vaccine is equal. However, in the second comparison, `Summary OR = 0.483` and the CI does not contain 1. It suggests that the MMRV vaccine against mumps is less effective than the MMR + V vaccine. It is an interesting finding."
+                                                "The three analyses in this section compare the MMRV vaccine and the MMR + V vaccine in preventing measles, mumps, and rubella. Intuitively, we would assume that the effectiveness of the two kinds of vaccine is equal. However, in the second comparison, `Summary OR = 0.483` and the CI does not contain 1. It suggests that the MMRV vaccine against mumps is less effective than the MMR + V vaccine. It is an interesting finding."
                                               )))
                                               )
                                               )
