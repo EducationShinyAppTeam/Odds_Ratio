@@ -276,7 +276,7 @@ shinyServer(function(input, output,session) {
                sampleRatio,
                lowerbound,
                upperbound,
-               cover = (lowerbound < 1) & (1 < upperbound))
+               cover = (lowerbound < 0.27) & (0.27 < upperbound))
     
   })
   
@@ -289,7 +289,7 @@ shinyServer(function(input, output,session) {
                sampleRatio,
                lowerbound,
                upperbound,
-               cover = (lowerbound < 1) & (1 < upperbound))
+               cover = (lowerbound < 0.27) & (0.27 < upperbound))
     
   })
   
@@ -354,7 +354,7 @@ shinyServer(function(input, output,session) {
         geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#ff864c", "TRUE" = "#916cdf"), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#916cdf", "TRUE" = "#ff864c"), guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel1, "% Confidence Intervals"),
@@ -383,7 +383,7 @@ shinyServer(function(input, output,session) {
         geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#ff864c", "TRUE" = "#916cdf"), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#916cdf", "TRUE" = "#ff864c"), guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
