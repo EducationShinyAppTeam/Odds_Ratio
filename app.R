@@ -1,9 +1,27 @@
 # Load Packages ----
 library(shiny)
-library(shinydashboard)
+library(shinyalert)
 library(shinyBS)
+library(shinyjs)
+library(shinyDND)
+library(shinycssloaders)
+library(shinydashboard)
 library(shinyWidgets)
+library(leaps)
+library(ggplot2)
+library(markdown)
 library(boastUtils)
+
+# insert "convertMentItem" function
+
+convertMenuItem <- function(mi, tabName) {
+  mi$children[[1]]$attribs['data-toggle'] = "tab"
+  mi$children[[1]]$attribs['data-value'] = tabName
+  if (length(mi$attribs$class) > 0 && mi$attribs$class == "treeview") {
+    mi$attribs$class = NULL
+  }
+  mi
+}
 
 # Load additional dependencies and setup functions
 # source("global.R")
@@ -12,7 +30,7 @@ library(boastUtils)
 ui <- list(
   ## Create the app page ----
   dashboardPage(
-    skin = "blue",
+    skin = "black",
     ### Create the app header ----
     dashboardHeader(
       title = "App Template", # You may use a shortened form of the title here
@@ -20,7 +38,7 @@ ui <- list(
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(
         class = "dropdown",
-        boastUtils::surveyLink(name = "App_Template")
+        boastUtils::surveyLink(name = "Odds_Ratio")
       ),
       tags$li(
         class = "dropdown",
@@ -36,9 +54,7 @@ ui <- list(
         menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
-        menuItem("Challenge", tabName = "challenge", icon = icon("gears")),
-        menuItem("Game", tabName = "game", icon = icon("gamepad")),
-        menuItem("Wizard", tabName = "wizard", icon = icon("hat-wizard")),
+        menuItem("Real Data Analysis", tabName = "analysis", icon = icon("cogs")),
         menuItem("References", tabName = "references", icon = icon("leanpub"))
       ),
       tags$div(
@@ -53,15 +69,20 @@ ui <- list(
         tabItem(
           tabName = "overview",
           withMathJax(),
-          h1("Sample Application for BOAST Apps"), # This should be the full name.
-          p("This is a sample Shiny application for BOAST."),
+          h1("Odds Ratio"), # This should be the full name.
+          p("About: This app explores confidence intervals for odds ratios and 
+            their use in the meta-analysis of real data."),
           h2("Instructions"),
           p("This information will change depending on what you want to do."),
           tags$ol(
-            tags$li("Review any prerequiste ideas using the Prerequistes tab."),
-            tags$li("Explore the Exploration Tab."),
-            tags$li("Challenge yourself."),
-            tags$li("Play the game to test how far you've come.")
+            tags$li('Click the explore button to enter the explore page. '),
+            tags$li(
+              'Explore either the equal sample size or different sample size situation. Then use the slider bars to change the confidence level or sample size(s).'
+            ),
+            tags$li(
+              'After working with the explore section, have a look at the summaries of real data. Note that each line of data represents a different individual experiment.'
+            )
+          ),
           ),
           ##### Go Button--location will depend on your goals ----
           div(
