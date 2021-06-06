@@ -63,7 +63,9 @@ ui <- list(
         menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
-        menuItem("Real Data Analysis", tabName = "analysis", icon = icon("cogs"))
+        menuItem("Real Data Analysis", tabName = "analysis", icon = icon("cogs")), 
+        menuItem("References", tabName = "references", icon = icon("leanpub"))
+        
       ),
       tags$div(
         class = "sidebar-logo",
@@ -89,7 +91,7 @@ ui <- list(
                     confidence level or sample size(s)."),
             tags$li("After working with the explore section, have a look at the
                     summaries of real data. Note that each line of data represents
-                    a different individual experiment."),
+                    a different individual experiment.")
           ),
           ##### Go Button--location will depend on your goals ----
           div(
@@ -188,20 +190,19 @@ ui <- list(
               icon = icon("wpexplorer"),
               style = "default"
             )
-          ),
+          )
         ),
        
         #### Set up an Explore Page
         tabItem(
           tabName = "explore",
           titlePanel(
-            strong(
-              "Odds Ratio for Enrollment by Residency between University Park and Commonwealth Campuses"
-            )
+            h1("Odds Ratio for Enrollment by Residency between University Park 
+               and Commonwealth Campuses")
           ),
           sidebarLayout(
             sidebarPanel(
-              h3(strong("True Population:")),
+              h3("True Population:"),
               h4("Count: "),
               img(
                 src = "2016Count.PNG",
@@ -218,48 +219,48 @@ ui <- list(
               ),
               br(),
               br(),
-              (p(("Odds of Pennsylvania residents for University Park:       1.47 "),
+              (p(("Odds of Pennsylvania residents for University Park: 1.47 "),
                  style = "white-space: pre-wrap"
               )),
-              (p(("Odds of Pennsylvania residents for other campuses:     5.42 "),
+              (p(("Odds of Pennsylvania residents for other campuses: 5.42 "),
                  style = "white-space: pre-wrap"
               )),
-              (p(("Odds ratio (θ) :    \\(\\frac{1.47}{5.42}= 0.27\\)"),
+              (p(("Odds ratio (θ) : \\(\\frac{1.47}{5.42}= 0.27\\)"),
                  style = "white-space: pre-wrap"
               )),
               
               br(),
               
               tags$style(
-                HTML(
-                  " .tabbable > .nav > li > a                  {background-color: white; color:#ff7532}
-            .tabbable > .nav > li[class=active] > a {background-color: #ff7532; color: white;}
-            "
+                HTML(" .tabbable > .nav > li > a {background-color: white; color:#ff7532}
+                .tabbable > .nav > li[class=active] > a {background-color: #ff7532; color: white;}"
                 )
               ),
-            h3(strong("Sliders: ")),
-            tabsetPanel(
-              id = "tabset",
-              tabPanel(
-                "Seperate Sample Sizes",
-                fluid = TRUE,
+              h3("Sliders: "),
+              tabsetPanel(
+                id = "tabset",
+                tabPanel(
+                  "Seperate Sample Sizes",
+                  fluid = TRUE,
+                  size = "medium"
                 
                 br(),
                 tags$style(
-                  HTML(
-                    ".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #ff864c}"
+                  HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 
+                       .irs-bar {background: #ff864c}"
                   )
                 ),
                 tags$style(
-                  HTML(
-                    ".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1 .irs-bar {background: #ff864c}"
+                  HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1
+                       .irs-bar {background: #ff864c}"
                   )
                 ),
                 tags$style(
-                  HTML(
-                    ".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2 .irs-bar {background: #ff864c}"
+                  HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2
+                       .irs-bar {background: #ff864c}"
                   )
                 ),
+                
                 sliderInput(
                   "dlevel",
                   "Confidence Level",
@@ -297,13 +298,13 @@ ui <- list(
                 
                 br(),
                 tags$style(
-                  HTML(
-                    ".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 .irs-bar {background: #ff864c}"
+                  HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 
+                       .irs-bar {background: #ff864c}"
                   )
                 ),
                 tags$style(
-                  HTML(
-                    ".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4 .irs-bar {background: #ff864c}"
+                  HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4
+                       .irs-bar {background: #ff864c}"
                   )
                 ),
                 
@@ -381,31 +382,242 @@ ui <- list(
               icon = icon("cogs"),
               style = "default"
             )
-          ),
-        ),
-        #### Set up a Challenge Page ----
-        tabItem(
-          tabName = "challenge",
-          withMathJax(),
-          h2("Challenge Yourself"),
-          p("The general intent of a Challenge page is to have the user take
-            what they learned in an Exploration and apply that knowledge in new
-            contexts/situations. In essence, to have them challenge their
-            understanding by testing themselves."),
-          p("What this page looks like will be up to you. Something you might
-            consider is to re-create the tools of the Exploration page and then
-            a list of questions for the user to then answer.")
-        ),
-        #### Set up a Game Page ----
-        tabItem(
-          tabName = "analysis",
-          withMathJax(),
-          h2("Practice/Test Yourself with [Type of Game]"),
-          p("On this type of tab, you'll set up a game for the user to play.
-            Game types include Tic-Tac-Toe, Matching, and a version Hangman to
-            name a few. If you have ideas for new game type, please let us know.")
+          )
         ),
         
+        #### Set up a Game Page ----
+        tabItem(tabName = "analysis",
+          sidebarLayout(
+            sidebarPanel(
+              tags$style(
+                type = 'text/css',
+                ".selectize-input { font-size: 18px; line-height: 18px;} .selectize-dropdown { font-size: 19px; line-height: 19px; }"
+              ),
+              h3(strong("Choose a Dataset Below")),
+              selectInput(
+                "sets",
+                NULL,
+                list(
+                  "Non-Small Cell Lung Cancer Treatment" =
+                    c(
+                      "Gefitinib vs. Chemotherapy" = "gvc",
+                      "Gefitinib vs. Erlotinib" = "gve"
+                    ),
+                  "Malaria Treatment" =
+                    c(
+                      "Artesunate-based therapies vs. Quinine (for uncomplicated malaria)" = "avq",
+                      "Artemether vs. Quinine (for cerebral malaria)" = "amvq"
+                    ),
+                  "Vaccines Immunogenicity" =
+                    c(
+                      "MMRV vs. MMR+V Against Measles" = "mea",
+                      "MMRV vs. MMR+V Against Mumps" =
+                        "mum",
+                      "MMRV vs. MMR+V Against Rubella" =
+                        "rub"
+                    )
+                ),
+                width = validateCssUnit("70%")
+              ),
+              useShinyjs(),
+              conditionalPanel(
+                condition = "input.sets == 'gve'",
+                div(style = "display: inline-block;vertical-align:top; width: 200px;", 
+                  actionButton("comments1", "Comments", style = "color: #fff; 
+                               background-color: #9874e3"))
+              ),
+              conditionalPanel(
+                condition = "input.sets == 'amvq'",
+                div(style = "display: inline-block;vertical-align:top; width: 200px;", 
+                  actionButton("comments2", "Comments", style = "color: #fff; 
+                               background-color: #9874e3"))
+              ),
+              conditionalPanel(
+                condition = "input.sets== 'rub'",
+                div(style = "display: inline-block;vertical-align:top; width: 200px;", 
+                    actionButton("comments3", "Comments", style = "color: #fff; background-color: #9874e3"))
+                
+              ),
+              
+              h3(strong("Background Knowledge")),
+              conditionalPanel(
+                condition = "input.sets == 'gvc'|input.sets == 'gve'",
+                tags$style("#nsclc{ font-size: 20px; }"),
+                textOutput("nsclc")
+              ),
+              conditionalPanel(
+                condition = "input.sets == 'avq'|input.sets == 'amvq'",
+                tags$style("#mala{ font-size: 20px; }"),
+                textOutput("mala")
+              ),
+              conditionalPanel(
+                condition = "input.sets == 'mea'|input.sets == 'mum'|input.sets == 'rub'",
+                tags$style("#vacc{ font-size: 20px; }"),
+                textOutput("vacc")
+                
+              )
+            ),
+            
+            mainPanel( 
+              conditionalPanel(
+                condition = "input.sets == 'gvc'",
+                h3(p(strong("Gefitinib vs. Chemotherapy"),
+                  style = "text-align: center"
+                )),
+                h4(p(("Those two studies come from two individual studies."),
+                  style = "text-align: center"
+                )),
+                img(src = "gvc.PNG",
+                    height = "100%", 
+                    width = "90%",
+                    algin = "middle"
+                )
+              ),
+              
+              conditionalPanel(
+                condition = "input.sets == 'gve'",
+                h3(p(strong("Gefitinib vs. Erlotinib"),
+                  style = "text-align: center")),
+                h4(p(("Those three studies come from three individual studies."),
+                  style = "text-align: center"
+                )),
+                img(
+                  src = "gve.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle"
+                ),
+                shinyjs::hidden(
+                  wellPanel(id = "nsclc_comments",
+                    HTML(markdownToHTML(fragment.only=TRUE, 
+                      text=c("The first analysis in this section generally compares
+                             the effect of targeted therapy and chemotherapy.`Summary
+                             OR = 1.4` which is greater than 1. However,
+                             the CI of the `Summary OR` contains 1. So we fail to
+                             reject that the effectiveness of the two ways of treatments
+                             is about equal in this case.Then the second comparison
+                             as shown above is between two medicine within targeted
+                             therapy treatment. This time, `Summary OR = 0.961`.
+                             However, the CI of the `Summary OR` contains 1. So
+                             we fail to reject that the effectiveness of the two
+                             medicine is about equal in this case. In two analyses,
+                             we both fail to reject the null. However, targeted
+                             therapy in general is better than chemotherapy.")
+                      )
+                    )
+                  )
+                )
+              ),
+              
+              conditionalPanel(
+                condition = "input.sets == 'avq'",
+                h3(p(strong("Artesunate-based therapies vs. Quinine"),
+                  style = "text-align: center")),
+                h4(p(strong("(uncomplicated malaria in pregnancy)"),
+                  style = "text-align: center")),
+                h4(p(("Those three studies come from three individual studies."),
+                  style = "text-align: center")),
+                img(
+                  src = "avq.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle"
+                  )
+                ),
+              conditionalPanel(
+                condition = "input.sets == 'amvq'",
+                h3(p(strong(
+                "Artemether vs. Quinine"),
+                  style = "text-align: center")),
+                h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"),
+                  style = "text-align: center")),
+                h4(p(("Those seven studies come from seven individual studies."),
+                 style = "text-align: center")),
+                img(
+                  src = "amvq.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle"
+                ),
+                shinyjs::hidden(
+                wellPanel(id = "mala_comments",
+                  HTML(markdownToHTML(fragment.only=TRUE, 
+                    text=c("The first analysis in this section compares the
+                           effect of artesunate-based therapies and quinine in 
+                           treating uncomplicated malaria in pregnancy. Although
+                           we only have data from three studies, the advantage
+                           of using artesunate-based therapies is obvious:`Summary
+                           OR = 7.59` which is greater than 1. Then the second
+                           analysis as shown above is between artemether and quinine
+                           in treating cerebral malaria in African children less
+                           than 15 years of age. This time, `Summary OR = 0.933`.
+                           However, the CI of the `Summary OR` contains 1. So the
+                           effectiveness of the two medicine is about equal in this case."
+                          )
+                        )
+                      )
+                    )
+                  )
+                ),
+              
+              conditionalPanel(
+              condition = "input.sets == 'mea'",
+              h3(p(strong("MMRV vs. MMR+V Against Measles"),
+                style = "text-align: center")),
+              h4(p(("Those nine studies come from nine individual studies."),
+               style = "text-align: center")),
+              img(
+                src = "mea.PNG",
+                height = "100%",
+                width = "90%",
+                algin = "middle"
+                )
+              ),
+              
+              conditionalPanel(
+                condition = "input.sets == 'mum'",
+                h3(p(
+                strong("MMRV vs. MMR+V Against Mumps"),
+                style = "text-align: center")),
+                h4(p(("Those eleven studies come from eleven individual studies."),
+                 style = "text-align: center")),
+                img(
+                  src = "mum.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle"
+                )
+              ),
+              conditionalPanel(
+                condition = "input.sets == 'rub'",
+                h3(p(strong("MMRV vs. MMR+V Against Rubella"),
+                  style = "text-align: center")),
+                h4(p(("Those five studies come from five individual studies."),
+                 style = "text-align: center")),
+                img(
+                  src = "rub.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle"
+                ),
+                shinyjs::hidden(
+                wellPanel(id = "vacc_comments",
+                  HTML(markdownToHTML(fragment.only=TRUE, 
+                    text=c("The three analyses in this section compare the MMRV
+                           vaccine and the MMR + V vaccine in preventing measles,
+                           mumps, and rubella. Intuitively, we would assume that
+                           the effectiveness of the two kinds of vaccine is equal.
+                           However, in the second comparison, `Summary OR = 0.483`
+                           and the CI does not contain 1. It suggests that the MMRV
+                           vaccine against mumps is less effective than the MMR + V
+                           vaccine. It is an interesting finding.")))
+                          )
+                        )
+                      )
+                    )
+                  )
+                ),
+
         #### Set up the References Page ----
         tabItem(
           tabName = "references",
@@ -464,7 +676,7 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$answer, {
-    updateButton(session, "answer", disabled=TRUE)
+    updateButton(session, "answer", disabled = TRUE)
   })
   
   observeEvent(input$begin, {
@@ -479,9 +691,17 @@ server <- function(input, output, session) {
   })
   
   output$testdesign = renderUI({
-    if(input$testdesigncheckbox)
+    if (input$testdesigncheckbox)
     {
-      h4("A researcher wants to sample a group of n University Park students and n students from other Penn State campuses to ask them about their experiences in college.  Although the percentage of Pennsylvania residents is 24.9% lower at University Park, a critic believes her sampling technique would provide a sample of students with a proportion (p) that does not depend on the campus (the null hypothesis). The researcher uses her samples to conduct a test of that null hypothesis and this app shows how that test would behave when the sampling is really unbiased and the University Park campus has a proportion that is 0.249 lower lower. ")
+      h4("A researcher wants to sample a group of n University Park students and
+         n students from other Penn State campuses to ask them about their
+         experiences in college.  Although the percentage of Pennsylvania
+         residents is 24.9% lower at University Park, a critic believes her 
+         sampling technique would provide a sample of students with a proportion
+         (p) that does not depend on the campus (the null hypothesis). The researcher
+         uses her samples to conduct a test of that null hypothesis and this app
+         shows how that test would behave when the sampling is really unbiased 
+         and the University Park campus has a proportion that is 0.249 lower lower. ")
     }
   })
   
@@ -514,16 +734,18 @@ server <- function(input, output, session) {
     #                           Out-of-State_Students 0.405	 0.156",
     #                   sep = "",header = TRUE)
     
-    dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), each=2),
-                        location=rep(c("University Park", "Other Campuses"),2),
-                        samplepercent=c(0.595,0.844,0.405,0.156))
+    dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), 
+                                    each = 2),
+                        location = rep(c("University Park", "Other Campuses"),2),
+                        samplepercent = c(0.595,0.844,0.405,0.156))
     
     ggplot(dfPop,aes(x = location,y = samplepercent, fill = types)) +
-      geom_bar(position = position_fill(),stat="identity", width=0.3) +
+      geom_bar(position = position_fill(),stat="identity", width = 0.3) +
       scale_y_continuous(labels = percent_format()) +
-      scale_fill_brewer(palette="Paired")+
+      scale_fill_brewer(palette = "Paired")+
       labs(
-        title = paste0("population proportion(diff) = -24.9%, σ(p(UP)-p(Others)) = ",round(sqrt(0.595*0.405 + 0.844*0.156),3)),
+        title = paste0("population proportion(diff) = -24.9%, σ(p(UP)-p(Others))
+                       = ",round(sqrt(0.595*0.405 + 0.844*0.156),3)),
         y = "Enrollment by Percentage")
     
   })
@@ -652,18 +874,17 @@ server <- function(input, output, session) {
   })
   
   newdata50 <- reactive({
-    merge.data.frame(data50_1_3(),data50_2_3(), by="idx")
+    merge.data.frame(data50_1_3(),data50_2_3(), by = "idx")
   })
-  
-  
-  
   
   #calculate the interval
   Intervals <- reactive({
-    zvalue = qnorm(((1-input$dlevel)/2), lower.tail = F)
+    zvalue = qnorm(((1 - input$dlevel)/2), lower.tail = F)
     sampleRatio = (data50()[,2]*data50()[,5])/(data50()[,3]*data50()[,4])
-    lowerbound = exp(log(sampleRatio)-zvalue*sqrt(1/data50()[,2]+1/data50()[,5]+1/data50()[,3]+1/data50()[,4]))
-    upperbound = exp(log(sampleRatio)+zvalue*sqrt(1/data50()[,2]+1/data50()[,5]+1/data50()[,3]+1/data50()[,4]))
+    lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/data50()[,2] + 
+                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
+    upperbound = exp(log(sampleRatio) + zvalue*sqrt(1/data50()[,2] + 
+                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
     data.frame(idx = rep(1:50), 
                sampleRatio,
                lowerbound,
@@ -673,10 +894,12 @@ server <- function(input, output, session) {
   })
   
   newIntervals <- reactive({
-    zvalue = qnorm(((1-input$dlevel1)/2), lower.tail = F)
+    zvalue = qnorm(((1 - input$dlevel1)/2), lower.tail = F)
     sampleRatio = (newdata50()[,2]*newdata50()[,5])/(newdata50()[,3]*newdata50()[,4])
-    lowerbound = exp(log(sampleRatio)-zvalue*sqrt(1/newdata50()[,2]+1/newdata50()[,5]+1/newdata50()[,3]+1/newdata50()[,4]))
-    upperbound = exp(log(sampleRatio)+zvalue*sqrt(1/newdata50()[,2]+1/newdata50()[,5]+1/newdata50()[,3]+1/newdata50()[,4]))
+    lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/newdata50()[,2] + 
+                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
+    upperbound = exp(log(sampleRatio) + zvalue*sqrt(1/newdata50()[,2] +
+                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
     data.frame(idx = rep(1:50), 
                sampleRatio,
                lowerbound,
@@ -697,7 +920,7 @@ server <- function(input, output, session) {
   #default as all the samples are selected
   selected_sample <- 50
   selectedSample <- reactive({
-    if (! is.null(input$plot_click)) {
+    if (!is.null(input$plot_click)) {
       selected_sample <<- round(input$plot_click$y)
       if (selected_sample < 1) selected_sample <<- 1
       if (selected_sample > 50) selected_sample <<- 50
@@ -738,7 +961,11 @@ server <- function(input, output, session) {
       
       ggplot(data = newIntervals()) +
         geom_pointrange(
-          aes(x=idx, ymin = lowerbound, ymax = upperbound, y = sampleRatio, colour = cover,
+          aes(x = idx, 
+              ymin = lowerbound, 
+              ymax = upperbound, 
+              y = sampleRatio, 
+              colour = cover,
               alpha = idx == selectedSample(),
               size = idx == selectedSample()
           )) +
@@ -750,13 +977,14 @@ server <- function(input, output, session) {
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel1, "% Confidence Intervals"),
-             x = "",y="black vertical line for null theta & green vertical line for true odds ratio",hjust = 5, vjust = 1) +
+             x = "",y ="black vertical line for null theta & green vertical line 
+             for true odds ratio",hjust = 5, vjust = 1) +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
-              plot.title = element_text(size=18),
-              axis.title.x = element_text(size=14),
-              axis.title.y = element_text(size=14))
+              plot.title = element_text(size = 18),
+              axis.title.x = element_text(size = 14),
+              axis.title.y = element_text(size = 14))
     }
     
     else{
@@ -767,7 +995,11 @@ server <- function(input, output, session) {
       
       ggplot(data = Intervals()) +
         geom_pointrange(
-          aes(x=idx, ymin = lowerbound, ymax = upperbound, y = sampleRatio, colour = cover,
+          aes(x = idx, 
+              ymin = lowerbound,
+              ymax = upperbound,
+              y = sampleRatio,
+              colour = cover,
               alpha = idx == selectedSample(),
               size = idx == selectedSample()
           )) +
@@ -779,13 +1011,14 @@ server <- function(input, output, session) {
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
-             x = "",y="black vertical line for null theta & green vertical line for true odds ratio",hjust = 5, vjust = 1) +
+             x = "",y = "black vertical line for null theta & green vertical line
+             for true odds ratio",hjust = 5, vjust = 1) +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
-              plot.title = element_text(size=18),
-              axis.title.x = element_text(size=14),
-              axis.title.y = element_text(size=14))
+              plot.title = element_text(size = 18),
+              axis.title.x = element_text(size = 14),
+              axis.title.y = element_text(size = 14))
     }
     
   })
@@ -798,9 +1031,12 @@ server <- function(input, output, session) {
         need(is.numeric(input$nSamp3),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(percent(newOneSample()[,2]/input$nSamp3), percent(newOneSample()[,3]/input$nSamp3), 
-                         percent(newOneSample()[,4]/input$nSamp3), percent(newOneSample()[,5]/input$nSamp3)), ncol=2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
+      ctable <- matrix(c(percent(newOneSample()[,2]/input$nSamp3), 
+                         percent(newOneSample()[,3]/input$nSamp3), 
+                         percent(newOneSample()[,4]/input$nSamp3), 
+                         percent(newOneSample()[,5]/input$nSamp3)), ncol = 2, 
+                       dimnames = list(Campus = c("University Park","Other Campuses"), 
+                                       State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
@@ -810,8 +1046,10 @@ server <- function(input, output, session) {
         need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(percent(OneSample()[,2]/input$nSamp1), percent(OneSample()[,3]/input$nSamp2), 
-                         percent(OneSample()[,4]/input$nSamp1), percent(OneSample()[,5]/input$nSamp2)), ncol=2, 
+      ctable <- matrix(c(percent(OneSample()[,2]/input$nSamp1), 
+                         percent(OneSample()[,3]/input$nSamp2), 
+                         percent(OneSample()[,4]/input$nSamp1), 
+                         percent(OneSample()[,5]/input$nSamp2)), ncol = 2, 
                        dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
@@ -823,8 +1061,12 @@ server <- function(input, output, session) {
         need(is.numeric(input$nSamp3),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(newOneSample()[,2], newOneSample()[,3], newOneSample()[,4], newOneSample()[,5]), ncol=2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
+      ctable <- matrix(c(newOneSample()[,2], 
+                         newOneSample()[,3],
+                         newOneSample()[,4],
+                         newOneSample()[,5]), ncol = 2, 
+                       dimnames = list(Campus = c("University Park","Other Campuses"), 
+                                       State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
@@ -833,8 +1075,12 @@ server <- function(input, output, session) {
         need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(OneSample()[,2], OneSample()[,3], OneSample()[,4], OneSample()[,5]), ncol=2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
+      ctable <- matrix(c(OneSample()[,2],
+                         OneSample()[,3],
+                         OneSample()[,4],
+                         OneSample()[,5]), ncol = 2, 
+                       dimnames = list(Campus = c("University Park","Other Campuses"),
+                                       State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
@@ -846,7 +1092,8 @@ server <- function(input, output, session) {
         need(is.numeric(input$nSamp3),
              message = "Please input sample size")
       )
-      cratio<-round(((newOneSample()[,2])*(newOneSample()[,5])/(newOneSample()[,3]*newOneSample()[,4])), 2)
+      cratio <- round(((newOneSample()[,2])*(newOneSample()[,5]) / 
+                         (newOneSample()[,3]*newOneSample()[,4])), 2)
       cratio
     }
     else{
@@ -854,7 +1101,8 @@ server <- function(input, output, session) {
         need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
              message = "Please input sample size")
       )
-      cratio<-round(((OneSample()[,2])*(OneSample()[,5])/(OneSample()[,3]*OneSample()[,4])), 2)
+      cratio <- round(((OneSample()[,2])*(OneSample()[,5]) /
+                       (OneSample()[,3]*OneSample()[,4])), 2)
       cratio
     }
   })
@@ -866,7 +1114,7 @@ server <- function(input, output, session) {
     mylist = c()
     rnum <- nrow(mytable)
     for (i in 1:rnum){
-      mylist[[i]] = matrix(as.numeric(mytable[i,]),nrow=2,byrow=TRUE)
+      mylist[[i]] = matrix(as.numeric(mytable[i,]),nrow = 2,byrow = TRUE)
     }
     mylist
   }
@@ -885,8 +1133,8 @@ server <- function(input, output, session) {
     nctrl <- vector()
     ptrt <- vector()
     pctrl <- vector()
-    if (referencerow == 1) { nonreferencerow <- 2 }
-    else                   { nonreferencerow <- 1 }
+    if (referencerow == 1) {nonreferencerow <- 2}
+    else {nonreferencerow <- 1}
     for (i in 1:numstrata)
     {
       mymatrix <- mylist[[i]]
@@ -902,15 +1150,17 @@ server <- function(input, output, session) {
       ptrt[i] <- DiseaseExposed
     }
     names <- as.character(seq(1,numstrata))
-    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level=0.95, names=names,statistic="OR")
+    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
+                    names = names,
+                    statistic = "OR")
     
     
-    tabletext<-cbind(c("","Study",myMH$names,NA,"Summary"),
+    tabletext <- cbind(c("","Study",myMH$names,NA,"Summary"),
                      c("Treatment","(effective)",ptrt,NA,NA),
                      c("Treatment","(non-effective)",pctrl, NA,NA),
                      c("Control","(effective)",(ntrt-ptrt),NA,NA),
                      c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
-                     c("","OR",format((exp(myMH$logOR)),digits=3),NA,format((exp(myMH$logMH)),digits=3)))
+                     c("","OR",format((exp(myMH$logOR)),digits = 3),NA,format((exp(myMH$logMH)),digits=3)))
   }
   
   
@@ -928,8 +1178,8 @@ server <- function(input, output, session) {
     nctrl <- vector()
     ptrt <- vector()
     pctrl <- vector()
-    if (referencerow == 1) { nonreferencerow <- 2 }
-    else                   { nonreferencerow <- 1 }
+    if (referencerow == 1) {nonreferencerow <- 2}
+    else {nonreferencerow <- 1}
     for (i in 1:numstrata)
     {
       mymatrix <- mylist[[i]]
@@ -945,7 +1195,9 @@ server <- function(input, output, session) {
       ptrt[i] <- DiseaseExposed
     }
     names <- as.character(seq(1,numstrata))
-    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level=0.95, names=names,statistic="OR")
+    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
+                    names = names,
+                    statistic = "OR")
     
     # metaplot(myMH$logOR, myMH$selogOR, nn=myMH$selogOR^-2, myMH$names,
     #          summn=myMH$logMH, sumse=myMH$selogMH, sumnn=myMH$selogMH^-2,
@@ -964,17 +1216,17 @@ server <- function(input, output, session) {
     #            clip=c(-0.01,1000), boxsize = 1.5)
   }
   
-  
-  
-  
-  
   ## Non-Small Cell Lung Cancer Treatment introduction
-  output$nsclc=renderText("About 80% to 85% of lung cancers are non-small cell lung cancer (NSCLC). The typical treatments include chemotherapy, radiation therapy and targeted therapy. 
-                          Gefitinib and Erlotinib are two kind of medicine used in NSCLC targeted therapy. In the two comparisons, Gefitinib represents treatment groups.")
+  output$nsclc = renderText("About 80% to 85% of lung cancers are non-small cell 
+                            lung cancer (NSCLC). The typical treatments include
+                            chemotherapy, radiation therapy and targeted therapy. 
+                            Gefitinib and Erlotinib are two kind of medicine used
+                            in NSCLC targeted therapy. In the two comparisons,
+                            Gefitinib represents treatment groups.")
   
   # drug 1: Gefitinib vs chemotherapy
-  gvc1 <- matrix(c(42,37,48,53),nrow=2,byrow=TRUE)
-  gvc2 <- matrix(c(18,12,26,32),nrow=2,byrow=TRUE)
+  gvc1 <- matrix(c(42,37,48,53),nrow = 2,byrow = TRUE)
+  gvc2 <- matrix(c(18,12,26,32),nrow = 2,byrow = TRUE)
   gvc_list = list(gvc1, gvc2)
   # makeForestPlotForRCTs(gvc_list)
   
@@ -985,9 +1237,9 @@ server <- function(input, output, session) {
   # output$plot1 = renderPlot(makeForestPlot(gvc_list))
   
   # drug 2: Gefitinib vs Erlotinib 
-  gve1 <- matrix(c(28,6,22,12),nrow=2,byrow=TRUE)
-  gve2 <- matrix(c(36,14,38,12),nrow=2,byrow=TRUE)
-  gve3 <- matrix(c(16,19,21,14),nrow=2,byrow=TRUE)
+  gve1 <- matrix(c(28,6,22,12),nrow = 2,byrow = TRUE)
+  gve2 <- matrix(c(36,14,38,12),nrow = 2,byrow = TRUE)
+  gve3 <- matrix(c(16,19,21,14),nrow = 2,byrow = TRUE)
   gve_list = list(gve1, gve2, gve3)
   #  makeForestPlot(gve_list)
   output$plot2 = renderUI({
@@ -995,20 +1247,25 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$comments1, {
-    toggle(id= "nsclc_comments")
+    toggle(id = "nsclc_comments")
   })
   
   ## Malaria Treatment
-  output$mala = renderText("Artemisinin is a plant-derived compound, isolated from the Artemisia annua, sweet wormwood a herb employed in Chinese herbal medicine. 
-                           This compound (along with its derivative drugs), is the World Health Organization's recommended treatment against malaria caused by Plasmodium falciparum. 
-                           Quinine, isolated from cinchona bark, is the first meditation to treat malaria.
-                           In the two comparisons, artesunate-based therapies represent treatment groups.")
+  output$mala = renderText("Artemisinin is a plant-derived compound, isolated from
+                           the Artemisia annua, sweet wormwood a herb employed in
+                           Chinese herbal medicine. This compound (along with its
+                           derivative drugs), is the World Health Organization's
+                           recommended treatment against malaria caused by Plasmodium
+                           falciparum. Quinine, isolated from cinchona bark, is
+                           the first meditation to treat malaria. In the two
+                           comparisons, artesunate-based therapies represent
+                           treatment groups.")
   
   
   #drug 1: Artemisinin-based combination therapies vs. Quinine
-  avq1 <- matrix(c(37,26,2,15),nrow=2,byrow=TRUE)
-  avq2 <- matrix(c(64,34,2,8),nrow=2,byrow=TRUE)
-  avq3 <- matrix(c(137,122,1,3),nrow=2,byrow=TRUE)
+  avq1 <- matrix(c(37,26,2,15),nrow = 2,byrow = TRUE)
+  avq2 <- matrix(c(64,34,2,8),nrow = 2,byrow = TRUE)
+  avq3 <- matrix(c(137,122,1,3),nrow = 2,byrow = TRUE)
   avq_list = list(avq1, avq2, avq3)
   output$plot3 = renderUI({
     img(src = "avq.PNG", width = "85%", algin = "middle")
@@ -1017,41 +1274,48 @@ server <- function(input, output, session) {
   
   
   #drug 2: artemether vs. Quinine
-  amvq1 <- matrix(c(6,10,45,42),nrow=2,byrow=TRUE)
-  amvq2 <- matrix(c(18,8,71,63),nrow=2,byrow=TRUE)
-  amvq3 <- matrix(c(11,14,43,35),nrow=2,byrow=TRUE)
-  amvq4 <- matrix(c(1,2,17,17),nrow=2,byrow=TRUE)
-  amvq5 <- matrix(c(10,12,73,69),nrow=2,byrow=TRUE)
-  amvq6 <- matrix(c(59,62,229,226),nrow=2,byrow=TRUE)
-  amvq7 <- matrix(c(3,2,35,37),nrow=2,byrow=TRUE)
+  amvq1 <- matrix(c(6,10,45,42),nrow = 2,byrow = TRUE)
+  amvq2 <- matrix(c(18,8,71,63),nrow = 2,byrow = TRUE)
+  amvq3 <- matrix(c(11,14,43,35),nrow = 2,byrow = TRUE)
+  amvq4 <- matrix(c(1,2,17,17),nrow = 2,byrow = TRUE)
+  amvq5 <- matrix(c(10,12,73,69),nrow = 2,byrow = TRUE)
+  amvq6 <- matrix(c(59,62,229,226),nrow = 2,byrow = TRUE)
+  amvq7 <- matrix(c(3,2,35,37),nrow = 2,byrow = TRUE)
   amvq_list = list(amvq1, amvq2, amvq3, amvq4, amvq5, amvq6, amvq7)
   output$plot4 = renderUI({
     img(src = "amvq.PNG", width = "85%", algin = "middle")
   })
   
   observeEvent(input$comments2, {
-    toggle(id= "mala_comments")
+    toggle(id = "mala_comments")
   })
   ## Vaccines Immunogenicity
   
-  output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV) vaccine is expected to facilitate universal immunization against these 4 diseases. 
-                           Here randomized controlled trials (RCTs) were conducted to compare single MMRV dose with measles-mumps-rubella vaccine with varicella vaccine (MMR + V). 
-                           All included studies reported seroconversion rate as serological response outcome. 
-                           Seroconversion rate was defined as percent of subjects initially seronegative (with titers \u2264 assay cut-offs), who developed postvaccination antibody titers above the assay cut-off levels.
-                           In the three comparisons, MMRV represents treatment groups.")
+  output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV)
+                           vaccine is expected to facilitate universal immunization
+                           against these 4 diseases. Here randomized controlled
+                           trials (RCTs) were conducted to compare single MMRV 
+                           dose with measles-mumps-rubella vaccine with varicella
+                           vaccine (MMR + V). All included studies reported
+                           seroconversion rate as serological response outcome. 
+                           Seroconversion rate was defined as percent of subjects
+                           initially seronegative (with titers \u2264 assay cut-offs),
+                           who developed postvaccination antibody titers above the
+                           assay cut-off levels. In the three comparisons, MMRV
+                           represents treatment groups.")
   #1: measles
-  mea1 <- matrix(c(289,141,4,1),nrow=2,byrow=TRUE)
-  mea2 <- matrix(c(1107,540,9,15),nrow=2,byrow=TRUE)
-  mea3 <- matrix(c(73,68,1,6),nrow=2,byrow=TRUE)
-  mea4 <- matrix(c(1114,181,29,9),nrow=2,byrow=TRUE)
-  mea12 <- matrix(c(290,145,12,0),nrow=2,byrow=TRUE)#contain 0
-  mea5 <- matrix(c(980,349,9,1),nrow=2,byrow=TRUE)
-  mea6 <- matrix(c(299,106,7,0),nrow=2,byrow=TRUE)#contain 0
-  mea7 <- matrix(c(2437,841,72,20),nrow=2,byrow=TRUE)
-  mea8 <- matrix(c(125,113,9,9),nrow=2,byrow=TRUE)
-  mea9 <- matrix(c(10,7,0,1),nrow=2,byrow=TRUE)#contain 0
-  mea10 <- matrix(c(633,199,37,14),nrow=2,byrow=TRUE)
-  mea11 <- matrix(c(294,155,6,1),nrow=2,byrow=TRUE)
+  mea1 <- matrix(c(289,141,4,1),nrow = 2,byrow = TRUE)
+  mea2 <- matrix(c(1107,540,9,15),nrow = 2,byrow = TRUE)
+  mea3 <- matrix(c(73,68,1,6),nrow = 2,byrow = TRUE)
+  mea4 <- matrix(c(1114,181,29,9),nrow = 2,byrow = TRUE)
+  mea12 <- matrix(c(290,145,12,0),nrow = 2,byrow = TRUE)#contain 0
+  mea5 <- matrix(c(980,349,9,1),nrow = 2,byrow = TRUE)
+  mea6 <- matrix(c(299,106,7,0),nrow = 2,byrow = TRUE)#contain 0
+  mea7 <- matrix(c(2437,841,72,20),nrow = 2,byrow = TRUE)
+  mea8 <- matrix(c(125,113,9,9),nrow = 2,byrow = TRUE)
+  mea9 <- matrix(c(10,7,0,1),nrow = 2,byrow = TRUE)#contain 0
+  mea10 <- matrix(c(633,199,37,14),nrow = 2,byrow = TRUE)
+  mea11 <- matrix(c(294,155,6,1),nrow = 2,byrow = TRUE)
   mea_list = list(mea1, mea2, mea3, mea4, mea5, mea7, mea8, mea10, mea11)
   output$plot5 = renderUI({
     img(src = "mea.PNG", width = "90%", algin = "middle")
@@ -1063,18 +1327,18 @@ server <- function(input, output, session) {
   
   
   #2: mumps
-  mum1 <- matrix(c(287,137,12,4),nrow=2,byrow=TRUE)
-  mum2 <- matrix(c(927,516,167,28),nrow=2,byrow=TRUE)
-  mum3 <- matrix(c(70,69,2,4),nrow=2,byrow=TRUE)
-  mum4 <- matrix(c(992,173,117,9),nrow=2,byrow=TRUE)
-  mum5 <- matrix(c(292,148,3,2),nrow=2,byrow=TRUE)
-  mum6 <- matrix(c(1002,350,10,1),nrow=2,byrow=TRUE)
-  mum7 <- matrix(c(272,101,30,4),nrow=2,byrow=TRUE)
-  mum8 <- matrix(c(2409,854,100,18),nrow=2,byrow=TRUE)
-  mum9 <- matrix(c(113,108,20,10),nrow=2,byrow=TRUE)
-  mum10 <- matrix(c(10,8,0,0),nrow=2,byrow=TRUE)#contain 0
-  mum11 <- matrix(c(613,191,37,16),nrow=2,byrow=TRUE)
-  mum12 <- matrix(c(262,145,33,9),nrow=2,byrow=TRUE)
+  mum1 <- matrix(c(287,137,12,4),nrow = 2,byrow = TRUE)
+  mum2 <- matrix(c(927,516,167,28),nrow = 2,byrow = TRUE)
+  mum3 <- matrix(c(70,69,2,4),nrow = 2,byrow = TRUE)
+  mum4 <- matrix(c(992,173,117,9),nrow = 2,byrow = TRUE)
+  mum5 <- matrix(c(292,148,3,2),nrow = 2,byrow = TRUE)
+  mum6 <- matrix(c(1002,350,10,1),nrow = 2,byrow = TRUE)
+  mum7 <- matrix(c(272,101,30,4),nrow = 2,byrow = TRUE)
+  mum8 <- matrix(c(2409,854,100,18),nrow = 2,byrow = TRUE)
+  mum9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)
+  mum10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
+  mum11 <- matrix(c(613,191,37,16),nrow = 2,byrow = TRUE)
+  mum12 <- matrix(c(262,145,33,9),nrow = 2,byrow = TRUE)
   mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11, mum12)
   output$plot6 = renderUI({
     img(src = "mum.PNG", width = "90%", algin = "middle")
@@ -1084,18 +1348,18 @@ server <- function(input, output, session) {
   
   
   #3: rubella
-  rub1 <- matrix(c(288,141,10,0),nrow=2,byrow=TRUE)#contain 0
-  rub2 <- matrix(c(1114,552,3,3),nrow=2,byrow=TRUE)
-  rub3 <- matrix(c(73,74,1,0),nrow=2,byrow=TRUE)#contain 0
-  rub4 <- matrix(c(1148,189,1,0),nrow=2,byrow=TRUE)#contain 0
-  rub5 <- matrix(c(289,142,15,11),nrow=2,byrow=TRUE)
-  rub6 <- matrix(c(1004,352,11,4),nrow=2,byrow=TRUE)
-  rub7 <- matrix(c(303,106,3,0),nrow=2,byrow=TRUE)#contain 0
-  rub8 <- matrix(c(2501,859,31,7),nrow=2,byrow=TRUE)
-  rub9 <- matrix(c(113,108,20,10),nrow=2,byrow=TRUE)#contain 0
-  rub10 <- matrix(c(10,8,0,0),nrow=2,byrow=TRUE)#contain 0
-  rub11 <- matrix(c(665,208,2,4),nrow=2,byrow=TRUE)
-  rub12 <- matrix(c(297,157,1,0),nrow=2,byrow=TRUE)#contain 0
+  rub1 <- matrix(c(288,141,10,0),nrow = 2,byrow = TRUE)#contain 0
+  rub2 <- matrix(c(1114,552,3,3),nrow = 2,byrow = TRUE)
+  rub3 <- matrix(c(73,74,1,0),nrow = 2,byrow = TRUE)#contain 0
+  rub4 <- matrix(c(1148,189,1,0),nrow = 2,byrow = TRUE)#contain 0
+  rub5 <- matrix(c(289,142,15,11),nrow = 2,byrow = TRUE)
+  rub6 <- matrix(c(1004,352,11,4),nrow = 2,byrow = TRUE)
+  rub7 <- matrix(c(303,106,3,0),nrow = 2,byrow = TRUE)#contain 0
+  rub8 <- matrix(c(2501,859,31,7),nrow = 2,byrow = TRUE)
+  rub9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)#contain 0
+  rub10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
+  rub11 <- matrix(c(665,208,2,4),nrow = 2,byrow = TRUE)
+  rub12 <- matrix(c(297,157,1,0),nrow = 2,byrow = TRUE)#contain 0
   rub_list = list(rub2,rub5, rub6, rub8, rub11)
   output$plot7 = renderUI({
     img(src = "rub.PNG", width = "85%", algin = "middle")
