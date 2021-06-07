@@ -1,24 +1,24 @@
 # Load Packages ----
 library(shiny) 
-library(shinyalert) 
+#library(shinyalert) 
 library(shinyBS)  
 library(shinyjs)  
-library(shinyDND) 
-library(shinycssloaders)  
+#library(shinyDND) 
+#library(shinycssloaders)  
 library(shinydashboard)  
 library(shinyWidgets) 
-library(leaps)  
+#library(leaps)  
 library(ggplot2)  
 library(markdown)
-library(png) 
-library(simstudy) 
+#library(png) 
+#library(simstudy) 
 library(dplyr) 
-library(data.table)
+#library(data.table)
 library(scales)
-library(Hmisc)
-library(colorspace)
-library(tidyverse)
-library(broom)
+#library(Hmisc)
+#library(colorspace)
+#library(tidyverse)
+#library(broom)
 library(rmeta)
 library(boastUtils)  
 
@@ -196,12 +196,13 @@ ui <- list(
         #### Set up an Explore Page
         tabItem(
           tabName = "explore",
-          titlePanel(
-            h2("Odds Ratio for Enrollment by Residency between University Park 
-               and Commonwealth Campuses")
-          ),
+          
+          h2("Odds Ratio for Enrollment by Residency between University Park 
+             and Commonwealth Campuses"),
+       
           sidebarLayout(
             sidebarPanel(
+              width = 6,
               h3("True Population:"),
               h4("Count: "),
               img(
@@ -325,51 +326,25 @@ ui <- list(
                   max = 200,
                   value = 50,
                   step = 5
-                )
-                
-              )
-            )
-            
-            
-            ),
-            mainPanel(
-              sidebarLayout(
-                mainPanel(
-                  plotOutput("CIplot", height = "600px", click = "plot_click"),
-                  bsPopover(
-                    "CIplot",
-                    "Confidence Interval Plot",
-                    "The orange lines indicate a confidence interval that smaller or greater than 1 and the purple lines indicate confidence intervas containing 1. Click on an interval to see detailed information on the right-hand side for the chosen sample.",
-                    trigger =
-                      "hover",
-                    placement = "bottom"
                   )
-                ),
-                sidebarPanel(
-                  h3(strong("Sample Counts:")),
-                  span(tableOutput("sampleinfotable2"), style =
-                         "font-size: 18px"),
-                  h3(strong("Sample Percentages:")),
-                  span(tableOutput("sampleinfotable1"), style =
-                         "font-size: 18px"),
-                  h3(strong("Sample Odds Ratio:")),
-                  span(textOutput("sampleinforatio"), style =
-                         "font-size: 18px")
                 )
-              ),
-              br(),
-              actionButton("newSample", "Generate 50 New Samples", icon("retweet"),
-                           style = "color: white; background-color: #ff7532"),
-              bsPopover(
-                "newSample",
-                "Note",
-                "By clicking on this button, new sample with the size you input will be generated.",
-                trigger =
-                  "hover",
-                placement = "bottom"
               )
+            ),
+            
+            mainPanel(
+              width = 6, 
+              h3(strong("Sample Counts:")),
+              span(tableOutput("sampleinfotable2"), style =
+                     "font-size: 18px"),
+              h3(strong("Sample Percentages:")),
+              span(tableOutput("sampleinfotable1"), style =
+                     "font-size: 18px"),
+              h3(strong("Sample Odds Ratio:")),
+              span(textOutput("sampleinforatio"), style =
+                     "font-size: 18px")
               
-            )
+            ), 
+            position = "left"
           ),
           
           div(
@@ -786,19 +761,31 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$start2, {
-    updateButton(session, "answer", disabled = TRUE)
+    updateButton(
+      session = session, 
+      inputId = "answer", 
+      disabled = TRUE)
   })
   
   observeEvent(input$challenge, {
-    updateButton(session, "answer", disabled = FALSE)
+    updateButton(
+      session = session,
+      inputId = "answer",
+      disabled = FALSE)
   })
   
   observeEvent(input$answer, {
-    updateButton(session, "answer", disabled = TRUE)
+    updateButton(
+      session = session,
+      inputId = "answer",
+      disabled = TRUE)
   })
   
   observeEvent(input$begin, {
-    updateButton(session, "submit", disabled = TRUE)
+    updateButton(
+      session = session,
+      inputId = "submit",
+      disabled = TRUE)
   })
   
   
