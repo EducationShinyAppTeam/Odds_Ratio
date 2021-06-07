@@ -1,18 +1,18 @@
 # Load Packages ----
-library(shiny)
-library(shinyalert)
-library(shinyBS)
-library(shinyjs)
-library(shinyDND)
-library(shinycssloaders)
-library(shinydashboard)
-library(shinyWidgets)
-library(leaps)
-library(ggplot2)
+library(shiny) 
+library(shinyalert) 
+library(shinyBS)  
+library(shinyjs)  
+library(shinyDND) 
+library(shinycssloaders)  
+library(shinydashboard)  
+library(shinyWidgets) 
+library(leaps)  
+library(ggplot2)  
 library(markdown)
-library(png)
-library(simstudy)
-library(dplyr)
+library(png) 
+library(simstudy) 
+library(dplyr) 
 library(data.table)
 library(scales)
 library(Hmisc)
@@ -20,7 +20,7 @@ library(colorspace)
 library(tidyverse)
 library(broom)
 library(rmeta)
-library(boastUtils)
+library(boastUtils)  
 
 # Load additional dependencies and setup functions
 # source("global.R")
@@ -121,7 +121,7 @@ ui <- list(
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
-          h1("Prerequisites"),
+          h2("Prerequisites"),
           br(), 
           h3("What is odds ratio?"),
           
@@ -197,7 +197,7 @@ ui <- list(
         tabItem(
           tabName = "explore",
           titlePanel(
-            h1("Odds Ratio for Enrollment by Residency between University Park 
+            h2("Odds Ratio for Enrollment by Residency between University Park 
                and Commonwealth Campuses")
           ),
           sidebarLayout(
@@ -242,7 +242,6 @@ ui <- list(
                 tabPanel(
                   "Seperate Sample Sizes",
                   fluid = TRUE,
-                  size = "medium"
                 
                 br(),
                 tags$style(
@@ -387,6 +386,7 @@ ui <- list(
         
         #### Set up a Game Page ----
         tabItem(tabName = "analysis",
+          h2("Real Data Analysis"), 
           sidebarLayout(
             sidebarPanel(
               tags$style(
@@ -625,9 +625,126 @@ ui <- list(
           h2("References"),
           p(
             class = "hangingindent",
+            "Attali, D. (2020). shinyjs: Easily Improve the User Experience of
+              Your Shiny Apps in Seconds. R package version 1.1. Available from
+              https://CRAN.R-project.org/package=shinyjs"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Attali, D., Edwards, T., Wang, Z. (2020). shinyalerts: Easily create
+            pretty popup messages (modals) in 'Shiny'. R package version 2.0.0.
+            Available from https://CRAN.R-project.org/package=shinyalert"
+          ),
+          p(
+            class = "hangingindent",
             "Bailey, E. (2015). shinyBS: Twitter bootstrap components for shiny.
             (v0.61). [R package]. Available from
             https://CRAN.R-project.org/package=shinyBS"
+          ),
+          p(
+            class = "hangingindent",
+            "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST Utilities. 
+            R package version 0.1.6.3. Available from 
+            https://github.com/EducationShinyAppTeam/boastUtils"
+          ),
+          p(
+            class = "hangingindent",
+            "Chang, W. and Borges Ribeiro, B. (2018). shinydashboard: 
+            Create Dashboards with 'Shiny'. R package version 0.7.1. Available 
+            from https://CRAN.R-project.org/package=shinydashboard"
+          ),
+          p(
+            class = "hangingindent",
+            "Chang, W., Cheng, J., Allaire, J., Xie, Y., and McPherson, J. 
+            (2020). shiny: Web Application Framework for R. R package version 
+            1.5.0. Available from https://CRAN.R-project.org/package=shiny"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Goldfeld, K., Wujciak-Jens, J. (2020). simstudy: Simulation of Study
+            Data. R package version 0.2.1. Available from https://CRAN.R-project.
+            org/package=simstudy"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Harrell, F.E., Dupont, C. (2021). Hmisc: Harrell Miscellaneous. R 
+            package version 4.5-0. Available from https://CRAN.R-project.org/package=Hmisc"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Hoffer, A. (2016). shinyDND: Shiny Drag-n-Drop. R package version 
+            0.1.0. Available from https://CRAN.R-project.org/package=shinyDND"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Ihaka, R., Murrell, P., Hornik, K., Fisher, J.C., Stauffer, R., Wilke, C.o., 
+            McWhite, C.D., Zeileis, A. (2021). colorspace: A Toolbox for Manipulating
+            and Assessing Colors and Palettes. R package version 2.0-1. 
+            Available from https://CRAN.R-project.org/package=colorspace"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Lumley, T., Miller, A. (2020). leaps: Regression Subset Selection. 
+            R package version 3.1. Available from https://CRAN.R-project.org/package=leaps"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Lumley, T. (2018). rmeta: Meta-Analysis. R package version 3.0. Available
+            from https://CRAN.R-project.org/package=rmeta"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Perrier, V., Meyer, F., and Granjon, D. (2020). shinyWidgets: 
+            Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
+            from https://CRAN.R-project.org/package=shinyWidgets"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Sali, A., Hass, L., Attali, D. (2020). shinycssloaders: Add Loading
+            Animations to a 'shiny' Output While It's Recalculating. R package
+            version 1.0.0. Available from https://CRAN.R-project.org/package=shinycssloaders"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Urbanek, S. (2013). png: Read and write PNG images. R package
+            version 0.1-7. Available from https://CRAN.R-project.org/package=png"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Wickham, H., François, R., Henry, L., Müller, K. (2021). dplyr: A 
+            Grammar of Data Manipulation. R package version 1.0.6. Available from
+            https://CRAN.R-project.org/package=dplyr"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Wickham, H., Chang, W., Henry, L., Pedersen, T.L., Takahashi, K., 
+            Wilke, C., Woo, K., Yutani, H., Dunnington, D.  (2020). ggplot2: 
+            Create Elegant Data Visualisations Using the Grammar of Graphics. R package
+            version 3.3.3. Available from https://CRAN.R-project.org/package=ggplot2"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Wickham, H., Seidel, D. (2020). scales: Scale Functions for Visualization.
+            R package version 1.1.1. Available from https://CRAN.R-project.org/package=scales"
+          ),
+          
+          p(
+            class = "hangingindent",
+            "Wickham, H. (2021). tidyverse: Easily Install and Load the 'Tidyverse'.
+            R package version 1.3.1. Available from https://CRAN.R-project.org/package=tidyverse"
           ),
         )
       )
@@ -641,7 +758,8 @@ server <- function(input, output, session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "This app explores confidence intervals for odds ratios and their use in the meta-analysis of real data.",
+      text = "This app explores confidence intervals for odds ratios and their
+              use in the meta-analysis of real data.",
       type = "info"
     )
   })
