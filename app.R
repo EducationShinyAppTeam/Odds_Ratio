@@ -1,24 +1,24 @@
 # Load Packages ----
 library(shiny) 
-#library(shinyalert) 
+library(shinyalert) 
 library(shinyBS)  
 library(shinyjs)  
-#library(shinyDND) 
-#library(shinycssloaders)  
+library(shinyDND) 
+library(shinycssloaders)  
 library(shinydashboard)  
 library(shinyWidgets) 
-#library(leaps)  
+library(leaps)  
 library(ggplot2)  
 library(markdown)
-#library(png) 
-#library(simstudy) 
+library(png) 
+library(simstudy) 
 library(dplyr) 
-#library(data.table)
+library(data.table)
 library(scales)
-#library(Hmisc)
-#library(colorspace)
-#library(tidyverse)
-#library(broom)
+library(Hmisc)
+library(colorspace)
+library(tidyverse)
+library(broom)
 library(rmeta)
 library(boastUtils)  
 
@@ -192,14 +192,14 @@ ui <- list(
             )
           )
         ),
-       
+        
         #### Set up an Explore Page
         tabItem(
           tabName = "explore",
           
           h2("Odds Ratio for Enrollment by Residency between University Park 
              and Commonwealth Campuses"),
-       
+          br(), 
           sidebarLayout(
             sidebarPanel(
               width = 6,
@@ -243,89 +243,89 @@ ui <- list(
                 tabPanel(
                   "Seperate Sample Sizes",
                   fluid = TRUE,
-                
-                br(),
-                tags$style(
-                  HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 
+                  
+                  br(),
+                  tags$style(
+                    HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 
                        .irs-bar {background: #ff864c}"
-                  )
-                ),
-                tags$style(
-                  HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1
+                    )
+                  ),
+                  tags$style(
+                    HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1
                        .irs-bar {background: #ff864c}"
-                  )
-                ),
-                tags$style(
-                  HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2
+                    )
+                  ),
+                  tags$style(
+                    HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2
                        .irs-bar {background: #ff864c}"
+                    )
+                  ),
+                  
+                  sliderInput(
+                    "dlevel",
+                    "Confidence Level",
+                    min =
+                      .10,
+                    max = 0.99,
+                    value = 0.95,
+                    step = 0.01
+                  ),
+                  
+                  sliderInput(
+                    "nSamp1",
+                    "Sample Size for University Park",
+                    min =
+                      30,
+                    max = 200,
+                    value = 50,
+                    step = 5
+                  ),
+                  sliderInput(
+                    "nSamp2",
+                    "Sample Size for Other Campuses",
+                    min =
+                      30,
+                    max = 200,
+                    value = 50,
+                    step = 5
                   )
+                  
+                  
                 ),
-                
-                sliderInput(
-                  "dlevel",
-                  "Confidence Level",
-                  min =
-                    .10,
-                  max = 0.99,
-                  value = 0.95,
-                  step = 0.01
-                ),
-                
-                sliderInput(
-                  "nSamp1",
-                  "Sample Size for University Park",
-                  min =
-                    30,
-                  max = 200,
-                  value = 50,
-                  step = 5
-                ),
-                sliderInput(
-                  "nSamp2",
-                  "Sample Size for Other Campuses",
-                  min =
-                    30,
-                  max = 200,
-                  value = 50,
-                  step = 5
-                )
-                
-                
-              ),
-              tabPanel(
-                "Same Sample Size",
-                fluid = TRUE,
-                
-                br(),
-                tags$style(
-                  HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 
+                tabPanel(
+                  "Same Sample Size",
+                  fluid = TRUE,
+                  
+                  br(),
+                  tags$style(
+                    HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 
                        .irs-bar {background: #ff864c}"
-                  )
-                ),
-                tags$style(
-                  HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4
+                    )
+                  ),
+                  tags$style(
+                    HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4
                        .irs-bar {background: #ff864c}"
-                  )
-                ),
-                
-                sliderInput(
-                  "dlevel1",
-                  "Confidence Level",
-                  min =
-                    .10,
-                  max = 0.99,
-                  value = 0.95,
-                  step = 0.01
-                ),
-                
-                sliderInput(
-                  "nSamp3",
-                  "Sample Sizes for both University Park and Other Campuses",
-                  min =
-                    30,
-                  max = 200,
-                  value = 50,
-                  step = 5
+                    )
+                  ),
+                  
+                  sliderInput(
+                    "dlevel1",
+                    "Confidence Level",
+                    min =
+                      .10,
+                    max = 0.99,
+                    value = 0.95,
+                    step = 0.01
+                  ),
+                  
+                  sliderInput(
+                    "nSamp3",
+                    "Sample Sizes for both University Park and Other Campuses",
+                    min =
+                      30,
+                    max = 200,
+                    value = 50,
+                    step = 5
                   )
                 )
               )
@@ -333,18 +333,46 @@ ui <- list(
             
             mainPanel(
               width = 6, 
-              h3(strong("Sample Counts:")),
-              span(tableOutput("sampleinfotable2"), style =
-                     "font-size: 18px"),
-              h3(strong("Sample Percentages:")),
-              span(tableOutput("sampleinfotable1"), style =
-                     "font-size: 18px"),
-              h3(strong("Sample Odds Ratio:")),
-              span(textOutput("sampleinforatio"), style =
-                     "font-size: 18px")
+              plotOutput("CIplot", height = "600px", click = "plot_click"),
+              bsPopover(
+                "CIplot",
+                "Confidence Interval Plot",
+                "The orange lines indicate a confidence interval that smaller or greater than 1 and the purple lines indicate confidence intervas containing 1. Click on an interval to see detailed information on the right-hand side for the chosen sample.",
+                trigger =
+                  "hover",
+                placement = "bottom"
+              ), 
               
+              fluidRow(column(width = 4, 
+                h4(strong("Sample Counts:")),
+                span(tableOutput("sampleinfotable2"), style = "font-size: 18px")
+              ), 
+              
+              column(width = 4,       
+                 h4(strong("Sample Percentages:")),
+                 span(tableOutput("sampleinfotable1"), style = "font-size: 18px")
+              ), 
+              
+              column(width = 4,
+                 h4(strong("Sample Odds Ratio:")),
+                 span(textOutput("sampleinforatio"), style = "font-size: 18px")
+              )), 
+              
+              br(),
+              actionButton("newSample", "Generate 50 New Samples", icon("retweet"),
+                           style = "color: white; background-color: #ff7532"),
+              bsPopover(
+                "newSample",
+                "Note",
+                "By clicking on this button, new sample with the size you input will be generated.",
+                trigger =
+                  "hover",
+                placement = "center"
+              )
             ), 
             position = "left"
+            
+            
           ),
           
           div(
@@ -359,113 +387,114 @@ ui <- list(
           )
         ),
         
+        
         #### Set up a Game Page ----
         tabItem(tabName = "analysis",
-          h2("Real Data Analysis"), 
-          sidebarLayout(
-            sidebarPanel(
-              tags$style(
-                type = 'text/css',
-                ".selectize-input { font-size: 18px; line-height: 18px;} .selectize-dropdown { font-size: 19px; line-height: 19px; }"
-              ),
-              h3(strong("Choose a Dataset Below")),
-              selectInput(
-                "sets",
-                NULL,
-                list(
-                  "Non-Small Cell Lung Cancer Treatment" =
-                    c(
-                      "Gefitinib vs. Chemotherapy" = "gvc",
-                      "Gefitinib vs. Erlotinib" = "gve"
+                h2("Real Data Analysis"), 
+                sidebarLayout(
+                  sidebarPanel(
+                    tags$style(
+                      type = 'text/css',
+                      ".selectize-input { font-size: 18px; line-height: 18px;} .selectize-dropdown { font-size: 19px; line-height: 19px; }"
                     ),
-                  "Malaria Treatment" =
-                    c(
-                      "Artesunate-based therapies vs. Quinine (for uncomplicated malaria)" = "avq",
-                      "Artemether vs. Quinine (for cerebral malaria)" = "amvq"
+                    h3(strong("Choose a Dataset Below")),
+                    selectInput(
+                      "sets",
+                      NULL,
+                      list(
+                        "Non-Small Cell Lung Cancer Treatment" =
+                          c(
+                            "Gefitinib vs. Chemotherapy" = "gvc",
+                            "Gefitinib vs. Erlotinib" = "gve"
+                          ),
+                        "Malaria Treatment" =
+                          c(
+                            "Artesunate-based therapies vs. Quinine (for uncomplicated malaria)" = "avq",
+                            "Artemether vs. Quinine (for cerebral malaria)" = "amvq"
+                          ),
+                        "Vaccines Immunogenicity" =
+                          c(
+                            "MMRV vs. MMR+V Against Measles" = "mea",
+                            "MMRV vs. MMR+V Against Mumps" =
+                              "mum",
+                            "MMRV vs. MMR+V Against Rubella" =
+                              "rub"
+                          )
+                      ),
+                      width = validateCssUnit("70%")
                     ),
-                  "Vaccines Immunogenicity" =
-                    c(
-                      "MMRV vs. MMR+V Against Measles" = "mea",
-                      "MMRV vs. MMR+V Against Mumps" =
-                        "mum",
-                      "MMRV vs. MMR+V Against Rubella" =
-                        "rub"
+                    useShinyjs(),
+                    conditionalPanel(
+                      condition = "input.sets == 'gve'",
+                      div(style = "display: inline-block;vertical-align:top; width: 200px;", 
+                          actionButton("comments1", "Comments", style = "color: #fff; 
+                               background-color: #9874e3"))
+                    ),
+                    conditionalPanel(
+                      condition = "input.sets == 'amvq'",
+                      div(style = "display: inline-block;vertical-align:top; width: 200px;", 
+                          actionButton("comments2", "Comments", style = "color: #fff; 
+                               background-color: #9874e3"))
+                    ),
+                    conditionalPanel(
+                      condition = "input.sets== 'rub'",
+                      div(style = "display: inline-block;vertical-align:top; width: 200px;", 
+                          actionButton("comments3", "Comments", style = "color: #fff; background-color: #9874e3"))
+                      
+                    ),
+                    
+                    h3(strong("Background Knowledge")),
+                    conditionalPanel(
+                      condition = "input.sets == 'gvc'|input.sets == 'gve'",
+                      tags$style("#nsclc{ font-size: 20px; }"),
+                      textOutput("nsclc")
+                    ),
+                    conditionalPanel(
+                      condition = "input.sets == 'avq'|input.sets == 'amvq'",
+                      tags$style("#mala{ font-size: 20px; }"),
+                      textOutput("mala")
+                    ),
+                    conditionalPanel(
+                      condition = "input.sets == 'mea'|input.sets == 'mum'|input.sets == 'rub'",
+                      tags$style("#vacc{ font-size: 20px; }"),
+                      textOutput("vacc")
+                      
                     )
-                ),
-                width = validateCssUnit("70%")
-              ),
-              useShinyjs(),
-              conditionalPanel(
-                condition = "input.sets == 'gve'",
-                div(style = "display: inline-block;vertical-align:top; width: 200px;", 
-                  actionButton("comments1", "Comments", style = "color: #fff; 
-                               background-color: #9874e3"))
-              ),
-              conditionalPanel(
-                condition = "input.sets == 'amvq'",
-                div(style = "display: inline-block;vertical-align:top; width: 200px;", 
-                  actionButton("comments2", "Comments", style = "color: #fff; 
-                               background-color: #9874e3"))
-              ),
-              conditionalPanel(
-                condition = "input.sets== 'rub'",
-                div(style = "display: inline-block;vertical-align:top; width: 200px;", 
-                    actionButton("comments3", "Comments", style = "color: #fff; background-color: #9874e3"))
-                
-              ),
-              
-              h3(strong("Background Knowledge")),
-              conditionalPanel(
-                condition = "input.sets == 'gvc'|input.sets == 'gve'",
-                tags$style("#nsclc{ font-size: 20px; }"),
-                textOutput("nsclc")
-              ),
-              conditionalPanel(
-                condition = "input.sets == 'avq'|input.sets == 'amvq'",
-                tags$style("#mala{ font-size: 20px; }"),
-                textOutput("mala")
-              ),
-              conditionalPanel(
-                condition = "input.sets == 'mea'|input.sets == 'mum'|input.sets == 'rub'",
-                tags$style("#vacc{ font-size: 20px; }"),
-                textOutput("vacc")
-                
-              )
-            ),
-            
-            mainPanel( 
-              conditionalPanel(
-                condition = "input.sets == 'gvc'",
-                h3(p(strong("Gefitinib vs. Chemotherapy"),
-                  style = "text-align: center"
-                )),
-                h4(p(("Those two studies come from two individual studies."),
-                  style = "text-align: center"
-                )),
-                img(src = "gvc.PNG",
-                    height = "100%", 
-                    width = "90%",
-                    algin = "middle"
-                )
-              ),
-              
-              conditionalPanel(
-                condition = "input.sets == 'gve'",
-                h3(p(strong("Gefitinib vs. Erlotinib"),
-                  style = "text-align: center")),
-                h4(p(("Those three studies come from three individual studies."),
-                  style = "text-align: center"
-                )),
-                img(
-                  src = "gve.PNG",
-                  height = "100%",
-                  width = "90%",
-                  algin = "middle"
-                ),
-                shinyjs::hidden(
-                  wellPanel(id = "nsclc_comments",
-                    HTML(markdownToHTML(fragment.only=TRUE, 
-                      text=c("The first analysis in this section generally compares
+                  ),
+                  
+                  mainPanel( 
+                    conditionalPanel(
+                      condition = "input.sets == 'gvc'",
+                      h3(p(strong("Gefitinib vs. Chemotherapy"),
+                           style = "text-align: center"
+                      )),
+                      h4(p(("Those two studies come from two individual studies."),
+                           style = "text-align: center"
+                      )),
+                      img(src = "gvc.PNG",
+                          height = "100%", 
+                          width = "90%",
+                          algin = "middle"
+                      )
+                    ),
+                    
+                    conditionalPanel(
+                      condition = "input.sets == 'gve'",
+                      h3(p(strong("Gefitinib vs. Erlotinib"),
+                           style = "text-align: center")),
+                      h4(p(("Those three studies come from three individual studies."),
+                           style = "text-align: center"
+                      )),
+                      img(
+                        src = "gve.PNG",
+                        height = "100%",
+                        width = "90%",
+                        algin = "middle"
+                      ),
+                      shinyjs::hidden(
+                        wellPanel(id = "nsclc_comments",
+                                  HTML(markdownToHTML(fragment.only=TRUE, 
+                                                      text=c("The first analysis in this section generally compares
                              the effect of targeted therapy and chemotherapy.`Summary
                              OR = 1.4` which is greater than 1. However,
                              the CI of the `Summary OR` contains 1. So we fail to
@@ -478,46 +507,46 @@ ui <- list(
                              medicine is about equal in this case. In two analyses,
                              we both fail to reject the null. However, targeted
                              therapy in general is better than chemotherapy.")
+                                  )
+                                  )
+                        )
                       )
-                    )
-                  )
-                )
-              ),
-              
-              conditionalPanel(
-                condition = "input.sets == 'avq'",
-                h3(p(strong("Artesunate-based therapies vs. Quinine"),
-                  style = "text-align: center")),
-                h4(p(strong("(uncomplicated malaria in pregnancy)"),
-                  style = "text-align: center")),
-                h4(p(("Those three studies come from three individual studies."),
-                  style = "text-align: center")),
-                img(
-                  src = "avq.PNG",
-                  height = "100%",
-                  width = "90%",
-                  algin = "middle"
-                  )
-                ),
-              conditionalPanel(
-                condition = "input.sets == 'amvq'",
-                h3(p(strong(
-                "Artemether vs. Quinine"),
-                  style = "text-align: center")),
-                h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"),
-                  style = "text-align: center")),
-                h4(p(("Those seven studies come from seven individual studies."),
-                 style = "text-align: center")),
-                img(
-                  src = "amvq.PNG",
-                  height = "100%",
-                  width = "90%",
-                  algin = "middle"
-                ),
-                shinyjs::hidden(
-                wellPanel(id = "mala_comments",
-                  HTML(markdownToHTML(fragment.only=TRUE, 
-                    text=c("The first analysis in this section compares the
+                    ),
+                    
+                    conditionalPanel(
+                      condition = "input.sets == 'avq'",
+                      h3(p(strong("Artesunate-based therapies vs. Quinine"),
+                           style = "text-align: center")),
+                      h4(p(strong("(uncomplicated malaria in pregnancy)"),
+                           style = "text-align: center")),
+                      h4(p(("Those three studies come from three individual studies."),
+                           style = "text-align: center")),
+                      img(
+                        src = "avq.PNG",
+                        height = "100%",
+                        width = "90%",
+                        algin = "middle"
+                      )
+                    ),
+                    conditionalPanel(
+                      condition = "input.sets == 'amvq'",
+                      h3(p(strong(
+                        "Artemether vs. Quinine"),
+                        style = "text-align: center")),
+                      h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"),
+                           style = "text-align: center")),
+                      h4(p(("Those seven studies come from seven individual studies."),
+                           style = "text-align: center")),
+                      img(
+                        src = "amvq.PNG",
+                        height = "100%",
+                        width = "90%",
+                        algin = "middle"
+                      ),
+                      shinyjs::hidden(
+                        wellPanel(id = "mala_comments",
+                                  HTML(markdownToHTML(fragment.only=TRUE, 
+                                                      text=c("The first analysis in this section compares the
                            effect of artesunate-based therapies and quinine in 
                            treating uncomplicated malaria in pregnancy. Although
                            we only have data from three studies, the advantage
@@ -528,57 +557,57 @@ ui <- list(
                            than 15 years of age. This time, `Summary OR = 0.933`.
                            However, the CI of the `Summary OR` contains 1. So the
                            effectiveness of the two medicine is about equal in this case."
-                          )
+                                                      )
+                                  )
+                                  )
                         )
                       )
-                    )
-                  )
-                ),
-              
-              conditionalPanel(
-              condition = "input.sets == 'mea'",
-              h3(p(strong("MMRV vs. MMR+V Against Measles"),
-                style = "text-align: center")),
-              h4(p(("Those nine studies come from nine individual studies."),
-               style = "text-align: center")),
-              img(
-                src = "mea.PNG",
-                height = "100%",
-                width = "90%",
-                algin = "middle"
-                )
-              ),
-              
-              conditionalPanel(
-                condition = "input.sets == 'mum'",
-                h3(p(
-                strong("MMRV vs. MMR+V Against Mumps"),
-                style = "text-align: center")),
-                h4(p(("Those eleven studies come from eleven individual studies."),
-                 style = "text-align: center")),
-                img(
-                  src = "mum.PNG",
-                  height = "100%",
-                  width = "90%",
-                  algin = "middle"
-                )
-              ),
-              conditionalPanel(
-                condition = "input.sets == 'rub'",
-                h3(p(strong("MMRV vs. MMR+V Against Rubella"),
-                  style = "text-align: center")),
-                h4(p(("Those five studies come from five individual studies."),
-                 style = "text-align: center")),
-                img(
-                  src = "rub.PNG",
-                  height = "100%",
-                  width = "90%",
-                  algin = "middle"
-                ),
-                shinyjs::hidden(
-                wellPanel(id = "vacc_comments",
-                  HTML(markdownToHTML(fragment.only=TRUE, 
-                    text=c("The three analyses in this section compare the MMRV
+                    ),
+                    
+                    conditionalPanel(
+                      condition = "input.sets == 'mea'",
+                      h3(p(strong("MMRV vs. MMR+V Against Measles"),
+                           style = "text-align: center")),
+                      h4(p(("Those nine studies come from nine individual studies."),
+                           style = "text-align: center")),
+                      img(
+                        src = "mea.PNG",
+                        height = "100%",
+                        width = "90%",
+                        algin = "middle"
+                      )
+                    ),
+                    
+                    conditionalPanel(
+                      condition = "input.sets == 'mum'",
+                      h3(p(
+                        strong("MMRV vs. MMR+V Against Mumps"),
+                        style = "text-align: center")),
+                      h4(p(("Those eleven studies come from eleven individual studies."),
+                           style = "text-align: center")),
+                      img(
+                        src = "mum.PNG",
+                        height = "100%",
+                        width = "90%",
+                        algin = "middle"
+                      )
+                    ),
+                    conditionalPanel(
+                      condition = "input.sets == 'rub'",
+                      h3(p(strong("MMRV vs. MMR+V Against Rubella"),
+                           style = "text-align: center")),
+                      h4(p(("Those five studies come from five individual studies."),
+                           style = "text-align: center")),
+                      img(
+                        src = "rub.PNG",
+                        height = "100%",
+                        width = "90%",
+                        algin = "middle"
+                      ),
+                      shinyjs::hidden(
+                        wellPanel(id = "vacc_comments",
+                                  HTML(markdownToHTML(fragment.only=TRUE, 
+                                                      text=c("The three analyses in this section compare the MMRV
                            vaccine and the MMR + V vaccine in preventing measles,
                            mumps, and rubella. Intuitively, we would assume that
                            the effectiveness of the two kinds of vaccine is equal.
@@ -586,13 +615,13 @@ ui <- list(
                            and the CI does not contain 1. It suggests that the MMRV
                            vaccine against mumps is less effective than the MMR + V
                            vaccine. It is an interesting finding.")))
-                          )
                         )
                       )
                     )
                   )
-                ),
-
+                )
+        ),
+        
         #### Set up the References Page ----
         tabItem(
           tabName = "references",
@@ -720,7 +749,7 @@ ui <- list(
             class = "hangingindent",
             "Wickham, H. (2021). tidyverse: Easily Install and Load the 'Tidyverse'.
             R package version 1.3.1. Available from https://CRAN.R-project.org/package=tidyverse"
-          ),
+          )
         )
       )
     )
@@ -761,31 +790,19 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$start2, {
-    updateButton(
-      session = session, 
-      inputId = "answer", 
-      disabled = TRUE)
+    updateButton(session, "answer", disabled = TRUE)
   })
   
   observeEvent(input$challenge, {
-    updateButton(
-      session = session,
-      inputId = "answer",
-      disabled = FALSE)
+    updateButton(session, "answer", disabled = FALSE)
   })
   
   observeEvent(input$answer, {
-    updateButton(
-      session = session,
-      inputId = "answer",
-      disabled = TRUE)
+    updateButton(session, "answer", disabled = TRUE)
   })
   
   observeEvent(input$begin, {
-    updateButton(
-      session = session,
-      inputId = "submit",
-      disabled = TRUE)
+    updateButton(session, "submit", disabled = TRUE)
   })
   
   
@@ -987,9 +1004,9 @@ server <- function(input, output, session) {
     zvalue = qnorm(((1 - input$dlevel)/2), lower.tail = F)
     sampleRatio = (data50()[,2]*data50()[,5])/(data50()[,3]*data50()[,4])
     lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/data50()[,2] + 
-                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
+                                                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
     upperbound = exp(log(sampleRatio) + zvalue*sqrt(1/data50()[,2] + 
-                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
+                                                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
     data.frame(idx = rep(1:50), 
                sampleRatio,
                lowerbound,
@@ -1002,9 +1019,9 @@ server <- function(input, output, session) {
     zvalue = qnorm(((1 - input$dlevel1)/2), lower.tail = F)
     sampleRatio = (newdata50()[,2]*newdata50()[,5])/(newdata50()[,3]*newdata50()[,4])
     lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/newdata50()[,2] + 
-                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
+                                                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
     upperbound = exp(log(sampleRatio) + zvalue*sqrt(1/newdata50()[,2] +
-                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
+                                                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
     data.frame(idx = rep(1:50), 
                sampleRatio,
                lowerbound,
@@ -1207,7 +1224,7 @@ server <- function(input, output, session) {
              message = "Please input sample size")
       )
       cratio <- round(((OneSample()[,2])*(OneSample()[,5]) /
-                       (OneSample()[,3]*OneSample()[,4])), 2)
+                         (OneSample()[,3]*OneSample()[,4])), 2)
       cratio
     }
   })
@@ -1261,11 +1278,11 @@ server <- function(input, output, session) {
     
     
     tabletext <- cbind(c("","Study",myMH$names,NA,"Summary"),
-                     c("Treatment","(effective)",ptrt,NA,NA),
-                     c("Treatment","(non-effective)",pctrl, NA,NA),
-                     c("Control","(effective)",(ntrt-ptrt),NA,NA),
-                     c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
-                     c("","OR",format((exp(myMH$logOR)),digits = 3),NA,format((exp(myMH$logMH)),digits=3)))
+                       c("Treatment","(effective)",ptrt,NA,NA),
+                       c("Treatment","(non-effective)",pctrl, NA,NA),
+                       c("Control","(effective)",(ntrt-ptrt),NA,NA),
+                       c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
+                       c("","OR",format((exp(myMH$logOR)),digits = 3),NA,format((exp(myMH$logMH)),digits=3)))
   }
   
   
