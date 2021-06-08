@@ -132,7 +132,8 @@ ui <- list(
             (so 4 is the odds ratio)."),
           
           h3("How to calculate the confidence interval of an odds ratio?"),
-          tags$img(src = 'newtable.PNG', width = "30%"),
+          tags$img(src = 'newtable.PNG', width = "30%",
+                   alt = "Sample table confidence interval and odds ratio"),
           
           p("The natural estimator of \\(\\theta\\) is the sample cross-product 
             ratio, \\(\\widehat{\\theta}=\\frac{ad}{bc}\\)"),
@@ -217,7 +218,7 @@ ui <- list(
                 height = "100%",
                 width = "90%",
                 algin = "middle", 
-                alt = "Count of enrollment by Residency between University Park 
+                alt = "Counts of enrollment by Residency between University Park 
                       and Commonwealth Campuses"
               ),
               h4("Percentage: "),
