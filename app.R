@@ -3,22 +3,22 @@ library(shiny)
 library(shinyalert) 
 library(shinyBS)  
 library(shinyjs)  
-library(shinyDND) 
-library(shinycssloaders)  
+#library(shinyDND) 
+#library(shinycssloaders)  
 library(shinydashboard)  
 library(shinyWidgets) 
-library(leaps)  
+#library(leaps)  
 library(ggplot2)  
 library(markdown)
-library(png) 
-library(simstudy) 
+#library(png) 
+#library(simstudy) 
 library(dplyr) 
-library(data.table)
+#library(data.table)
 library(scales)
-library(Hmisc)
-library(colorspace)
-library(tidyverse)
-library(broom)
+#library(Hmisc)
+#library(colorspace)
+#library(tidyverse)
+#library(broom)
 library(rmeta)
 library(boastUtils)  
 
@@ -199,6 +199,13 @@ ui <- list(
           
           h2("Odds Ratio for Enrollment by Residency between University Park 
              and Commonwealth Campuses"),
+          p("Below are the tables for the counts and percentages of enrollment by
+            residency between University Park and the Commonwealth Campuses. Use
+            the slide controls to change the confidence level interval as well as
+            the sample sizes taken from University Park and the Commonwealth campuses.
+            Observe the difference between confidence intervals for each sample.
+            Check below the plot to see the sample counts, percentages, and odds
+            ratio."),
           br(), 
           sidebarLayout(
             sidebarPanel(
@@ -209,14 +216,18 @@ ui <- list(
                 src = "2016Count.PNG",
                 height = "100%",
                 width = "90%",
-                algin = "middle"
+                algin = "middle", 
+                alt = "Count of enrollment by Residency between University Park 
+                      and Commonwealth Campuses"
               ),
               h4("Percentage: "),
               img(
                 src = "2016Diff.PNG",
                 height = "100%",
                 width = "90%",
-                algin = "middle"
+                algin = "middle", 
+                alt = "Percentage of enrollment by Residency between University Park 
+                      and Commonwealth Campuses"
               ),
               br(),
               br(),
@@ -337,7 +348,10 @@ ui <- list(
               bsPopover(
                 "CIplot",
                 "Confidence Interval Plot",
-                "The orange lines indicate a confidence interval that smaller or greater than 1 and the purple lines indicate confidence intervas containing 1. Click on an interval to see detailed information on the right-hand side for the chosen sample.",
+                "The orange lines indicate a confidence interval that smaller or
+                greater than 1 and the purple lines indicate confidence intervas
+                containing 1. Click on an interval to see detailed information on
+                the right-hand side for the chosen sample.",
                 trigger =
                   "hover",
                 placement = "bottom"
@@ -359,8 +373,12 @@ ui <- list(
               )), 
               
               br(),
-              actionButton("newSample", "Generate 50 New Samples", icon("retweet"),
-                           style = "color: white; background-color: #ff7532"),
+              actionButton(
+                inputId = "newSample", 
+                label = "Generate 50 New Samples", 
+                icon("retweet"),
+                style = "color: white; background-color: #ff7532"),
+              
               bsPopover(
                 "newSample",
                 "Note",
@@ -368,7 +386,9 @@ ui <- list(
                 trigger =
                   "hover",
                 placement = "center"
-              )
+              ),
+              
+              br()
             ), 
             position = "left"
             
@@ -390,14 +410,15 @@ ui <- list(
         
         #### Set up a Game Page ----
         tabItem(tabName = "analysis",
-                h2("Real Data Analysis"), 
+                h2("Real Data Analysis"),
+                br(), 
                 sidebarLayout(
                   sidebarPanel(
                     tags$style(
                       type = 'text/css',
                       ".selectize-input { font-size: 18px; line-height: 18px;} .selectize-dropdown { font-size: 19px; line-height: 19px; }"
                     ),
-                    h3(strong("Choose a Dataset Below")),
+                    h3("Choose a Dataset Below"),
                     selectInput(
                       "sets",
                       NULL,
@@ -443,7 +464,7 @@ ui <- list(
                       
                     ),
                     
-                    h3(strong("Background Knowledge")),
+                    h3("Background Knowledge"),
                     conditionalPanel(
                       condition = "input.sets == 'gvc'|input.sets == 'gve'",
                       tags$style("#nsclc{ font-size: 20px; }"),
@@ -493,22 +514,25 @@ ui <- list(
                       ),
                       shinyjs::hidden(
                         wellPanel(id = "nsclc_comments",
-                                  HTML(markdownToHTML(fragment.only=TRUE, 
-                                                      text=c("The first analysis in this section generally compares
-                             the effect of targeted therapy and chemotherapy.`Summary
-                             OR = 1.4` which is greater than 1. However,
-                             the CI of the `Summary OR` contains 1. So we fail to
-                             reject that the effectiveness of the two ways of treatments
-                             is about equal in this case.Then the second comparison
-                             as shown above is between two medicine within targeted
-                             therapy treatment. This time, `Summary OR = 0.961`.
-                             However, the CI of the `Summary OR` contains 1. So
-                             we fail to reject that the effectiveness of the two
-                             medicine is about equal in this case. In two analyses,
-                             we both fail to reject the null. However, targeted
-                             therapy in general is better than chemotherapy.")
-                                  )
-                                  )
+                          HTML(markdownToHTML(fragment.only = TRUE, 
+                            text = c("The first analysis in this section generally
+                                     compares the effect of targeted therapy and
+                                     chemotherapy.`Summary OR = 1.4` which is greater
+                                     than 1. However, the CI of the `Summary OR` 
+                                     contains 1. So we fail to reject that the
+                                     effectiveness of the two ways of treatments 
+                                     is about equal in this case. Then the second
+                                     comparison as shown above is between two
+                                     medicine within targeted therapy treatment.
+                                     This time, `Summary OR = 0.961`. However, the
+                                     CI of the `Summary OR` contains 1. So we fail
+                                     to reject that the effectiveness of the two medicine
+                                     is about equal in this case. In two analyses,
+                                     we both fail to reject the null. However,
+                                     targeted therapy in general is better than
+                                     chemotherapy.")
+                            )
+                          )
                         )
                       )
                     ),
@@ -545,21 +569,19 @@ ui <- list(
                       ),
                       shinyjs::hidden(
                         wellPanel(id = "mala_comments",
-                                  HTML(markdownToHTML(fragment.only=TRUE, 
-                                                      text=c("The first analysis in this section compares the
-                           effect of artesunate-based therapies and quinine in 
-                           treating uncomplicated malaria in pregnancy. Although
-                           we only have data from three studies, the advantage
-                           of using artesunate-based therapies is obvious:`Summary
-                           OR = 7.59` which is greater than 1. Then the second
-                           analysis as shown above is between artemether and quinine
-                           in treating cerebral malaria in African children less
-                           than 15 years of age. This time, `Summary OR = 0.933`.
-                           However, the CI of the `Summary OR` contains 1. So the
-                           effectiveness of the two medicine is about equal in this case."
-                                                      )
-                                  )
-                                  )
+                            HTML(markdownToHTML(fragment.only = TRUE, 
+                              text = c("The first analysis in this section compares the
+                                       effect of artesunate-based therapies and quinine in 
+                                       treating uncomplicated malaria in pregnancy. Although
+                                       we only have data from three studies, the advantage
+                                       of using artesunate-based therapies is obvious:`Summary
+                                       OR = 7.59` which is greater than 1. Then the second
+                                       analysis as shown above is between artemether and quinine
+                                       in treating cerebral malaria in African children less
+                                       than 15 years of age. This time, `Summary OR = 0.933`.
+                                       However, the CI of the `Summary OR` contains 1. So the
+                                       effectiveness of the two medicine is about equal in this case."))
+                           )
                         )
                       )
                     ),
@@ -606,15 +628,15 @@ ui <- list(
                       ),
                       shinyjs::hidden(
                         wellPanel(id = "vacc_comments",
-                                  HTML(markdownToHTML(fragment.only=TRUE, 
-                                                      text=c("The three analyses in this section compare the MMRV
-                           vaccine and the MMR + V vaccine in preventing measles,
-                           mumps, and rubella. Intuitively, we would assume that
-                           the effectiveness of the two kinds of vaccine is equal.
-                           However, in the second comparison, `Summary OR = 0.483`
-                           and the CI does not contain 1. It suggests that the MMRV
-                           vaccine against mumps is less effective than the MMR + V
-                           vaccine. It is an interesting finding.")))
+                          HTML(markdownToHTML(fragment.only = TRUE, 
+                            text = c("The three analyses in this section compare the MMRV
+                            vaccine and the MMR + V vaccine in preventing measles,
+                            mumps, and rubella. Intuitively, we would assume that
+                            the effectiveness of the two kinds of vaccine is equal.
+                            However, in the second comparison, `Summary OR = 0.483`
+                            and the CI does not contain 1. It suggests that the MMRV
+                            vaccine against mumps is less effective than the MMR + V
+                            vaccine. It is an interesting finding.")))
                         )
                       )
                     )
@@ -627,6 +649,13 @@ ui <- list(
           tabName = "references",
           withMathJax(),
           h2("References"),
+          p(
+            class = "hangingindent",
+            "Allaire, JJ., Horner, J. (2019). markdown: Render Markdown with the
+              C Library 'Sundown'. R package version 1.1. Available from
+              https://CRAN.R-project.org/package=markdown"
+          ),
+          
           p(
             class = "hangingindent",
             "Attali, D. (2020). shinyjs: Easily Improve the User Experience of
@@ -667,39 +696,6 @@ ui <- list(
           
           p(
             class = "hangingindent",
-            "Goldfeld, K., Wujciak-Jens, J. (2020). simstudy: Simulation of Study
-            Data. R package version 0.2.1. Available from https://CRAN.R-project.
-            org/package=simstudy"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Harrell, F.E., Dupont, C. (2021). Hmisc: Harrell Miscellaneous. R 
-            package version 4.5-0. Available from https://CRAN.R-project.org/package=Hmisc"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Hoffer, A. (2016). shinyDND: Shiny Drag-n-Drop. R package version 
-            0.1.0. Available from https://CRAN.R-project.org/package=shinyDND"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Ihaka, R., Murrell, P., Hornik, K., Fisher, J.C., Stauffer, R., Wilke, C.o., 
-            McWhite, C.D., Zeileis, A. (2021). colorspace: A Toolbox for Manipulating
-            and Assessing Colors and Palettes. R package version 2.0-1. 
-            Available from https://CRAN.R-project.org/package=colorspace"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Lumley, T., Miller, A. (2020). leaps: Regression Subset Selection. 
-            R package version 3.1. Available from https://CRAN.R-project.org/package=leaps"
-          ),
-          
-          p(
-            class = "hangingindent",
             "Lumley, T. (2018). rmeta: Meta-Analysis. R package version 3.0. Available
             from https://CRAN.R-project.org/package=rmeta"
           ),
@@ -709,19 +705,6 @@ ui <- list(
             "Perrier, V., Meyer, F., and Granjon, D. (2020). shinyWidgets: 
             Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
             from https://CRAN.R-project.org/package=shinyWidgets"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Sali, A., Hass, L., Attali, D. (2020). shinycssloaders: Add Loading
-            Animations to a 'shiny' Output While It's Recalculating. R package
-            version 1.0.0. Available from https://CRAN.R-project.org/package=shinycssloaders"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Urbanek, S. (2013). png: Read and write PNG images. R package
-            version 0.1-7. Available from https://CRAN.R-project.org/package=png"
           ),
           
           p(
@@ -743,12 +726,6 @@ ui <- list(
             class = "hangingindent",
             "Wickham, H., Seidel, D. (2020). scales: Scale Functions for Visualization.
             R package version 1.1.1. Available from https://CRAN.R-project.org/package=scales"
-          ),
-          
-          p(
-            class = "hangingindent",
-            "Wickham, H. (2021). tidyverse: Easily Install and Load the 'Tidyverse'.
-            R package version 1.3.1. Available from https://CRAN.R-project.org/package=tidyverse"
           )
         )
       )
