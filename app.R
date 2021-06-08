@@ -467,17 +467,17 @@ ui <- list(
                     h3("Background Knowledge"),
                     conditionalPanel(
                       condition = "input.sets == 'gvc'|input.sets == 'gve'",
-                      tags$style("#nsclc{ font-size: 20px; }"),
+                      tags$style("#nsclc{ font-size: 15px; }"),
                       textOutput("nsclc")
                     ),
                     conditionalPanel(
                       condition = "input.sets == 'avq'|input.sets == 'amvq'",
-                      tags$style("#mala{ font-size: 20px; }"),
+                      tags$style("#mala{ font-size: 15px; }"),
                       textOutput("mala")
                     ),
                     conditionalPanel(
                       condition = "input.sets == 'mea'|input.sets == 'mum'|input.sets == 'rub'",
-                      tags$style("#vacc{ font-size: 20px; }"),
+                      tags$style("#vacc{ font-size: 15px; }"),
                       textOutput("vacc")
                       
                     )
