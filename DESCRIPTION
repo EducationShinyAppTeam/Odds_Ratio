@@ -1,20 +1,21 @@
-Title: Sample App - A Lengthy Title
-ShortName: Sample App
-Date: 2021-05-13
-Lifecycle: experimental
+Title: Odds Ratio - A Lengthy Title
+ShortName: Odds Ratio
+Date: 2021-06-9
+Lifecycle: maturing
 Authors@R: c(
-    person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut", "cre")),
-    person(given = "Robert", family = "Carey", email = "rpc5102@psu.edu", role = c("aut"))
+    person(given = "Jingjun", family = "Wang", email = "", role = c("aut", "cre")),
+    person(given = "Shravani", family = "Samala", email = "sjs7049@psu.edu", role = c("aut"))
   )
-Chapter: Sample Chapter
-Description: This app is focused on the common types of xyz.
+Chapter: Categorical Data
+Description: This app explores confidence intervals for odds ratios and their use
+              in the meta-analysis of real data.
 LearningObjectives: c(
-    "The student will learn to understand Concept A in way z.",
-    "The student will learn to understand Concept B as description y."
+    "The student will learn how changing sample sizes changes the odds ratio.",
+    "The student will learn how changing sample sizes affects confidence intervals."
   )
 DisplayMode: Normal
-URL: https://psu-eberly.shinyapps.io/Sample_App
-BugReports: https://github.com/EducationShinyAppTeam/Sample_App/issues
+URL: https://psu-eberly.shinyapps.io/Odds_Ratio 
+BugReports: https://github.com/EducationShinyAppTeam/Odds_Ratio/issues
 License: CC-BY-NC-SA-4.0
 Tags: simulation
 Type: Shiny
