@@ -163,8 +163,9 @@ ui <- list(
           p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\)."),
           br(),
           p("It is the ratio of the odds of lung cancer in smokers divided by the 
-            odds of lung cancer in non-smokers: \\(\\frac{\\frac{647}{662}}
-            {\\frac{2}{27}}= 14.04\\)."),
+            odds of lung cancer in non-smokers: \\(\\frac{647}{662}\\big/\\frac{2}{27}=14.04\\)"), 
+            #\\(\\frac{\\frac{647}{662}}
+            #{\\frac{2}{27}}= 14.04\\)."),
           br(),
           p("Here, the odds ratio is greater than 1."),
           br(),
