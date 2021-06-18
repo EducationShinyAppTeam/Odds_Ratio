@@ -99,7 +99,7 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p("This app was developed and coded by Jingjun Wang and updated by 
-            Shravani Samala",
+            Shravani Samala.",
             br(),
             br(),
             br(),
