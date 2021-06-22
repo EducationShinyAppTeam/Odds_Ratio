@@ -88,7 +88,7 @@ ui <- list(
             style = "text-align: center",
             bsButton(
               inputId = "go1",
-              label = "GO!",
+              label = "Prerequisites!",
               size = "large",
               icon = icon("book"),
               style = "default"
@@ -130,8 +130,8 @@ ui <- list(
           
           p("The properties of \\(\\hat{\\theta}\\) are easily established under
             multinomial sampling, but the same properties will hold under Poisson
-            or product-multinomial sampling with either the row totals or column
-            totals (but not both) regarded as fixed."),
+            or product-multinomial sampling with either the row totals and/or column
+            totals regarded as fixed."),
           
           p("As with the relative risk, the log-odds ratio \\(\\log\\hat{\\theta}\\)
             has a better normal approximation than \\(\\hat{\\theta}\\) does. 
@@ -162,7 +162,7 @@ ui <- list(
           br(),
           p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\)."),
           br(),
-          p("It is the ratio of the odds of lung cancer in smokers divided by the 
+          p("The ratio of the odds of lung cancer in smokers divided by the 
             odds of lung cancer in non-smokers: \\(\\frac{647}{662}\\big/\\frac{2}{27}=14.04\\)"), 
             #\\(\\frac{\\frac{647}{662}}
             #{\\frac{2}{27}}= 14.04\\)."),
@@ -189,8 +189,7 @@ ui <- list(
         tabItem(
           tabName = "explore",
           
-          h2("Odds Ratio for Enrollment by Residency between University Park 
-             and Commonwealth Campuses"),
+          h2("Residency Status Differences Between Campuses"),
           p("Below are the tables for the counts and percentages of enrollment by
             residency between University Park and the Commonwealth Campuses. Use
             the slide controls to change the confidence level interval as well as
