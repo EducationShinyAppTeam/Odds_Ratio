@@ -484,7 +484,7 @@ ui <- list(
                       h3(p(strong("Gefitinib vs. Chemotherapy"),
                            style = "text-align: center"
                       )),
-                      h4(p(("Those two studies come from two individual studies."),
+                      h4(p(("Data from two individual studies."),
                            style = "text-align: center"
                       )),
                       img(src = "gvc.PNG",
@@ -498,7 +498,7 @@ ui <- list(
                       condition = "input.sets == 'gve'",
                       h3(p(strong("Gefitinib vs. Erlotinib"),
                            style = "text-align: center")),
-                      h4(p(("Those three studies come from three individual studies."),
+                      h4(p(("Data from three individual studies."),
                            style = "text-align: center"
                       )),
                       img(
@@ -538,7 +538,7 @@ ui <- list(
                            style = "text-align: center")),
                       h4(p(strong("(uncomplicated malaria in pregnancy)"),
                            style = "text-align: center")),
-                      h4(p(("Those three studies come from three individual studies."),
+                      h4(p(("Data from three individual studies."),
                            style = "text-align: center")),
                       img(
                         src = "avq.PNG",
@@ -554,7 +554,7 @@ ui <- list(
                         style = "text-align: center")),
                       h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"),
                            style = "text-align: center")),
-                      h4(p(("Those seven studies come from seven individual studies."),
+                      h4(p(("Data from seven individual studies."),
                            style = "text-align: center")),
                       img(
                         src = "amvq.PNG",
@@ -585,7 +585,7 @@ ui <- list(
                       condition = "input.sets == 'mea'",
                       h3(p(strong("MMRV vs. MMR+V Against Measles"),
                            style = "text-align: center")),
-                      h4(p(("Those nine studies come from nine individual studies."),
+                      h4(p(("Data from nine individual studies."),
                            style = "text-align: center")),
                       img(
                         src = "mea.PNG",
@@ -600,7 +600,7 @@ ui <- list(
                       h3(p(
                         strong("MMRV vs. MMR+V Against Mumps"),
                         style = "text-align: center")),
-                      h4(p(("Those eleven studies come from eleven individual studies."),
+                      h4(p(("Data from eleven individual studies."),
                            style = "text-align: center")),
                       img(
                         src = "mum.PNG",
@@ -613,7 +613,7 @@ ui <- list(
                       condition = "input.sets == 'rub'",
                       h3(p(strong("MMRV vs. MMR+V Against Rubella"),
                            style = "text-align: center")),
-                      h4(p(("Those five studies come from five individual studies."),
+                      h4(p(("Data from five individual studies."),
                            style = "text-align: center")),
                       img(
                         src = "rub.PNG",
