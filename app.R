@@ -53,7 +53,7 @@ ui <- list(
         menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
-        menuItem("Real Data Analysis", tabName = "analysis", icon = icon("cogs")), 
+        menuItem("Example", tabName = "example", icon = icon("cogs")), 
         menuItem("References", tabName = "references", icon = icon("leanpub"))
         
       ),
@@ -404,8 +404,8 @@ ui <- list(
         
         
         #### Set up a Game Page ----
-        tabItem(tabName = "analysis",
-                h2("Real Data Analysis"),
+        tabItem(tabName = "example",
+                h2("Example"),
                 br(), 
                 sidebarLayout(
                   sidebarPanel(
@@ -758,7 +758,7 @@ server <- function(input, output, session) {
     updateTabItems(
       session = session,
       inputId = "pages",
-      selected = "analysis")
+      selected = "example")
   })
   
   observeEvent(input$start2, {
@@ -1312,7 +1312,7 @@ server <- function(input, output, session) {
   output$nsclc = renderText("About 80% to 85% of lung cancers are non-small cell 
                             lung cancer (NSCLC). The typical treatments include
                             chemotherapy, radiation therapy and targeted therapy. 
-                            Gefitinib and Erlotinib are two kind of medicine used
+                            Gefitinib and Erlotinib are two kinds of medicine used
                             in NSCLC targeted therapy. In the two comparisons,
                             Gefitinib represents treatment groups.")
   
