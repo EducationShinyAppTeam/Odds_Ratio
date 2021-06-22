@@ -191,12 +191,12 @@ ui <- list(
           
           h2("Residency Status Differences Between Campuses"),
           p("Below are the tables for the counts and percentages of enrollment by
-            residency between University Park and the Commonwealth Campuses. Use
-            the slide controls to change the confidence level interval as well as
-            the sample sizes taken from University Park and the Commonwealth campuses.
-            Observe the difference between confidence intervals for each sample.
-            Check below the plot to see the sample counts, percentages, and odds
-            ratio."),
+            residency between University Park and the Commonwealth Campuses of 
+            Penn State University. Use the slide controls to change the confidence
+            level interval as well as the sample sizes taken from University Park
+            and the Commonwealth campuses. Observe the difference between confidence
+            intervals for each sample. Check below the plot to see the sample counts,
+            percentages, and odds ratio."),
           br(), 
           sidebarLayout(
             sidebarPanel(
@@ -348,6 +348,10 @@ ui <- list(
                 placement = "bottom"
               ), 
               
+              p("Black vertical line for null theta & green vertical line 
+             for true odds ratio. Click on an interval (dot) to show the underlying
+             data", style="text-align: center"), 
+             
               fluidRow(column(width = 4, 
                 h4(strong("Sample Counts:")),
                 span(tableOutput("sampleinfotable2"), style = "font-size: 18px")
@@ -1067,8 +1071,7 @@ server <- function(input, output, session) {
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel1, "% Confidence Intervals"),
-             x = "",y ="black vertical line for null theta & green vertical line 
-             for true odds ratio",hjust = 5, vjust = 1) +
+             x="",y="") +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
@@ -1101,8 +1104,7 @@ server <- function(input, output, session) {
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
-             x = "",y = "black vertical line for null theta & green vertical line
-             for true odds ratio",hjust = 5, vjust = 1) +
+             x = "",y = "") +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
               axis.ticks.y = element_blank(),
