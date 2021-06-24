@@ -691,6 +691,11 @@ ui <- list(
           
           p(
             class = "hangingindent",
+            "Lock, Robin H. Statistics: Unlocking the Power of Data. Wiley, 2013. "
+          ),
+          
+          p(
+            class = "hangingindent",
             "Lumley, T. (2018). rmeta: Meta-Analysis. R package version 3.0. Available
             from https://CRAN.R-project.org/package=rmeta"
           ),
