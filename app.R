@@ -73,9 +73,10 @@ ui <- list(
           p("About: This app explores confidence intervals for odds ratios and 
             their use in the meta-analysis of real data."),
           h2("Instructions"),
-          p("This information will change depending on what you want to do."),
           tags$ol(
-            tags$li("Click the explore button to enter the explore page."),
+            tags$li("Click on the prerequisites button to review/learn how 
+                    to calculate odds ratio"), 
+            tags$li("Click the go button to enter the explore page."),
             tags$li("Explore either the equal sample size or different sample
                     size situation. Then use the slider bars to change the
                     confidence level or sample size(s)."),
