@@ -159,13 +159,13 @@ ui <- list(
           tags$img(src = 'sample_question.PNG', width = "30%"),
           br(),
           br(),
-          p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}{662}= 1.04\\)"),
+          p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}{622}= 1.04\\)"),
           br(),
           p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\)."),
           br(),
           p("The ratio of the odds of lung cancer in smokers divided by the 
-            odds of lung cancer in non-smokers: \\(\\frac{647}{662}\\big/\\frac{2}{27}=14.04\\)"), 
-            #\\(\\frac{\\frac{647}{662}}
+            odds of lung cancer in non-smokers: \\(\\frac{647}{622}\\big/\\frac{2}{27}=14.04\\)"), 
+            #\\(\\frac{\\frac{647}{622}}
             #{\\frac{2}{27}}= 14.04\\)."),
           br(),
           p("Here, the odds ratio is greater than 1."),
@@ -727,7 +727,8 @@ ui <- list(
             class = "hangingindent",
             "Wickham, H., Seidel, D. (2020). scales: Scale Functions for Visualization.
             R package version 1.1.1. Available from https://CRAN.R-project.org/package=scales"
-          )
+          ),
+          boastUtils::copyrightInfo()
         )
       )
     )
