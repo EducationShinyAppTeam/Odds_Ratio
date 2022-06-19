@@ -11,6 +11,7 @@ library(dplyr)
 library(scales)
 library(rmeta)
 library(boastUtils)  
+library(DT) #add library
 
 # Load additional dependencies and setup functions
 # source("global.R")
@@ -24,13 +25,26 @@ convertMenuItem <- function(mi, tabName) {
   mi
 }
 
+enrollmentData <- data.frame(
+  Pennsylvania = c(24028, 19143),
+  Non = c(16572, 4662),
+  row.names = c("University Park", "Commonwealth Campuses")
+)  #define the count
+
+enrollmentData1 <- data.frame(
+  Pennsylvania = c(0.557, 0.443),
+  Non = c(0.78, 0.22),
+  row.names = c("University Park", "Commonwealth Campuses")
+)  #define the percentage
+
+
 
 # Define UI for App ----
 ui <- list(
   ## Create the app page ----
   dashboardPage(
     skin = "yellow",
-    ### Create the app header ----
+    ## Create the app header ----
     dashboardHeader(
       title = "Odds Ratio", # You may use a shortened form of the title here
       titleWidth = 250,
@@ -46,12 +60,13 @@ ui <- list(
         )
       )
     ),
-    ### Create the sidebar/left navigation menu ----
+    ## Create the sidebar/left navigation menu ----
     dashboardSidebar(
       sidebarMenu(
         id = "pages",
         menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
-        menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
+        menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")
+                 ),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
         menuItem("Example", tabName = "example", icon = icon("cogs")), 
         menuItem("References", tabName = "references", icon = icon("leanpub"))
@@ -62,10 +77,11 @@ ui <- list(
         boastUtils::sidebarFooter()
       )
     ),
-    ### Create the content ----
+
+# Create the body ----
     dashboardBody(
       tabItems(
-        #### Set up the Overview Page ----
+## Set up the Overview Page ----
         tabItem(
           tabName = "overview",
           withMathJax(),
@@ -84,7 +100,7 @@ ui <- list(
                     summaries of real data. Note that each line of data represents
                     a different individual experiment.")
           ),
-          ##### Go Button--location will depend on your goals ----
+          #### Go Button--location will depend on your goals 
           div(
             style = "text-align: center",
             bsButton(
@@ -95,7 +111,7 @@ ui <- list(
               style = "default"
             )
           ),
-          ##### Create two lines of space ----
+          ##### Create two lines of space 
           br(),
           br(),
           h2("Acknowledgements"),
@@ -105,10 +121,10 @@ ui <- list(
             br(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 7/1/2021 by SJS.")
+            div(class = "updated", "Last Update: 6/14/2022 by JJH.")
           )
         ),
-        #### Set up the Prerequisites Page ----
+## Set up the Prerequisites Page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
@@ -116,10 +132,13 @@ ui <- list(
           br(), 
           h3("What is odds ratio?"),
           
-          p("An odds ratio relates the odds of an event under two different conditions. 
+          p("An odds ratio relates the odds of an event under two different 
+            conditions. 
             For example if two-thirds of women ate vegetables at lunch today 
-            (odds of 2 to 1), while only one-third of men ate vegetables (odds of 1 to 2)
-            - then the odds for women are four times as great as the odds for men
+            (odds of 2 to 1), while only one-third of men ate vegetables 
+            (odds of 1 to 2)
+            - then the odds for women are four times as great as the odds for
+            men
             (so 4 is the odds ratio)."),
           
           h3("How to calculate the confidence interval of an odds ratio?"),
@@ -131,20 +150,23 @@ ui <- list(
           
           p("The properties of \\(\\hat{\\theta}\\) are easily established under
             multinomial sampling, but the same properties will hold under Poisson
-            or product-multinomial sampling with either the row totals and/or column
+            or product-multinomial sampling with either the row totals and/or 
+            column
             totals regarded as fixed."),
           
-          p("As with the relative risk, the log-odds ratio \\(\\log\\hat{\\theta}\\)
+          p("As with the relative risk, the log-odds ratio \\(\\log\\hat
+            {\\theta}\\)
             has a better normal approximation than \\(\\hat{\\theta}\\) does. 
             Therefore, we usually obtain a confidence interval on the log scale
-            (log here means natural log). The estimated variance of \\(\\log\\hat{\\theta}\\)
+            (log here means natural log). The estimated variance of \\(\\log\\hat
+            {\\theta}\\)
             is easy to remember,"),
           
           p(("\\(\\widehat{V}(\\log\\widehat{\\theta})=\\frac{1}{a}+\\frac{1}{b}+
              \\frac{1}{c}+\\frac{1}{d}\\)"), style = "text-align: center"),
           
-          p("and we get a 95% confidence interval for \\(\\theta\\) by exponentiating
-            the endpoints of"),
+          p("and we get a 95% confidence interval for \\(\\theta\\) by 
+            exponentiating the endpoints of"),
           
           p(("\\(\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
              \\frac{1}{c}+\\frac{1}{d}}\\)"), style = "text-align: center"),
@@ -159,19 +181,22 @@ ui <- list(
           tags$img(src = 'sample_question.PNG', width = "30%"),
           br(),
           br(),
-          p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}{622}= 1.04\\)"),
+          p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}
+            {622}= 1.04\\)"),
           br(),
-          p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\)."),
+          p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\).
+            "),
           br(),
           p("The ratio of the odds of lung cancer in smokers divided by the 
-            odds of lung cancer in non-smokers: \\(\\frac{647}{622}\\big/\\frac{2}{27}=14.04\\)"), 
+            odds of lung cancer in non-smokers: \\(\\frac{647}{622}\\big/\\frac{2}
+            {27}=14.04\\)"), 
             #\\(\\frac{\\frac{647}{622}}
             #{\\frac{2}{27}}= 14.04\\)."),
           br(),
           p("Here, the odds ratio is greater than 1."),
           br(),
-          p("Being a smoker is considered to be associated with having lung cancer 
-            since smoking raises the odds of having lung cancer"),
+          p("Being a smoker is considered to be associated with having lung 
+            cancer since smoking raises the odds of having lung cancer"),
           br(),
           
           div(
@@ -204,40 +229,29 @@ ui <- list(
               width = 6,
               h3("True Population:"),
               h4("Count: "),
-              img(
-                src = "2016Count.PNG",
-                height = "100%",
-                width = "90%",
-                algin = "middle", 
-                alt = "Counts of enrollment by Residency between University Park 
-                      and Commonwealth Campuses"
-              ),
-              h4("Percentage: "),
-              img(
-                src = "2016Diff.PNG",
-                height = "100%",
-                width = "90%",
-                algin = "middle", 
-                alt = "Percentage of enrollment by Residency between University Park 
-                      and Commonwealth Campuses"
-              ),
+              
+              DTOutput(outputId = "countTable1"), 
+              DTOutput(outputId = "countTable2"),
+              
               br(),
               br(),
-              (p(("Odds of Pennsylvania residents for University Park: 1.47 "),
+              (p(("Odds of Pennsylvania residents for University Park: 1.45 "),
                  style = "white-space: pre-wrap"
               )),
-              (p(("Odds of Pennsylvania residents for other campuses: 5.42 "),
+              (p(("Odds of Pennsylvania residents for other campuses: 4.11 "),
                  style = "white-space: pre-wrap"
               )),
-              (p(("Odds ratio (θ) : \\(\\frac{1.47}{5.42}= 0.27\\)"),
+              (p(("Odds ratio (θ) : \\(\\frac{1.45}{4.11}= 0.35\\)"),
                  style = "white-space: pre-wrap"
               )),
               
               br(),
               
               tags$style(
-                HTML(" .tabbable > .nav > li > a {background-color: white; color:#ff7532}
-                .tabbable > .nav > li[class=active] > a {background-color: #ff7532; color: white;}"
+                HTML(" .tabbable > .nav > li > a {background-color: white; 
+                     color:#ff7532}
+                .tabbable > .nav > li[class=active] > a {background-color:
+                #ff7532; color: white;}"
                 )
               ),
               h3("Sliders: "),
@@ -249,17 +263,20 @@ ui <- list(
                   
                   br(),
                   tags$style(
-                    HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 
+                    HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, 
+                         .js-irs-0 
                        .irs-bar {background: #ff864c}"
                     )
                   ),
                   tags$style(
-                    HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, .js-irs-1
+                    HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, 
+                         .js-irs-1
                        .irs-bar {background: #ff864c}"
                     )
                   ),
                   tags$style(
-                    HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, .js-irs-2
+                    HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, 
+                         .js-irs-2
                        .irs-bar {background: #ff864c}"
                     )
                   ),
@@ -301,12 +318,14 @@ ui <- list(
                   
                   br(),
                   tags$style(
-                    HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, .js-irs-3 
+                    HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, 
+                         .js-irs-3 
                        .irs-bar {background: #ff864c}"
                     )
                   ),
                   tags$style(
-                    HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge, .js-irs-4
+                    HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge,
+                         .js-irs-4
                        .irs-bar {background: #ff864c}"
                     )
                   ),
@@ -378,7 +397,8 @@ ui <- list(
               bsPopover(
                 "newSample",
                 "Note",
-                "By clicking on this button, new sample with the size you input will be generated.",
+                "By clicking on this button, new sample with the size you input 
+                will be generated.",
                 trigger =
                   "hover",
                 placement = "center"
@@ -404,7 +424,7 @@ ui <- list(
         ),
         
         
-        #### Set up a Game Page ----
+## Set up a Game Page ----
         tabItem(tabName = "example",
                 h2("Example"),
                 br(), 
@@ -412,7 +432,9 @@ ui <- list(
                   sidebarPanel(
                     tags$style(
                       type = 'text/css',
-                      ".selectize-input { font-size: 18px; line-height: 18px;} .selectize-dropdown { font-size: 19px; line-height: 19px; }"
+                      ".selectize-input { font-size: 18px; line-height: 18px;} 
+                      .selectize-dropdown { font-size: 19px; line-height: 19px; 
+                      }"
                     ),
                     h3("Choose a Dataset Below"),
                     selectInput(
@@ -426,8 +448,10 @@ ui <- list(
                           ),
                         "Malaria Treatment" =
                           c(
-                            "Artesunate-based therapies vs. Quinine (for uncomplicated malaria)" = "avq",
-                            "Artemether vs. Quinine (for cerebral malaria)" = "amvq"
+                            "Artesunate-based therapies vs. Quinine 
+                            (for uncomplicated malaria)" = "avq",
+                            "Artemether vs. Quinine (for cerebral malaria)" 
+                            = "amvq"
                           ),
                         "Vaccines Immunogenicity" =
                           c(
@@ -443,20 +467,26 @@ ui <- list(
                     useShinyjs(),
                     conditionalPanel(
                       condition = "input.sets == 'gve'",
-                      div(style = "display: inline-block;vertical-align:top; width: 200px;", 
-                          actionButton("comments1", "Comments", style = "color: #fff; 
+                      div(style = "display: inline-block;vertical-align:top;
+                          width: 200px;", 
+                          actionButton("comments1", "Comments", style =
+                                         "color: #fff; 
                                background-color: #9874e3"))
                     ),
                     conditionalPanel(
                       condition = "input.sets == 'amvq'",
-                      div(style = "display: inline-block;vertical-align:top; width: 200px;", 
-                          actionButton("comments2", "Comments", style = "color: #fff; 
+                      div(style = "display: inline-block;vertical-align:top; 
+                          width: 200px;", 
+                          actionButton("comments2", "Comments", style =
+                                         "color: #fff; 
                                background-color: #9874e3"))
                     ),
                     conditionalPanel(
                       condition = "input.sets== 'rub'",
-                      div(style = "display: inline-block;vertical-align:top; width: 200px;", 
-                          actionButton("comments3", "Comments", style = "color: #fff; background-color: #9874e3"))
+                      div(style = "display: inline-block;vertical-align:top; 
+                          width: 200px;", 
+                          actionButton("comments3", "Comments", style = "color:
+                                       #fff; background-color: #9874e3"))
                       
                     ),
                     
@@ -472,7 +502,8 @@ ui <- list(
                       textOutput("mala")
                     ),
                     conditionalPanel(
-                      condition = "input.sets == 'mea'|input.sets == 'mum'|input.sets == 'rub'",
+                      condition = "input.sets == 'mea'|input.sets == 
+                      'mum'|input.sets == 'rub'",
                       tags$style("#vacc{ font-size: 15px; }"),
                       textOutput("vacc")
                       
@@ -513,20 +544,20 @@ ui <- list(
                           HTML(markdownToHTML(fragment.only = TRUE, 
                             text = c("The first analysis in this section generally
                                      compares the effect of targeted therapy and
-                                     chemotherapy.`Summary OR = 1.4` which is greater
-                                     than 1. However, the CI of the `Summary OR` 
-                                     contains 1. So we fail to reject that the
-                                     effectiveness of the two ways of treatments 
-                                     is about equal in this case. Then the second
-                                     comparison as shown above is between two
-                                     medicine within targeted therapy treatment.
-                                     This time, `Summary OR = 0.961`. However, the
-                                     CI of the `Summary OR` contains 1. So we fail
-                                     to reject that the effectiveness of the two medicine
-                                     is about equal in this case. In two analyses,
-                                     we both fail to reject the null. However,
-                                     targeted therapy in general is better than
-                                     chemotherapy.")
+                                     chemotherapy.`Summary OR = 1.4` which is 
+                                     greater than 1. However, the CI of the `
+                                     Summary OR` contains 1. So we fail to reject
+                                     that the effectiveness of the two ways of 
+                                     treatments is about equal in this case. Then 
+                                     the second comparison as shown above is 
+                                     between two medicine within targeted therapy
+                                     treatment. This time, `Summary OR = 0.961`. 
+                                     However, the CI of the `Summary OR` contains 
+                                     1. So we fail to reject that the effectiveness 
+                                     of the two medicine is about equal in this 
+                                     case. In two analyses, we both fail to reject 
+                                     the null. However, targeted therapy in 
+                                     general is better than chemotherapy.")
                             )
                           )
                         )
@@ -553,7 +584,8 @@ ui <- list(
                       h3(p(strong(
                         "Artemether vs. Quinine"),
                         style = "text-align: center")),
-                      h4(p(strong("(cerebral malaria in African children \u2264 15 years of age)"),
+                      h4(p(strong("(cerebral malaria in African children \u2264 
+                                  15 years of age)"),
                            style = "text-align: center")),
                       h4(p(("Data from seven individual studies."),
                            style = "text-align: center")),
@@ -566,17 +598,22 @@ ui <- list(
                       shinyjs::hidden(
                         wellPanel(id = "mala_comments",
                             HTML(markdownToHTML(fragment.only = TRUE, 
-                              text = c("The first analysis in this section compares the
-                                       effect of artesunate-based therapies and quinine in 
-                                       treating uncomplicated malaria in pregnancy. Although
-                                       we only have data from three studies, the advantage
-                                       of using artesunate-based therapies is obvious:`Summary
-                                       OR = 7.59` which is greater than 1. Then the second
-                                       analysis as shown above is between artemether and quinine
-                                       in treating cerebral malaria in African children less
-                                       than 15 years of age. This time, `Summary OR = 0.933`.
-                                       However, the CI of the `Summary OR` contains 1. So the
-                                       effectiveness of the two medicine is about equal in this case."))
+                              text = c("The first analysis in this section 
+                                       compares the effect of artesunate-based
+                                       therapies and quinine in treating
+                                       uncomplicated malaria in pregnancy. 
+                                       Although we only have data from three 
+                                       studies, the advantage of using 
+                                       artesunate-based therapies is obvious:
+                                       `Summary OR = 7.59` which is greater than
+                                       1. Then the second analysis as shown above 
+                                       is between artemether and quinine in 
+                                       treating cerebral malaria in African 
+                                       children less than 15 years of age. This 
+                                       time, `Summary OR = 0.933`.However, the 
+                                       CI of the `Summary OR` contains 1. So the
+                                       effectiveness of the two medicine is 
+                                       about equal in this case."))
                            )
                         )
                       )
@@ -625,14 +662,16 @@ ui <- list(
                       shinyjs::hidden(
                         wellPanel(id = "vacc_comments",
                           HTML(markdownToHTML(fragment.only = TRUE, 
-                            text = c("The three analyses in this section compare the MMRV
-                            vaccine and the MMR + V vaccine in preventing measles,
-                            mumps, and rubella. Intuitively, we would assume that
-                            the effectiveness of the two kinds of vaccine is equal.
-                            However, in the second comparison, `Summary OR = 0.483`
-                            and the CI does not contain 1. It suggests that the MMRV
-                            vaccine against mumps is less effective than the MMR + V
-                            vaccine. It is an interesting finding.")))
+                            text = c("The three analyses in this section compare
+                                     the MMRV vaccine and the MMR + V vaccine in 
+                                     preventing measles, mumps, and rubella. 
+                                     Intuitively, we would assume that the 
+                                     effectiveness of the two kinds of vaccine 
+                                     is equal. However, in the second 
+                                     comparison, `Summary OR = 0.483`and the CI 
+                                     does not contain 1. It suggests that the MMRV
+                            vaccine against mumps is less effective than the MMR
+                            + V vaccine. It is an interesting finding.")))
                         )
                       )
                     )
@@ -640,7 +679,7 @@ ui <- list(
                 )
         ),
         
-        #### Set up the References Page ----
+## Set up the References Page ----
         tabItem(
           tabName = "references",
           withMathJax(),
@@ -692,13 +731,14 @@ ui <- list(
           
           p(
             class = "hangingindent",
-            "Lock, Robin H. Statistics: Unlocking the Power of Data. Wiley, 2013. "
+            "Lock, R., Frazer, P., Morgan, K., Lock, E., and Lock, D.  Statistics:
+            Unlocking the Power of Data. Wiley, 2013. "
           ),
           
           p(
             class = "hangingindent",
-            "Lumley, T. (2018). rmeta: Meta-Analysis. R package version 3.0. Available
-            from https://CRAN.R-project.org/package=rmeta"
+            "Lumley, T. (2018). rmeta: Meta-Analysis. R package version 3.0.
+            Available from https://CRAN.R-project.org/package=rmeta"
           ),
           
           p(
@@ -725,9 +765,21 @@ ui <- list(
           
           p(
             class = "hangingindent",
-            "Wickham, H., Seidel, D. (2020). scales: Scale Functions for Visualization.
-            R package version 1.1.1. Available from https://CRAN.R-project.org/package=scales"
+            "Wickham, H., Seidel, D. (2020). scales: Scale Functions for 
+            Visualization. R package version 1.1.1. Available from 
+            https://CRAN.R-project.org/package=scales"
           ),
+          
+          p(
+            class = "hangingindent",
+            "Pennsylvania State University. (2022). Student enrollment. 
+            Available from https://datadigest.psu.edu/student-enrollment"
+            ),
+          
+          
+          br(),
+          br(),
+          br(),
           boastUtils::copyrightInfo()
         )
       )
@@ -785,6 +837,65 @@ server <- function(input, output, session) {
   })
   
   
+  # call the table
+  
+  output$countTable1 <- renderDT(
+    expr = {
+      datatable(
+        data = enrollmentData,
+        caption = "Total Number of Students Enrolled, Fall 2021",
+        colnames = c("Pennsylvania", "Non-Pennsylvania"),
+        rownames = TRUE,
+        style = "bootstrap4",
+        options = list(
+          responsive = TRUE,
+          scrollX = FALSE,
+          ordering = FALSE,
+          paging = FALSE,
+          lengthChange = FALSE,
+          searching = FALSE,
+          info = FALSE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 1:2)
+          )
+        )
+      ) %>%
+        formatRound(
+          columns = 1:2,
+          digits = 0
+        )
+    }
+  ) 
+  
+  
+  output$countTable2 <- renderDT(
+    expr = {
+      datatable(
+        data = enrollmentData1,
+        caption = "Percentages of Students Enrolled, Fall 2021",
+        colnames = c("Pennsylvania", "Non-Pennsylvania"),
+        rownames = TRUE,
+        style = "bootstrap4",
+        options = list(
+          responsive = TRUE,
+          scrollX = FALSE,
+          ordering = FALSE,
+          paging = FALSE,
+          lengthChange = FALSE,
+          searching = FALSE,
+          info = FALSE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 1:2)
+          )
+        )
+      ) %>%
+        formatRound(
+          columns = 1:2,
+        
+        )
+    }
+  ) 
+  
   # print greek letter
   
   output$hypo <- renderPrint({
@@ -802,7 +913,8 @@ server <- function(input, output, session) {
          (p) that does not depend on the campus (the null hypothesis). The researcher
          uses her samples to conduct a test of that null hypothesis and this app
          shows how that test would behave when the sampling is really unbiased 
-         and the University Park campus has a proportion that is 0.249 lower lower. ")
+         and the University Park campus has a proportion that is 0.249 lower.
+         ")
     }
   })
   
@@ -835,7 +947,7 @@ server <- function(input, output, session) {
     #                           Out-of-State_Students 0.405	 0.156",
     #                   sep = "",header = TRUE)
     
-    dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), 
+  dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), 
                                     each = 2),
                         location = rep(c("University Park", "Other Campuses"),2),
                         samplepercent = c(0.595,0.844,0.405,0.156))
@@ -983,14 +1095,18 @@ server <- function(input, output, session) {
     zvalue = qnorm(((1 - input$dlevel)/2), lower.tail = F)
     sampleRatio = (data50()[,2]*data50()[,5])/(data50()[,3]*data50()[,4])
     lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/data50()[,2] + 
-                                                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
+                                                      1/data50()[,5] +
+                                                      1/data50()[,3] + 
+                                                      1/data50()[,4]))
     upperbound = exp(log(sampleRatio) + zvalue*sqrt(1/data50()[,2] + 
-                                                      1/data50()[,5] + 1/data50()[,3] + 1/data50()[,4]))
+                                                      1/data50()[,5] +
+                                                      1/data50()[,3] +
+                                                      1/data50()[,4]))
     data.frame(idx = rep(1:50), 
                sampleRatio,
                lowerbound,
                upperbound,
-               cover = (lowerbound < 0.27) & (0.27 < upperbound))
+               cover = (lowerbound < 0.35) & (0.35 < upperbound))
     
   })
   
@@ -998,14 +1114,18 @@ server <- function(input, output, session) {
     zvalue = qnorm(((1 - input$dlevel1)/2), lower.tail = F)
     sampleRatio = (newdata50()[,2]*newdata50()[,5])/(newdata50()[,3]*newdata50()[,4])
     lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/newdata50()[,2] + 
-                                                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
+                                                      1/newdata50()[,5] + 
+                                                      1/newdata50()[,3] + 
+                                                      1/newdata50()[,4]))
     upperbound = exp(log(sampleRatio) + zvalue*sqrt(1/newdata50()[,2] +
-                                                      1/newdata50()[,5] + 1/newdata50()[,3] + 1/newdata50()[,4]))
+                                                      1/newdata50()[,5] + 
+                                                      1/newdata50()[,3] + 
+                                                      1/newdata50()[,4]))
     data.frame(idx = rep(1:50), 
                sampleRatio,
                lowerbound,
                upperbound,
-               cover = (lowerbound < 0.27) & (0.27 < upperbound))
+               cover = (lowerbound < 0.35) & (0.35 < upperbound))
     
   })
   
@@ -1070,11 +1190,12 @@ server <- function(input, output, session) {
               alpha = idx == selectedSample(),
               size = idx == selectedSample()
           )) +
-        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 0.5) +
-        geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
+        theme_bw()+
+        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 1) +
+        geom_hline(yintercept = .35, size = 1.8, colour = "#0B6623", alpha = 1) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#916cdf", "TRUE" = "#ff864c"), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"), guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel1, "% Confidence Intervals"),
@@ -1103,11 +1224,12 @@ server <- function(input, output, session) {
               alpha = idx == selectedSample(),
               size = idx == selectedSample()
           )) +
-        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 0.5) +
-        geom_hline(yintercept = .27, size = 1.8, colour = "#0B6623", alpha = 0.5) +
+        theme_bw()+
+        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 1) +
+        geom_hline(yintercept = .35, size = 1.8, colour = "#0B6623", alpha = 1) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#916cdf", "TRUE" = "#ff864c"), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"), guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
         labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
@@ -1149,7 +1271,8 @@ server <- function(input, output, session) {
                          percent(OneSample()[,3]/input$nSamp2), 
                          percent(OneSample()[,4]/input$nSamp1), 
                          percent(OneSample()[,5]/input$nSamp2)), ncol = 2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), State = c("Penn", "Non-Penn")))
+                       dimnames = list(Campus = c("University Park","Other Campuses"), 
+                                       State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
@@ -1206,8 +1329,8 @@ server <- function(input, output, session) {
     }
   })
   
-  
-  ########forestplot########
+
+  #####forestplot
   
   makeDatatabletoList <- function(mytable){
     mylist = c()
@@ -1259,7 +1382,8 @@ server <- function(input, output, session) {
                        c("Treatment","(non-effective)",pctrl, NA,NA),
                        c("Control","(effective)",(ntrt-ptrt),NA,NA),
                        c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
-                       c("","OR",format((exp(myMH$logOR)),digits = 3),NA,format((exp(myMH$logMH)),digits=3)))
+                       c("","OR",format((exp(myMH$logOR)),digits = 3),NA,
+                         format((exp(myMH$logMH)),digits=3)))
   }
   
   
@@ -1298,21 +1422,7 @@ server <- function(input, output, session) {
                     names = names,
                     statistic = "OR")
     
-    # metaplot(myMH$logOR, myMH$selogOR, nn=myMH$selogOR^-2, myMH$names,
-    #          summn=myMH$logMH, sumse=myMH$selogMH, sumnn=myMH$selogMH^-2,
-    #          logeffect=T, colors=meta.colors(box="#34186f",lines="blue", zero ="red", 
-    #                                          summary="#ff864c", text="black"))
-    
-    # tabletext_less<-cbind(c("","Study",myMH$names,NA,"Summary"))
-    # 
-    # m<- c(NA,NA,exp(myMH$logOR),NA,exp(myMH$logMH))
-    # l<- exp(c(NA,NA,myMH$logOR,NA,myMH$logMH)-c(NA,NA,myMH$selogOR,NA,myMH$selogMH)*1.96)
-    # u<- exp(c(NA,NA,myMH$logOR,NA,myMH$logMH)+c(NA,NA,myMH$selogOR,NA,myMH$selogMH)*1.96)
-    # 
-    # forestplot(tabletext_less,m,l,u,zero=1,is.summary=c(TRUE,TRUE,rep(FALSE,(length(mylist)+1)),TRUE),
-    #            col=meta.colors(box="#916cdf",line="#34186f", summary="#ff864c"),
-    #            xlab="\nOdds ratio with 95% confidence interval\n(<1=no effect, 1=treatment has effect)", 
-    #            clip=c(-0.01,1000), boxsize = 1.5)
+
   }
   
   ## Non-Small Cell Lung Cancer Treatment introduction
@@ -1471,7 +1581,7 @@ server <- function(input, output, session) {
   #check answer
   
   
-  #closing for SERVER DON'T DELET####      
+  #closing for SERVER DON'T DELET      
 }
 
 
