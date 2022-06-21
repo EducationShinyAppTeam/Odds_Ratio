@@ -11,7 +11,7 @@ library(dplyr)
 library(scales)
 library(rmeta)
 library(boastUtils)  
-library(DT) #add library
+library(DT)
 
 # Load additional dependencies and setup functions
 # source("global.R")
@@ -116,7 +116,8 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p("This app was developed and coded by Jingjun Wang and updated by 
-            Shravani Samala.",
+            Shravani Samala and Junjie He. Special thanks to Pro. Neil for coding
+            help.",
             br(),
             br(),
             br(),
@@ -788,7 +789,8 @@ ui <- list(
 )
 
 # Define server logic ----
-server <- function(input, output, session) {
+
+  server <- function(input, output, session) {
   observeEvent(input$info,{
     sendSweetAlert(
       session = session,
@@ -1345,12 +1347,6 @@ server <- function(input, output, session) {
   {
     require("rmeta")
     numstrata <- length(mylist)
-    # make an array "ntrt" of the number of people in the exposed group, in each stratum
-    # make an array "nctrl" of the number of people in the unexposed group, in each stratum
-    # make an array "ptrt" of the number of people in the exposed group that have the disease,
-    # in each stratum
-    # make an array "pctrl" of the number of people in the unexposed group that have the disease,
-    # in each stratum
     ntrt <- vector()
     nctrl <- vector()
     ptrt <- vector()
@@ -1391,12 +1387,6 @@ server <- function(input, output, session) {
   {
     require("rmeta")
     numstrata <- length(mylist)
-    # make an array "ntrt" of the number of people in the exposed group, in each stratum
-    # make an array "nctrl" of the number of people in the unexposed group, in each stratum
-    # make an array "ptrt" of the number of people in the exposed group that have the disease,
-    # in each stratum
-    # make an array "pctrl" of the number of people in the unexposed group that have the disease,
-    # in each stratum
     ntrt <- vector()
     nctrl <- vector()
     ptrt <- vector()
@@ -1548,7 +1538,9 @@ server <- function(input, output, session) {
   mum10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
   mum11 <- matrix(c(613,191,37,16),nrow = 2,byrow = TRUE)
   mum12 <- matrix(c(262,145,33,9),nrow = 2,byrow = TRUE)
-  mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11, mum12)
+  mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11, 
+                  mum12)
+  
   output$plot6 = renderUI({
     img(src = "mum.PNG", width = "90%", algin = "middle")
   })
@@ -1573,6 +1565,7 @@ server <- function(input, output, session) {
   output$plot7 = renderUI({
     img(src = "rub.PNG", width = "85%", algin = "middle")
   })
+  
   # makeForestPlotForRCTs(rub_list)
   
   observeEvent(input$comments3, {
