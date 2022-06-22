@@ -197,7 +197,7 @@ ui <- list(
           p("Here, the odds ratio is greater than 1."),
           br(),
           p("Being a smoker is considered to be associated with having lung 
-            cancer since smoking raises the odds of having lung cancer"),
+            cancer since smoking raises the odds of having lung cancer."),
           br(),
           
           div(
