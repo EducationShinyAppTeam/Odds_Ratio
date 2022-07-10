@@ -116,8 +116,7 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p("This app was developed and coded by Jingjun Wang and updated by 
-            Shravani Samala and Junjie He. Special thanks to Pro. Neil for coding
-            help.",
+            Shravani Samala and Junjie He. Special thanks to Hatfield, Neil J.",
             br(),
             br(),
             br(),
