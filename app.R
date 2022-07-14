@@ -2,17 +2,16 @@
 library(shiny) 
 library(shinyalert) 
 library(shinyBS)  
-library(shinyjs)  
 library(shinydashboard)  
 library(shinyWidgets) 
 library(ggplot2)  
-library(markdown)
 library(dplyr) 
 library(scales)
 library(rmeta)
 library(boastUtils)  
 library(DT)
-
+library(markdown)
+library(shinyjs)
 # Load additional dependencies and setup functions
 # source("global.R")
 
@@ -37,7 +36,17 @@ enrollmentData1 <- data.frame(
   row.names = c("University Park", "Commonwealth Campuses")
 )  #define the percentage
 
+sampleTable <- data.frame(
+  Event = c('a','c'),
+  No = c('b','d'),
+  row.names = c ("Treatment", "Control")
+)
 
+exampleTable <- data.frame(
+  Cancer = c(647, 2),
+  Non = c(622,27),
+  row.names = c("Smoker", "Non-Smoker")
+)
 
 # Define UI for App ----
 ui <- list(
@@ -64,29 +73,28 @@ ui <- list(
     dashboardSidebar(
       sidebarMenu(
         id = "pages",
-        menuItem("Overview", tabName = "overview", icon = icon("dashboard")),
+        menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
         menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")
-                 ),
+        ),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
-        menuItem("Example", tabName = "example", icon = icon("cogs")), 
+        menuItem("Example", tabName = "example", icon = icon("book-reader")), 
         menuItem("References", tabName = "references", icon = icon("leanpub"))
-        
       ),
       tags$div(
         class = "sidebar-logo",
         boastUtils::sidebarFooter()
       )
     ),
-
-# Create the body ----
+    
+    # Create the body ----
     dashboardBody(
       tabItems(
-## Set up the Overview Page ----
+        ## Set up the Overview Page ----
         tabItem(
           tabName = "overview",
           withMathJax(),
           h1("Odds Ratio"), # This should be the full name.
-          p("About: This app explores confidence intervals for odds ratios and 
+          p(" This app explores confidence intervals for odds ratios and 
             their use in the meta-analysis of real data."),
           h2("Instructions"),
           tags$ol(
@@ -102,12 +110,12 @@ ui <- list(
           ),
           #### Go Button--location will depend on your goals 
           div(
-            style = "text-align: center",
+            style = "text-align: center;",
             bsButton(
               inputId = "go1",
-              label = "Prerequisites!",
+              label = "Go!",
               size = "large",
-              icon = icon("book"),
+              icon = icon("bolt"),
               style = "default"
             )
           ),
@@ -116,7 +124,7 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p("This app was developed and coded by Jingjun Wang and updated by 
-            Shravani Samala and Junjie He. Special thanks to Hatfield, Neil J.",
+            Shravani Samala and Junjie He. Special thanks to Neil Hatfield.",
             br(),
             br(),
             br(),
@@ -124,14 +132,11 @@ ui <- list(
             div(class = "updated", "Last Update: 6/14/2022 by JJH.")
           )
         ),
-## Set up the Prerequisites Page ----
+        ## Set up the Prerequisites Page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
-          h2("Prerequisites"),
-          br(), 
-          h3("What is odds ratio?"),
-          
+          h2("What is odds ratio?"),
           p("An odds ratio relates the odds of an event under two different 
             conditions. 
             For example if two-thirds of women ate vegetables at lunch today 
@@ -140,20 +145,15 @@ ui <- list(
             - then the odds for women are four times as great as the odds for
             men
             (so 4 is the odds ratio)."),
-          
-          h3("How to calculate the confidence interval of an odds ratio?"),
-          tags$img(src = 'newtable.PNG', width = "30%",
-                   alt = "Sample table confidence interval and odds ratio"),
-          
+          h2("How to calculate the confidence interval of an odds ratio?"),
+          DTOutput(outputId = "countTable4"),
           p("The natural estimator of \\(\\theta\\) is the sample cross-product 
             ratio, \\(\\widehat{\\theta}=\\frac{ad}{bc}\\)"),
-          
           p("The properties of \\(\\hat{\\theta}\\) are easily established under
             multinomial sampling, but the same properties will hold under Poisson
             or product-multinomial sampling with either the row totals and/or 
             column
             totals regarded as fixed."),
-          
           p("As with the relative risk, the log-odds ratio \\(\\log\\hat
             {\\theta}\\)
             has a better normal approximation than \\(\\hat{\\theta}\\) does. 
@@ -161,24 +161,18 @@ ui <- list(
             (log here means natural log). The estimated variance of \\(\\log\\hat
             {\\theta}\\)
             is easy to remember,"),
-          
           p(("\\(\\widehat{V}(\\log\\widehat{\\theta})=\\frac{1}{a}+\\frac{1}{b}+
-             \\frac{1}{c}+\\frac{1}{d}\\)"), style = "text-align: center"),
-          
+             \\frac{1}{c}+\\frac{1}{d}\\)"), style = "text-align: center;"),
           p("and we get a 95% confidence interval for \\(\\theta\\) by 
             exponentiating the endpoints of"),
-          
           p(("\\(\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
-             \\frac{1}{c}+\\frac{1}{d}}\\)"), style = "text-align: center"),
-          
+             \\frac{1}{c}+\\frac{1}{d}}\\)"), style = "text-align: center;"),
           br(),
-          
-          h3("Example"),
-          
+          h2("Example"),
           p("Here is the contingency table from a case-control study of smoking 
             and lung cancer:"),
           br(),
-          tags$img(src = 'sample_question.PNG', width = "30%"),
+          DTOutput(outputId = "countTable3"),
           br(),
           br(),
           p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}
@@ -190,31 +184,19 @@ ui <- list(
           p("The ratio of the odds of lung cancer in smokers divided by the 
             odds of lung cancer in non-smokers: \\(\\frac{647}{622}\\big/\\frac{2}
             {27}=14.04\\)"), 
-            #\\(\\frac{\\frac{647}{622}}
-            #{\\frac{2}{27}}= 14.04\\)."),
+          #\\(\\frac{\\frac{647}{622}}
+          #{\\frac{2}{27}}= 14.04\\)."),
           br(),
           p("Here, the odds ratio is greater than 1."),
           br(),
           p("Being a smoker is considered to be associated with having lung 
             cancer since smoking raises the odds of having lung cancer."),
           br(),
-          
-          div(
-            style = "text-align: center",
-            bsButton(
-              inputId = "go2",
-              label = "GO!",
-              size = "large",
-              icon = icon("wpexplorer"),
-              style = "default"
-            )
-          )
         ),
         
-        #### Set up an Explore Page
+        ## Set up an Explore Page----
         tabItem(
           tabName = "explore",
-          
           h2("Residency Status Differences Between Campuses"),
           p("Below are the tables for the counts and percentages of enrollment by
             residency between University Park and the Commonwealth Campuses of 
@@ -227,75 +209,35 @@ ui <- list(
           sidebarLayout(
             sidebarPanel(
               width = 6,
-              h3("True Population:"),
-              h4("Count: "),
-              
               DTOutput(outputId = "countTable1"), 
               DTOutput(outputId = "countTable2"),
-              
               br(),
               br(),
-              (p(("Odds of Pennsylvania residents for University Park: 1.45 "),
-                 style = "white-space: pre-wrap"
+              (p(("Odds of Pennsylvania residents for University Park: 1.45 ")
               )),
-              (p(("Odds of Pennsylvania residents for other campuses: 4.11 "),
-                 style = "white-space: pre-wrap"
+              (p(("Odds of Pennsylvania residents for other campuses: 4.11 ")
               )),
-              (p(("Odds ratio (θ) : \\(\\frac{1.45}{4.11}= 0.35\\)"),
-                 style = "white-space: pre-wrap"
+              (p(("Odds ratio (θ) : \\(\\frac{1.45}{4.11}= 0.35\\)")
               )),
-              
               br(),
-              
-              tags$style(
-                HTML(" .tabbable > .nav > li > a {background-color: white; 
-                     color:#ff7532}
-                .tabbable > .nav > li[class=active] > a {background-color:
-                #ff7532; color: white;}"
-                )
-              ),
-              h3("Sliders: "),
               tabsetPanel(
                 id = "tabset",
                 tabPanel(
                   "Seperate Sample Sizes",
                   fluid = TRUE,
-                  
                   br(),
-                  tags$style(
-                    HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, 
-                         .js-irs-0 
-                       .irs-bar {background: #ff864c}"
-                    )
-                  ),
-                  tags$style(
-                    HTML(".js-irs-1 .irs-single, .js-irs-1 .irs-bar-edge, 
-                         .js-irs-1
-                       .irs-bar {background: #ff864c}"
-                    )
-                  ),
-                  tags$style(
-                    HTML(".js-irs-2 .irs-single, .js-irs-2 .irs-bar-edge, 
-                         .js-irs-2
-                       .irs-bar {background: #ff864c}"
-                    )
-                  ),
-                  
                   sliderInput(
                     "dlevel",
                     "Confidence Level",
-                    min =
-                      .10,
+                    min = .10,
                     max = 0.99,
                     value = 0.95,
                     step = 0.01
                   ),
-                  
                   sliderInput(
                     "nSamp1",
                     "Sample Size for University Park",
-                    min =
-                      30,
+                    min = 30,
                     max = 200,
                     value = 50,
                     step = 5
@@ -303,48 +245,27 @@ ui <- list(
                   sliderInput(
                     "nSamp2",
                     "Sample Size for Other Campuses",
-                    min =
-                      30,
+                    min = 30,
                     max = 200,
                     value = 50,
                     step = 5
                   )
-                  
-                  
                 ),
                 tabPanel(
                   "Same Sample Size",
                   fluid = TRUE,
-                  
-                  br(),
-                  tags$style(
-                    HTML(".js-irs-3 .irs-single, .js-irs-3 .irs-bar-edge, 
-                         .js-irs-3 
-                       .irs-bar {background: #ff864c}"
-                    )
-                  ),
-                  tags$style(
-                    HTML(".js-irs-4 .irs-single, .js-irs-4 .irs-bar-edge,
-                         .js-irs-4
-                       .irs-bar {background: #ff864c}"
-                    )
-                  ),
-                  
                   sliderInput(
                     "dlevel1",
                     "Confidence Level",
-                    min =
-                      .10,
+                    min = .10,
                     max = 0.99,
                     value = 0.95,
                     step = 0.01
                   ),
-                  
                   sliderInput(
                     "nSamp3",
                     "Sample Sizes for both University Park and Other Campuses",
-                    min =
-                      30,
+                    min = 30,
                     max = 200,
                     value = 50,
                     step = 5
@@ -352,90 +273,41 @@ ui <- list(
                 )
               )
             ),
-            
             mainPanel(
               width = 6, 
               plotOutput("CIplot", height = "600px", click = "plot_click"),
-              bsPopover(
-                "CIplot",
-                "Confidence Interval Plot",
-                "The orange lines indicate a confidence interval that smaller or
-                greater than 1 and the purple lines indicate confidence intervas
-                containing 1. Click on an interval to see detailed information on
-                the right-hand side for the chosen sample.",
-                trigger =
-                  "hover",
-                placement = "bottom"
-              ), 
-              
               p("Black vertical line for null theta & green vertical line 
              for true odds ratio. Click on an interval (dot) to show the underlying
-             data", style="text-align: center"), 
-             
-              fluidRow(column(width = 4, 
-                h4(strong("Sample Counts:")),
-                span(tableOutput("sampleinfotable2"), style = "font-size: 18px")
-              ), 
-              
-              column(width = 4,       
-                 h4(strong("Sample Percentages:")),
-                 span(tableOutput("sampleinfotable1"), style = "font-size: 18px")
-              ), 
-              
-              column(width = 4,
-                 h4(strong("Sample Odds Ratio:")),
-                 span(textOutput("sampleinforatio"), style = "font-size: 18px")
-              )), 
-              
-              br(),
-              actionButton(
-                inputId = "newSample", 
-                label = "Generate 50 New Samples", 
-                icon("retweet"),
-                style = "color: white; background-color: #ff7532"),
-              
-              bsPopover(
-                "newSample",
-                "Note",
-                "By clicking on this button, new sample with the size you input 
-                will be generated.",
-                trigger =
-                  "hover",
-                placement = "center"
-              ),
-              
-              br()
+             data", style="text-align: center;"), 
+             fluidRow(column(width = 4, 
+                             h4(strong("Sample Counts:")),
+                             span(tableOutput("sampleinfotable2"))
+             ), 
+             column(width = 4,       
+                    h4(strong("Sample Percentages:")),
+                    span(tableOutput("sampleinfotable1"))
+             ), 
+             column(width = 4,
+                    h4(strong("Sample Odds Ratio:")),
+                    span(textOutput("sampleinforatio"))
+             )), 
+             br(),
+             bsButton(
+               inputId = "newSample", 
+               label = "Generate 50 New Samples",
+               size = "large",
+               icon("retweet"),
+               style = "default"),
             ), 
-            position = "left"
-            
-            
           ),
-          
-          div(
-            style = "text-align: center",
-            bsButton(
-              inputId = "go3",
-              label = "GO!",
-              size = "large",
-              icon = icon("cogs"),
-              style = "default"
-            )
-          )
         ),
         
         
-## Set up a Game Page ----
+        ## Set up a Example Page ----
         tabItem(tabName = "example",
-                h2("Example"),
                 br(), 
                 sidebarLayout(
                   sidebarPanel(
-                    tags$style(
-                      type = 'text/css',
-                      ".selectize-input { font-size: 18px; line-height: 18px;} 
-                      .selectize-dropdown { font-size: 19px; line-height: 19px; 
-                      }"
-                    ),
                     h3("Choose a Dataset Below"),
                     selectInput(
                       "sets",
@@ -466,58 +338,38 @@ ui <- list(
                     ),
                     useShinyjs(),
                     conditionalPanel(
-                      condition = "input.sets == 'gve'",
-                      div(style = "display: inline-block;vertical-align:top;
-                          width: 200px;", 
-                          actionButton("comments1", "Comments", style =
-                                         "color: #fff; 
-                               background-color: #9874e3"))
+                      condition = "input.sets == 'gve'"
                     ),
                     conditionalPanel(
-                      condition = "input.sets == 'amvq'",
-                      div(style = "display: inline-block;vertical-align:top; 
-                          width: 200px;", 
-                          actionButton("comments2", "Comments", style =
-                                         "color: #fff; 
-                               background-color: #9874e3"))
+                      condition = "input.sets == 'amvq'"
                     ),
                     conditionalPanel(
-                      condition = "input.sets== 'rub'",
-                      div(style = "display: inline-block;vertical-align:top; 
-                          width: 200px;", 
-                          actionButton("comments3", "Comments", style = "color:
-                                       #fff; background-color: #9874e3"))
-                      
+                      condition = "input.sets== 'rub'"
                     ),
                     
                     h3("Background Knowledge"),
                     conditionalPanel(
                       condition = "input.sets == 'gvc'|input.sets == 'gve'",
-                      tags$style("#nsclc{ font-size: 15px; }"),
                       textOutput("nsclc")
                     ),
                     conditionalPanel(
                       condition = "input.sets == 'avq'|input.sets == 'amvq'",
-                      tags$style("#mala{ font-size: 15px; }"),
                       textOutput("mala")
                     ),
                     conditionalPanel(
                       condition = "input.sets == 'mea'|input.sets == 
                       'mum'|input.sets == 'rub'",
-                      tags$style("#vacc{ font-size: 15px; }"),
                       textOutput("vacc")
-                      
                     )
                   ),
-                  
                   mainPanel( 
                     conditionalPanel(
                       condition = "input.sets == 'gvc'",
                       h3(p(strong("Gefitinib vs. Chemotherapy"),
-                           style = "text-align: center"
+                           style = "text-align: center;"
                       )),
                       h4(p(("Data from two individual studies."),
-                           style = "text-align: center"
+                           style = "text-align: center;"
                       )),
                       img(src = "gvc.PNG",
                           height = "100%", 
@@ -529,9 +381,9 @@ ui <- list(
                     conditionalPanel(
                       condition = "input.sets == 'gve'",
                       h3(p(strong("Gefitinib vs. Erlotinib"),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       h4(p(("Data from three individual studies."),
-                           style = "text-align: center"
+                           style = "text-align: center;"
                       )),
                       img(
                         src = "gve.PNG",
@@ -539,10 +391,8 @@ ui <- list(
                         width = "90%",
                         algin = "middle"
                       ),
-                      shinyjs::hidden(
-                        wellPanel(id = "nsclc_comments",
-                          HTML(markdownToHTML(fragment.only = TRUE, 
-                            text = c("The first analysis in this section generally
+                      HTML(markdownToHTML(fragment.only = TRUE, 
+                                          text = c("The first analysis in this section generally
                                      compares the effect of targeted therapy and
                                      chemotherapy.`Summary OR = 1.4` which is 
                                      greater than 1. However, the CI of the `
@@ -558,20 +408,18 @@ ui <- list(
                                      case. In two analyses, we both fail to reject 
                                      the null. However, targeted therapy in 
                                      general is better than chemotherapy.")
-                            )
-                          )
-                        )
+                      )
                       )
                     ),
                     
                     conditionalPanel(
                       condition = "input.sets == 'avq'",
                       h3(p(strong("Artesunate-based therapies vs. Quinine"),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       h4(p(strong("(uncomplicated malaria in pregnancy)"),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       h4(p(("Data from three individual studies."),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       img(
                         src = "avq.PNG",
                         height = "100%",
@@ -583,22 +431,20 @@ ui <- list(
                       condition = "input.sets == 'amvq'",
                       h3(p(strong(
                         "Artemether vs. Quinine"),
-                        style = "text-align: center")),
+                        style = "text-align: center;")),
                       h4(p(strong("(cerebral malaria in African children \u2264 
                                   15 years of age)"),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       h4(p(("Data from seven individual studies."),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       img(
                         src = "amvq.PNG",
                         height = "100%",
                         width = "90%",
                         algin = "middle"
                       ),
-                      shinyjs::hidden(
-                        wellPanel(id = "mala_comments",
-                            HTML(markdownToHTML(fragment.only = TRUE, 
-                              text = c("The first analysis in this section 
+                      HTML(markdownToHTML(fragment.only = TRUE, 
+                                          text = c("The first analysis in this section 
                                        compares the effect of artesunate-based
                                        therapies and quinine in treating
                                        uncomplicated malaria in pregnancy. 
@@ -614,17 +460,15 @@ ui <- list(
                                        CI of the `Summary OR` contains 1. So the
                                        effectiveness of the two medicine is 
                                        about equal in this case."))
-                           )
-                        )
                       )
                     ),
                     
                     conditionalPanel(
                       condition = "input.sets == 'mea'",
                       h3(p(strong("MMRV vs. MMR+V Against Measles"),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       h4(p(("Data from nine individual studies."),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       img(
                         src = "mea.PNG",
                         height = "100%",
@@ -632,14 +476,13 @@ ui <- list(
                         algin = "middle"
                       )
                     ),
-                    
                     conditionalPanel(
                       condition = "input.sets == 'mum'",
                       h3(p(
                         strong("MMRV vs. MMR+V Against Mumps"),
-                        style = "text-align: center")),
+                        style = "text-align: center;")),
                       h4(p(("Data from eleven individual studies."),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       img(
                         src = "mum.PNG",
                         height = "100%",
@@ -650,19 +493,17 @@ ui <- list(
                     conditionalPanel(
                       condition = "input.sets == 'rub'",
                       h3(p(strong("MMRV vs. MMR+V Against Rubella"),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       h4(p(("Data from five individual studies."),
-                           style = "text-align: center")),
+                           style = "text-align: center;")),
                       img(
                         src = "rub.PNG",
                         height = "100%",
                         width = "90%",
                         algin = "middle"
                       ),
-                      shinyjs::hidden(
-                        wellPanel(id = "vacc_comments",
-                          HTML(markdownToHTML(fragment.only = TRUE, 
-                            text = c("The three analyses in this section compare
+                      HTML(markdownToHTML(fragment.only = TRUE, 
+                                          text = c("The three analyses in this section compare
                                      the MMRV vaccine and the MMR + V vaccine in 
                                      preventing measles, mumps, and rubella. 
                                      Intuitively, we would assume that the 
@@ -672,14 +513,12 @@ ui <- list(
                                      does not contain 1. It suggests that the MMRV
                             vaccine against mumps is less effective than the MMR
                             + V vaccine. It is an interesting finding.")))
-                        )
-                      )
                     )
                   )
                 )
         ),
         
-## Set up the References Page ----
+        ## Set up the References Page ----
         tabItem(
           tabName = "references",
           withMathJax(),
@@ -690,14 +529,12 @@ ui <- list(
               C Library 'Sundown'. R package version 1.1. Available from
               https://CRAN.R-project.org/package=markdown"
           ),
-          
           p(
             class = "hangingindent",
             "Attali, D. (2020). shinyjs: Easily Improve the User Experience of
               Your Shiny Apps in Seconds. R package version 1.1. Available from
               https://CRAN.R-project.org/package=shinyjs"
           ),
-          
           p(
             class = "hangingindent",
             "Attali, D., Edwards, T., Wang, Z. (2020). shinyalerts: Easily create
@@ -728,33 +565,28 @@ ui <- list(
             (2020). shiny: Web Application Framework for R. R package version 
             1.5.0. Available from https://CRAN.R-project.org/package=shiny"
           ),
-          
           p(
             class = "hangingindent",
             "Lock, R., Frazer, P., Morgan, K., Lock, E., and Lock, D.  Statistics:
             Unlocking the Power of Data. Wiley, 2013. "
           ),
-          
           p(
             class = "hangingindent",
             "Lumley, T. (2018). rmeta: Meta-Analysis. R package version 3.0.
             Available from https://CRAN.R-project.org/package=rmeta"
           ),
-          
           p(
             class = "hangingindent",
             "Perrier, V., Meyer, F., and Granjon, D. (2020). shinyWidgets: 
             Custom Inputs Widgets for Shiny. R package version 0.5.3. Available 
             from https://CRAN.R-project.org/package=shinyWidgets"
           ),
-          
           p(
             class = "hangingindent",
             "Wickham, H., François, R., Henry, L., Müller, K. (2021). dplyr: A 
             Grammar of Data Manipulation. R package version 1.0.6. Available from
             https://CRAN.R-project.org/package=dplyr"
           ),
-          
           p(
             class = "hangingindent",
             "Wickham, H., Chang, W., Henry, L., Pedersen, T.L., Takahashi, K., 
@@ -762,21 +594,17 @@ ui <- list(
             Create Elegant Data Visualisations Using the Grammar of Graphics. R package
             version 3.3.3. Available from https://CRAN.R-project.org/package=ggplot2"
           ),
-          
           p(
             class = "hangingindent",
             "Wickham, H., Seidel, D. (2020). scales: Scale Functions for 
             Visualization. R package version 1.1.1. Available from 
             https://CRAN.R-project.org/package=scales"
           ),
-          
           p(
             class = "hangingindent",
             "Pennsylvania State University. (2022). Student enrollment. 
             Available from https://datadigest.psu.edu/student-enrollment"
-            ),
-          
-          
+          ),
           br(),
           br(),
           br(),
@@ -789,7 +617,7 @@ ui <- list(
 
 # Define server logic ----
 
-  server <- function(input, output, session) {
+server <- function(input, output, session) {
   observeEvent(input$info,{
     sendSweetAlert(
       session = session,
@@ -805,20 +633,6 @@ ui <- list(
       session = session,
       inputId = "pages",
       selected = "prerequisites")
-  })
-  
-  observeEvent(input$go2,{
-    updateTabItems(
-      session = session,
-      inputId = "pages",
-      selected = "explore")
-  })
-  
-  observeEvent(input$go3,{
-    updateTabItems(
-      session = session,
-      inputId = "pages",
-      selected = "example")
   })
   
   observeEvent(input$start2, {
@@ -840,6 +654,54 @@ ui <- list(
   
   # call the table
   
+  ##table in the prerequisite page ----
+  output$countTable4 <- renderDT(
+    expr = {
+      datatable(
+        data = sampleTable,
+        colnames = c("Event", "No-Event"),
+        rownames = TRUE,
+        style = "bootstrap4",
+        options = list(
+          responsive = TRUE,
+          scrollX = FALSE,
+          ordering = FALSE,
+          paging = FALSE,
+          lengthChange = FALSE,
+          searching = FALSE,
+          info = FALSE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 1:2)
+          )
+        )
+      ) 
+    })
+  
+  output$countTable3 <- renderDT(
+    expr = {
+      datatable(
+        data = exampleTable,
+        colnames = c("Cancer", "Non-Cancer"),
+        rownames = TRUE,
+        style = "bootstrap4",
+        options = list(
+          responsive = TRUE,
+          scrollX = FALSE,
+          ordering = FALSE,
+          paging = FALSE,
+          lengthChange = FALSE,
+          searching = FALSE,
+          info = FALSE,
+          columnDefs = list(
+            list(className = "dt-center", targets = 1:2)
+          )
+        )
+      ) 
+    }
+  )
+  
+  
+  ##table in the explore page ----
   output$countTable1 <- renderDT(
     expr = {
       datatable(
@@ -868,7 +730,6 @@ ui <- list(
     }
   ) 
   
-  
   output$countTable2 <- renderDT(
     expr = {
       datatable(
@@ -892,13 +753,13 @@ ui <- list(
       ) %>%
         formatRound(
           columns = 1:2,
-        
+          
         )
     }
   ) 
   
-  # print greek letter
   
+  # print greek letter
   output$hypo <- renderPrint({
     print(paste0("H0: $$\\hat{A}_{\\small{\\textrm{M???}}} =", 1,"$$"))
   })
@@ -937,18 +798,10 @@ ui <- list(
     as.integer(input$nSamp3)
   })
   
-  # standardError <- reactive({
-  #   sqrt(0.595*0.405/dN() + 0.844*0.156/dN())
-  # })
   
   #population mean plot with true diffmean
   output$dpopMean  = renderPlot({
-    # dat <- read.table(text = "University_Park Other_Campuses
-    #                           Pennsylvania_Students 0.595 0.844
-    #                           Out-of-State_Students 0.405	 0.156",
-    #                   sep = "",header = TRUE)
-    
-  dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), 
+    dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), 
                                     each = 2),
                         location = rep(c("University Park", "Other Campuses"),2),
                         samplepercent = c(0.595,0.844,0.405,0.156))
@@ -961,8 +814,9 @@ ui <- list(
         title = paste0("population proportion(diff) = -24.9%, σ(p(UP)-p(Others))
                        = ",round(sqrt(0.595*0.405 + 0.844*0.156),3)),
         y = "Enrollment by Percentage")
-    
   })
+  
+  
   #generate 50 new sample
   
   UPS50P <- reactive({
@@ -977,7 +831,6 @@ ui <- list(
       mutate(idx = rep(1:50, each = dN1()))
   })
   
-  
   ups50p <- reactive({
     UPS50P() %>%
       group_by(idx) %>%
@@ -989,8 +842,6 @@ ui <- list(
     data.frame(idx = rep(1:50), 
                Count2 = input$nSamp1-ups50p()[,2])
   })
-  
-  
   
   UWS50P <- reactive({
     input$newSample
@@ -1004,15 +855,12 @@ ui <- list(
       mutate(idx = rep(1:50, each = dN2()))
   })
   
-  
-  
   uws50p <- reactive({
     UWS50P() %>%
       group_by(idx) %>%
       summarise(
         Count3 = sum(x))
   })
-  
   
   uws50n <- reactive({
     data.frame(idx = rep(1:50), 
@@ -1023,33 +871,34 @@ ui <- list(
   data50_1 <- reactive({
     merge(ups50p(),uws50p())
   })
+  
   data50_2 <- reactive({
     merge(ups50n(),uws50n())
   })
+  
   data50 <- reactive({
     merge.data.frame(data50_1(), data50_2(), by = "idx")
   })
   
   
   #generate 50 new sample (combined sample size)
-  
   UPS50P_3 <- reactive({
     input$newSample
-    
     data.frame(
-      x =
-        do.call(
+      x = do.call(
           paste0("rbinom"),
           c(list(n = dN3() * 50), list(1, 0.595)))
     ) %>%
       mutate(idx = rep(1:50, each = dN3()))
   })
+  
   ups50p_3 <- reactive({
     UPS50P_3() %>%
       group_by(idx) %>%
       summarise(
         Count1 = sum(x))
   })
+  
   ups50n_3 <- reactive({
     data.frame(idx = rep(1:50), 
                Count2 = input$nSamp3-ups50p_3()[,2])
@@ -1057,16 +906,13 @@ ui <- list(
   
   UWS50P_3 <- reactive({
     input$newSample
-    
     data.frame(
-      x =
-        do.call(
+      x = do.call(
           paste0("rbinom"),
           c(list(n = dN3() * 50), list(1, 0.844)))
     ) %>%
       mutate(idx = rep(1:50, each = dN3()))
   })
-  
   
   uws50p_3 <- reactive({
     UWS50P_3() %>%
@@ -1080,9 +926,11 @@ ui <- list(
                input$nSamp3-uws50p_3()[,2])
     
   })
+  
   data50_1_3 <- reactive({
     merge(ups50p_3(),uws50p_3())
   })
+  
   data50_2_3 <- reactive({
     merge(ups50n_3(),uws50n_3())
   })
@@ -1108,7 +956,6 @@ ui <- list(
                lowerbound,
                upperbound,
                cover = (lowerbound < 0.35) & (0.35 < upperbound))
-    
   })
   
   newIntervals <- reactive({
@@ -1127,15 +974,12 @@ ui <- list(
                lowerbound,
                upperbound,
                cover = (lowerbound < 0.35) & (0.35 < upperbound))
-    
   })
   
   output$show1 <- renderTable({
     newIntervals()
-    
   })
   output$show2 <- renderTable({
-    
     Intervals()
   })
   
@@ -1149,6 +993,8 @@ ui <- list(
     }
     selected_sample
   })
+  
+  
   # selected sample 
   OneSample <- reactive({
     data50() %>%
@@ -1180,7 +1026,6 @@ ui <- list(
         need(is.numeric(input$nSamp3),
              message = "Please input sample size")
       )
-      
       ggplot(data = newIntervals()) +
         geom_pointrange(
           aes(x = idx, 
@@ -1208,13 +1053,11 @@ ui <- list(
               axis.title.x = element_text(size = 14),
               axis.title.y = element_text(size = 14))
     }
-    
     else{
       validate(
         need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
              message = "Please input sample size")
       )
-      
       ggplot(data = Intervals()) +
         geom_pointrange(
           aes(x = idx, 
@@ -1242,7 +1085,6 @@ ui <- list(
               axis.title.x = element_text(size = 14),
               axis.title.y = element_text(size = 14))
     }
-    
   })
   
   
@@ -1262,7 +1104,6 @@ ui <- list(
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
-    
     else{
       validate(
         need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
@@ -1330,7 +1171,7 @@ ui <- list(
     }
   })
   
-
+  
   #####forestplot
   
   makeDatatabletoList <- function(mytable){
@@ -1410,8 +1251,6 @@ ui <- list(
     myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
                     names = names,
                     statistic = "OR")
-    
-
   }
   
   ## Non-Small Cell Lung Cancer Treatment introduction
@@ -1426,27 +1265,24 @@ ui <- list(
   gvc1 <- matrix(c(42,37,48,53),nrow = 2,byrow = TRUE)
   gvc2 <- matrix(c(18,12,26,32),nrow = 2,byrow = TRUE)
   gvc_list = list(gvc1, gvc2)
-  # makeForestPlotForRCTs(gvc_list)
   
+  # makeForestPlotForRCTs(gvc_list)
   output$plot1 = renderUI({
     img(src = "gvc.PNG", width = "80%", algin = "middle")
   })
-  # output$table1 = renderPlot(makeTable(gvc_list))
-  # output$plot1 = renderPlot(makeForestPlot(gvc_list))
+
   
   # drug 2: Gefitinib vs Erlotinib 
   gve1 <- matrix(c(28,6,22,12),nrow = 2,byrow = TRUE)
   gve2 <- matrix(c(36,14,38,12),nrow = 2,byrow = TRUE)
   gve3 <- matrix(c(16,19,21,14),nrow = 2,byrow = TRUE)
   gve_list = list(gve1, gve2, gve3)
+  
   #  makeForestPlot(gve_list)
   output$plot2 = renderUI({
     img(src = "gve.PNG", width = "80%", algin = "middle")
   })
   
-  observeEvent(input$comments1, {
-    toggle(id = "nsclc_comments")
-  })
   
   ## Malaria Treatment
   output$mala = renderText("Artemisinin is a plant-derived compound, isolated from
@@ -1470,7 +1306,6 @@ ui <- list(
   })
   
   
-  
   #drug 2: artemether vs. Quinine
   amvq1 <- matrix(c(6,10,45,42),nrow = 2,byrow = TRUE)
   amvq2 <- matrix(c(18,8,71,63),nrow = 2,byrow = TRUE)
@@ -1484,9 +1319,7 @@ ui <- list(
     img(src = "amvq.PNG", width = "85%", algin = "middle")
   })
   
-  observeEvent(input$comments2, {
-    toggle(id = "mala_comments")
-  })
+  
   ## Vaccines Immunogenicity
   
   output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV)
@@ -1519,11 +1352,6 @@ ui <- list(
     img(src = "mea.PNG", width = "90%", algin = "middle")
   })
   
-  
-  # makeForestPlotForRCTs(mea_list)
-  
-  
-  
   #2: mumps
   mum1 <- matrix(c(287,137,12,4),nrow = 2,byrow = TRUE)
   mum2 <- matrix(c(927,516,167,28),nrow = 2,byrow = TRUE)
@@ -1545,8 +1373,6 @@ ui <- list(
   })
   # makeForestPlotForRCTs(mum_list)
   
-  
-  
   #3: rubella
   rub1 <- matrix(c(288,141,10,0),nrow = 2,byrow = TRUE)#contain 0
   rub2 <- matrix(c(1114,552,3,3),nrow = 2,byrow = TRUE)
@@ -1564,16 +1390,6 @@ ui <- list(
   output$plot7 = renderUI({
     img(src = "rub.PNG", width = "85%", algin = "middle")
   })
-  
-  # makeForestPlotForRCTs(rub_list)
-  
-  observeEvent(input$comments3, {
-    toggle(id= "vacc_comments")
-  })
-  #check answer
-  
-  
-  #closing for SERVER DON'T DELET      
 }
 
 
