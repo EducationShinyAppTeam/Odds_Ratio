@@ -10,43 +10,20 @@ library(scales)
 library(rmeta)
 library(boastUtils)  
 library(DT)
-library(markdown)
-library(shinyjs)
 # Load additional dependencies and setup functions
 # source("global.R")
-
-convertMenuItem <- function(mi, tabName) {
-  mi$children[[1]]$attribs['data-toggle'] = "tab"
-  mi$children[[1]]$attribs['data-value'] = tabName
-  if (length(mi$attribs$class) > 0 && mi$attribs$class == "treeview") {
-    mi$attribs$class = NULL
-  }
-  mi
-}
 
 enrollmentData <- data.frame(
   Pennsylvania = c(24028, 19143),
   Non = c(16572, 4662),
   row.names = c("University Park", "Commonwealth Campuses")
-)  #define the count
+) 
 
 enrollmentData1 <- data.frame(
   Pennsylvania = c(0.557, 0.443),
   Non = c(0.78, 0.22),
   row.names = c("University Park", "Commonwealth Campuses")
-)  #define the percentage
-
-sampleTable <- data.frame(
-  Event = c('a','c'),
-  No = c('b','d'),
-  row.names = c ("Treatment", "Control")
-)
-
-exampleTable <- data.frame(
-  Cancer = c(647, 2),
-  Non = c(622,27),
-  row.names = c("Smoker", "Non-Smoker")
-)
+) 
 
 # Define UI for App ----
 ui <- list(
@@ -74,12 +51,11 @@ ui <- list(
       sidebarMenu(
         id = "pages",
         menuItem("Overview", tabName = "overview", icon = icon("tachometer-alt")),
-        menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")
-        ),
+        menuItem("Prerequisites", tabName = "prerequisites", icon = icon("book")),
         menuItem("Explore", tabName = "explore", icon = icon("wpexplorer")),
         menuItem("Example", tabName = "example", icon = icon("book-reader")), 
         menuItem("References", tabName = "references", icon = icon("leanpub"))
-      ),
+        ),
       tags$div(
         class = "sidebar-logo",
         boastUtils::sidebarFooter()
@@ -108,7 +84,6 @@ ui <- list(
                     summaries of real data. Note that each line of data represents
                     a different individual experiment.")
           ),
-          #### Go Button--location will depend on your goals 
           div(
             style = "text-align: center;",
             bsButton(
@@ -119,7 +94,6 @@ ui <- list(
               style = "default"
             )
           ),
-          ##### Create two lines of space 
           br(),
           br(),
           h2("Acknowledgements"),
@@ -146,7 +120,42 @@ ui <- list(
             men
             (so 4 is the odds ratio)."),
           h2("How to calculate the confidence interval of an odds ratio?"),
-          DTOutput(outputId = "countTable4"),
+          fluidRow(
+            column(
+              width = 8,
+              offset = 4,
+              tags$table(
+                rules = "all",
+                border = "1pt",
+                align = "left",
+                width = "500px",
+                targets = "_all",
+                tags$thead(
+                  tags$tr(
+                    tags$th(""),
+                    tags$th("Event", style = "text-align: center;"),
+                    tags$th("No-Event", style = "text-align: center;"), 
+                  )
+                ),
+                tags$tbody(
+                  tags$tr(
+                    tags$th("Treatment", style = "text-align: center;"),
+                    tags$td("a"),
+                    tags$td("b"), 
+                    align = "center"
+                  ),
+                  tags$tr(
+                    tags$th("Control", style = "text-align: center;"),
+                    tags$td("c"),
+                    tags$td("d"), 
+                    align = "center"
+                  ), 
+                )
+              ),
+              alt = "fill me in later",
+            )
+          ),
+          br(),
           p("The natural estimator of \\(\\theta\\) is the sample cross-product 
             ratio, \\(\\widehat{\\theta}=\\frac{ad}{bc}\\)"),
           p("The properties of \\(\\hat{\\theta}\\) are easily established under
@@ -161,42 +170,68 @@ ui <- list(
             (log here means natural log). The estimated variance of \\(\\log\\hat
             {\\theta}\\)
             is easy to remember,"),
-          p(("\\(\\widehat{V}(\\log\\widehat{\\theta})=\\frac{1}{a}+\\frac{1}{b}+
-             \\frac{1}{c}+\\frac{1}{d}\\)"), style = "text-align: center;"),
+          p("\\[\\widehat{V}(\\log\\widehat{\\theta})=\\frac{1}{a}+\\frac{1}{b}+
+             \\frac{1}{c}+\\frac{1}{d}\\]"),
           p("and we get a 95% confidence interval for \\(\\theta\\) by 
             exponentiating the endpoints of"),
-          p(("\\(\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
-             \\frac{1}{c}+\\frac{1}{d}}\\)"), style = "text-align: center;"),
+          p("\\[\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
+             \\frac{1}{c}+\\frac{1}{d}}\\]"),
           br(),
           h2("Example"),
           p("Here is the contingency table from a case-control study of smoking 
             and lung cancer:"),
           br(),
-          DTOutput(outputId = "countTable3"),
-          br(),
-          br(),
+          fluidRow(
+            column(
+              width = 8,
+              offset = 4,
+              tags$table(
+                rules = "all",
+                border = "1pt",
+                align = "left",
+                width = "500px",
+                targets = "_all",
+                tags$thead(
+                  tags$tr(
+                    tags$th(""),
+                    tags$th("Cancer", style = "text-align: center;"),
+                    tags$th("Non-Cancer", style = "text-align: center;"), 
+                  )
+                ),
+                tags$tbody(
+                  tags$tr(
+                    tags$th("Smoker", style = "text-align: center;"),
+                    tags$td("647"),
+                    tags$td("622"), 
+                    align = "center"
+                  ),
+                  tags$tr(
+                    tags$th("Non-Smoker",style = "text-align: center;"),
+                    tags$td("2"),
+                    tags$td("27"), 
+                    align = "center"
+                  ), 
+                )
+              ),
+              alt = "fill me in later",
+            )
+          ),
           p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}
-            {622}= 1.04\\)"),
-          br(),
+            {622}= 1.04\\)."),
           p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\).
             "),
-          br(),
           p("The ratio of the odds of lung cancer in smokers divided by the 
             odds of lung cancer in non-smokers: \\(\\frac{647}{622}\\big/\\frac{2}
-            {27}=14.04\\)"), 
-          #\\(\\frac{\\frac{647}{622}}
-          #{\\frac{2}{27}}= 14.04\\)."),
-          br(),
+            {27}=14.04\\)."), 
           p("Here, the odds ratio is greater than 1."),
-          br(),
           p("Being a smoker is considered to be associated with having lung 
             cancer since smoking raises the odds of having lung cancer."),
-          br(),
         ),
         
         ## Set up an Explore Page----
         tabItem(
           tabName = "explore",
+          withMathJax(),
           h2("Residency Status Differences Between Campuses"),
           p("Below are the tables for the counts and percentages of enrollment by
             residency between University Park and the Commonwealth Campuses of 
@@ -206,28 +241,28 @@ ui <- list(
             intervals for each sample. Check below the plot to see the sample counts,
             percentages, and odds ratio."),
           br(), 
-          sidebarLayout(
-            sidebarPanel(
+          fluidRow(
+            column(
               width = 6,
+              offset = 0,
               DTOutput(outputId = "countTable1"), 
               DTOutput(outputId = "countTable2"),
               br(),
               br(),
-              (p(("Odds of Pennsylvania residents for University Park: 1.45 ")
-              )),
-              (p(("Odds of Pennsylvania residents for other campuses: 4.11 ")
-              )),
-              (p(("Odds ratio (θ) : \\(\\frac{1.45}{4.11}= 0.35\\)")
-              )),
+              p("Odds of Pennsylvania residents for University Park: 1.45 "),
+              p("Odds of Pennsylvania residents for other campuses: 4.11 "),
+              p("Odds ratio (θ) : \\(\\frac{1.45}{4.11}= 0.35\\)"),
               br(),
               tabsetPanel(
+                type = "tabs",
                 id = "tabset",
                 tabPanel(
                   "Seperate Sample Sizes",
                   fluid = TRUE,
                   br(),
+                  wellPanel(
                   sliderInput(
-                    "dlevel",
+                    inputId = "dlevel",
                     "Confidence Level",
                     min = .10,
                     max = 0.99,
@@ -235,36 +270,37 @@ ui <- list(
                     step = 0.01
                   ),
                   sliderInput(
-                    "nSamp1",
-                    "Sample Size for University Park",
+                    inputId = "nSamp1",
+                    label = "Sample Size for University Park",
                     min = 30,
                     max = 200,
                     value = 50,
                     step = 5
                   ),
                   sliderInput(
-                    "nSamp2",
-                    "Sample Size for Other Campuses",
+                    inputId = "nSamp2",
+                    label = "Sample Size for Other Campuses",
                     min = 30,
                     max = 200,
                     value = 50,
                     step = 5
                   )
-                ),
+                )),
                 tabPanel(
                   "Same Sample Size",
                   fluid = TRUE,
+                  wellPanel(
                   sliderInput(
-                    "dlevel1",
-                    "Confidence Level",
+                    inputId = "dlevel1",
+                    label = "Confidence Level",
                     min = .10,
                     max = 0.99,
                     value = 0.95,
                     step = 0.01
                   ),
                   sliderInput(
-                    "nSamp3",
-                    "Sample Sizes for both University Park and Other Campuses",
+                    inputId = "nSamp3",
+                    label = "Sample Sizes for both University Park and Other Campuses",
                     min = 30,
                     max = 200,
                     value = 50,
@@ -272,25 +308,33 @@ ui <- list(
                   )
                 )
               )
-            ),
-            mainPanel(
+            )),
+            column(
               width = 6, 
+              offset = 0,
               plotOutput("CIplot", height = "600px", click = "plot_click"),
               p("Black vertical line for null theta & green vertical line 
              for true odds ratio. Click on an interval (dot) to show the underlying
              data", style="text-align: center;"), 
-             fluidRow(column(width = 4, 
-                             h4(strong("Sample Counts:")),
-                             span(tableOutput("sampleinfotable2"))
-             ), 
-             column(width = 4,       
-                    h4(strong("Sample Percentages:")),
-                    span(tableOutput("sampleinfotable1"))
-             ), 
-             column(width = 4,
-                    h4(strong("Sample Odds Ratio:")),
-                    span(textOutput("sampleinforatio"))
-             )), 
+             fluidRow(
+               column(
+                 width = 4, 
+                 offset = 0,
+                 h3(strong("Sample Counts:")),
+                 span(tableOutput("sampleinfotable2"))
+               ), 
+               column(
+                 width = 4,
+                offset = 0,
+                h3(strong("Sample Percentages:")),
+                span(tableOutput("sampleinfotable1"))
+               ), 
+               column(
+                 width = 4,
+                 offset = 0,
+                 h3(strong("Sample Odds Ratio:")),
+                 span(textOutput("sampleinforatio"))
+               )), 
              br(),
              bsButton(
                inputId = "newSample", 
@@ -302,239 +346,48 @@ ui <- list(
           ),
         ),
         
-        
         ## Set up a Example Page ----
-        tabItem(tabName = "example",
-                br(), 
-                sidebarLayout(
-                  sidebarPanel(
-                    h3("Choose a Dataset Below"),
-                    selectInput(
-                      "sets",
-                      NULL,
-                      list(
-                        "Non-Small Cell Lung Cancer Treatment" =
-                          c(
-                            "Gefitinib vs. Chemotherapy" = "gvc",
-                            "Gefitinib vs. Erlotinib" = "gve"
-                          ),
-                        "Malaria Treatment" =
-                          c(
-                            "Artesunate-based therapies vs. Quinine 
-                            (for uncomplicated malaria)" = "avq",
-                            "Artemether vs. Quinine (for cerebral malaria)" 
-                            = "amvq"
-                          ),
-                        "Vaccines Immunogenicity" =
-                          c(
-                            "MMRV vs. MMR+V Against Measles" = "mea",
-                            "MMRV vs. MMR+V Against Mumps" =
-                              "mum",
-                            "MMRV vs. MMR+V Against Rubella" =
-                              "rub"
-                          )
-                      ),
-                      width = validateCssUnit("70%")
-                    ),
-                    useShinyjs(),
-                    conditionalPanel(
-                      condition = "input.sets == 'gve'"
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets == 'amvq'"
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets== 'rub'"
-                    ),
-                    
-                    h3("Background Knowledge"),
-                    conditionalPanel(
-                      condition = "input.sets == 'gvc'|input.sets == 'gve'",
-                      textOutput("nsclc")
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets == 'avq'|input.sets == 'amvq'",
-                      textOutput("mala")
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets == 'mea'|input.sets == 
-                      'mum'|input.sets == 'rub'",
-                      textOutput("vacc")
-                    )
-                  ),
-                  mainPanel( 
-                    conditionalPanel(
-                      condition = "input.sets == 'gvc'",
-                      h3(p(strong("Gefitinib vs. Chemotherapy"),
-                           style = "text-align: center;"
-                      )),
-                      h4(p(("Data from two individual studies."),
-                           style = "text-align: center;"
-                      )),
-                      img(src = "gvc.PNG",
-                          height = "100%", 
-                          width = "90%",
-                          algin = "middle"
-                      )
-                    ),
-                    
-                    conditionalPanel(
-                      condition = "input.sets == 'gve'",
-                      h3(p(strong("Gefitinib vs. Erlotinib"),
-                           style = "text-align: center;")),
-                      h4(p(("Data from three individual studies."),
-                           style = "text-align: center;"
-                      )),
-                      img(
-                        src = "gve.PNG",
-                        height = "100%",
-                        width = "90%",
-                        algin = "middle"
-                      ),
-                      HTML(markdownToHTML(fragment.only = TRUE, 
-                                          text = c("The first analysis in this section generally
-                                     compares the effect of targeted therapy and
-                                     chemotherapy.`Summary OR = 1.4` which is 
-                                     greater than 1. However, the CI of the `
-                                     Summary OR` contains 1. So we fail to reject
-                                     that the effectiveness of the two ways of 
-                                     treatments is about equal in this case. Then 
-                                     the second comparison as shown above is 
-                                     between two medicine within targeted therapy
-                                     treatment. This time, `Summary OR = 0.961`. 
-                                     However, the CI of the `Summary OR` contains 
-                                     1. So we fail to reject that the effectiveness 
-                                     of the two medicine is about equal in this 
-                                     case. In two analyses, we both fail to reject 
-                                     the null. However, targeted therapy in 
-                                     general is better than chemotherapy.")
-                      )
-                      )
-                    ),
-                    
-                    conditionalPanel(
-                      condition = "input.sets == 'avq'",
-                      h3(p(strong("Artesunate-based therapies vs. Quinine"),
-                           style = "text-align: center;")),
-                      h4(p(strong("(uncomplicated malaria in pregnancy)"),
-                           style = "text-align: center;")),
-                      h4(p(("Data from three individual studies."),
-                           style = "text-align: center;")),
-                      img(
-                        src = "avq.PNG",
-                        height = "100%",
-                        width = "90%",
-                        algin = "middle"
-                      )
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets == 'amvq'",
-                      h3(p(strong(
-                        "Artemether vs. Quinine"),
-                        style = "text-align: center;")),
-                      h4(p(strong("(cerebral malaria in African children \u2264 
-                                  15 years of age)"),
-                           style = "text-align: center;")),
-                      h4(p(("Data from seven individual studies."),
-                           style = "text-align: center;")),
-                      img(
-                        src = "amvq.PNG",
-                        height = "100%",
-                        width = "90%",
-                        algin = "middle"
-                      ),
-                      HTML(markdownToHTML(fragment.only = TRUE, 
-                                          text = c("The first analysis in this section 
-                                       compares the effect of artesunate-based
-                                       therapies and quinine in treating
-                                       uncomplicated malaria in pregnancy. 
-                                       Although we only have data from three 
-                                       studies, the advantage of using 
-                                       artesunate-based therapies is obvious:
-                                       `Summary OR = 7.59` which is greater than
-                                       1. Then the second analysis as shown above 
-                                       is between artemether and quinine in 
-                                       treating cerebral malaria in African 
-                                       children less than 15 years of age. This 
-                                       time, `Summary OR = 0.933`.However, the 
-                                       CI of the `Summary OR` contains 1. So the
-                                       effectiveness of the two medicine is 
-                                       about equal in this case."))
-                      )
-                    ),
-                    
-                    conditionalPanel(
-                      condition = "input.sets == 'mea'",
-                      h3(p(strong("MMRV vs. MMR+V Against Measles"),
-                           style = "text-align: center;")),
-                      h4(p(("Data from nine individual studies."),
-                           style = "text-align: center;")),
-                      img(
-                        src = "mea.PNG",
-                        height = "100%",
-                        width = "90%",
-                        algin = "middle"
-                      )
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets == 'mum'",
-                      h3(p(
-                        strong("MMRV vs. MMR+V Against Mumps"),
-                        style = "text-align: center;")),
-                      h4(p(("Data from eleven individual studies."),
-                           style = "text-align: center;")),
-                      img(
-                        src = "mum.PNG",
-                        height = "100%",
-                        width = "90%",
-                        algin = "middle"
-                      )
-                    ),
-                    conditionalPanel(
-                      condition = "input.sets == 'rub'",
-                      h3(p(strong("MMRV vs. MMR+V Against Rubella"),
-                           style = "text-align: center;")),
-                      h4(p(("Data from five individual studies."),
-                           style = "text-align: center;")),
-                      img(
-                        src = "rub.PNG",
-                        height = "100%",
-                        width = "90%",
-                        algin = "middle"
-                      ),
-                      HTML(markdownToHTML(fragment.only = TRUE, 
-                                          text = c("The three analyses in this section compare
-                                     the MMRV vaccine and the MMR + V vaccine in 
-                                     preventing measles, mumps, and rubella. 
-                                     Intuitively, we would assume that the 
-                                     effectiveness of the two kinds of vaccine 
-                                     is equal. However, in the second 
-                                     comparison, `Summary OR = 0.483`and the CI 
-                                     does not contain 1. It suggests that the MMRV
-                            vaccine against mumps is less effective than the MMR
-                            + V vaccine. It is an interesting finding.")))
-                    )
-                  )
-                )
-        ),
+        tabItem(
+          tabName = "example",
+          withMathJax(),
+          h2("Example"),
+          tabPanel(h2("example"),
+                   tags$ul(tags$li("all datasets below are about the comparsion of  medical
+                             therapy or vaccine effectiveness."),
+                           tags$li("choose the dataset to see the odds ratio and related
+                             95% confidence interval to check which thearpy or vaccine
+                             is better.")),
+                   br(),
+                   fluidRow(
+                     column(
+                       width = 4,
+                       wellPanel(
+                         selectInput(
+                           inputId = "sets",
+                           label = "Choose a Dataset Below",
+                           choices = c(
+                             "Non-Small Cell Lung Cancer Treatment" = "lungCancer",
+                             "Malaria Treatment" = "marlaria",
+                             "Vaccines Immunogenicity = vaccines"
+                           ),
+                           selected = "lungCancer"
+                         ),
+                         width = validateCssUnit("70%")
+                       ),
+                     ),
+                     column(
+                       width = 8,
+                       offset = 0,
+                       uiOutput(outputId = "exampleGraphs"),
+                     ),
+                   )
+          )),
         
         ## Set up the References Page ----
         tabItem(
           tabName = "references",
           withMathJax(),
           h2("References"),
-          p(
-            class = "hangingindent",
-            "Allaire, JJ., Horner, J. (2019). markdown: Render Markdown with the
-              C Library 'Sundown'. R package version 1.1. Available from
-              https://CRAN.R-project.org/package=markdown"
-          ),
-          p(
-            class = "hangingindent",
-            "Attali, D. (2020). shinyjs: Easily Improve the User Experience of
-              Your Shiny Apps in Seconds. R package version 1.1. Available from
-              https://CRAN.R-project.org/package=shinyjs"
-          ),
           p(
             class = "hangingindent",
             "Attali, D., Edwards, T., Wang, Z. (2020). shinyalerts: Easily create
@@ -616,12 +469,11 @@ ui <- list(
 )
 
 # Define server logic ----
-
 server <- function(input, output, session) {
   observeEvent(input$info,{
     sendSweetAlert(
       session = session,
-      title = "Instructions:",
+      title = "Instructions",
       text = "This app explores confidence intervals for odds ratios and their
               use in the meta-analysis of real data.",
       type = "info"
@@ -634,72 +486,6 @@ server <- function(input, output, session) {
       inputId = "pages",
       selected = "prerequisites")
   })
-  
-  observeEvent(input$start2, {
-    updateButton(session, "answer", disabled = TRUE)
-  })
-  
-  observeEvent(input$challenge, {
-    updateButton(session, "answer", disabled = FALSE)
-  })
-  
-  observeEvent(input$answer, {
-    updateButton(session, "answer", disabled = TRUE)
-  })
-  
-  observeEvent(input$begin, {
-    updateButton(session, "submit", disabled = TRUE)
-  })
-  
-  
-  # call the table
-  
-  ##table in the prerequisite page ----
-  output$countTable4 <- renderDT(
-    expr = {
-      datatable(
-        data = sampleTable,
-        colnames = c("Event", "No-Event"),
-        rownames = TRUE,
-        style = "bootstrap4",
-        options = list(
-          responsive = TRUE,
-          scrollX = FALSE,
-          ordering = FALSE,
-          paging = FALSE,
-          lengthChange = FALSE,
-          searching = FALSE,
-          info = FALSE,
-          columnDefs = list(
-            list(className = "dt-center", targets = 1:2)
-          )
-        )
-      ) 
-    })
-  
-  output$countTable3 <- renderDT(
-    expr = {
-      datatable(
-        data = exampleTable,
-        colnames = c("Cancer", "Non-Cancer"),
-        rownames = TRUE,
-        style = "bootstrap4",
-        options = list(
-          responsive = TRUE,
-          scrollX = FALSE,
-          ordering = FALSE,
-          paging = FALSE,
-          lengthChange = FALSE,
-          searching = FALSE,
-          info = FALSE,
-          columnDefs = list(
-            list(className = "dt-center", targets = 1:2)
-          )
-        )
-      ) 
-    }
-  )
-  
   
   ##table in the explore page ----
   output$countTable1 <- renderDT(
@@ -753,40 +539,160 @@ server <- function(input, output, session) {
       ) %>%
         formatRound(
           columns = 1:2,
-          
         )
     }
   ) 
   
-  
-  # print greek letter
-  output$hypo <- renderPrint({
-    print(paste0("H0: $$\\hat{A}_{\\small{\\textrm{M???}}} =", 1,"$$"))
-  })
-  
-  output$testdesign = renderUI({
-    if (input$testdesigncheckbox)
-    {
-      h4("A researcher wants to sample a group of n University Park students and
-         n students from other Penn State campuses to ask them about their
-         experiences in college.  Although the percentage of Pennsylvania
-         residents is 24.9% lower at University Park, a critic believes her 
-         sampling technique would provide a sample of students with a proportion
-         (p) that does not depend on the campus (the null hypothesis). The researcher
-         uses her samples to conduct a test of that null hypothesis and this app
-         shows how that test would behave when the sampling is really unbiased 
-         and the University Park campus has a proportion that is 0.249 lower.
-         ")
+  ## example page----
+  observeEvent(
+    eventExpr = input$sets,
+    handlerExpr = {
+      output$exampleGraphs <- renderUI(
+        expr = {
+          if (input$sets == "lungCancer") {
+            list(
+              h3("data context"),
+              p("About 80% to 85% of lung cancers are non-small cell
+                 lung cancer (NSCLC). The typical treatments include
+                 chemotherapy, radiation therapy and targeted therapy.
+                 Gefitinib and Erlotinib are two kinds of medicine used
+                 in NSCLC targeted therapy. In the two comparisons,
+                 Gefitinib represents treatment groups."),
+              h3("First Graph : Gefitinib vs. Chemotherapy"),
+              img(src = "gvc.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle",
+                  alt = "fill me in later"
+              ),
+              h3("Second Graph : Gefitinib vs. Erlotinib"),
+              img(
+                src = "gve.PNG",
+                height = "100%",
+                width = "90%",
+                algin = "middle",
+                alt = "fill me in later"
+              ),
+              h3("Commentary"), 
+              p("The first analysis in this section generally compares the effect
+              of targeted therapy and chemotherapy. ",strong("Summary OR = 1.4")," which is
+                                     greater than 1. However, the CI of the `
+                                     Summary OR` contains 1. So we fail to reject
+                                     that the effectiveness of the two ways of
+                                     treatments is about equal in this case. Then
+                                     the second comparison as shown above is
+                                     between two medicine within targeted therapy
+                                     treatment. This time,", strong("Summary OR = 0.961"),
+              ". However, the CI of the `Summary OR` contains
+                                     1. So we fail to reject that the effectiveness
+                                     of the two medicine is about equal in this
+                                     case. In two analyses, we both fail to reject
+                                     the null. However, targeted therapy in
+                                     general is better than chemotherapy.")
+            )
+          }
+          else if (input$sets == "marlaria") {
+            list(
+              h3("data context"),
+              p("Artemisinin is a plant-derived compound, isolated from
+                           the Artemisia annua, sweet wormwood a herb employed in
+                           Chinese herbal medicine. This compound (along with its
+                           derivative drugs), is the World Health Organization's
+                           recommended treatment against malaria caused by Plasmodium
+                           falciparum. Quinine, isolated from cinchona bark, is
+                           the first meditation to treat malaria. In the two
+                           comparisons, artesunate-based therapies represent
+                           treatment groups."),
+              h3("First Graph : Artesunate-based therapies vs. Quinine 
+                            (for uncomplicated malaria)"),
+              img(src = "avq.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle",
+                  alt = "fill me in later"
+              ),
+              h3("Second Graph : Artemether vs. Quinine (for cerebral malaria)"),
+              img(
+                src = "amvq.PNG",
+                height = "100%",
+                width = "90%",
+                algin = "middle",
+                alt = "fill me in later"
+              ),
+              h3("Commentary"), 
+              p("The first analysis in this section compares the effect
+                of artesunate-based therapies and quinine in treating
+                uncomplicated malaria in pregnancy. Although we only have
+                data from three studies, the advantage of using artesunate-based
+                therapies is obvious:",strong("Summary OR = 7.59")," which is greater
+                than 1. Then the second analysis as shown above is between
+                artemether and quinine in treating cerebral malaria in
+                African children less than 15 years of age. This time,
+                ",strong("Summary OR = 0.933"),".However, the CI of the `Summary OR`
+                contains 1. So the effectiveness of the two medicine is
+                about equal in this case.")
+            )
+          }
+          else if (input$sets == "vaccines") {
+            list(
+              h3("data context"),
+              p("A combined measles-mumps-rubella-varicella (MMRV)
+                           vaccine is expected to facilitate universal immunization
+                           against these 4 diseases. Here randomized controlled
+                           trials (RCTs) were conducted to compare single MMRV
+                           dose with measles-mumps-rubella vaccine with varicella
+                           vaccine (MMR + V). All included studies reported
+                           seroconversion rate as serological response outcome.
+                           Seroconversion rate was defined as percent of subjects
+                           initially seronegative (with titers \u2264 assay cut-offs),
+                           who developed postvaccination antibody titers above the
+                           assay cut-off levels. In the three comparisons, MMRV
+                           represents treatment groups."),
+              h3("First Graph: MMRV vs. MMR+V Against Measles"),
+              img(src = "mea.PNG",
+                  height = "100%",
+                  width = "90%",
+                  algin = "middle",
+                  alt = "fill me in later"
+              ),
+              h3("Second Graph : MMRV vs. MMR+V Against Mumps"),
+              img(
+                src = "mum.PNG",
+                height = "100%",
+                width = "90%",
+                algin = "middle",
+                alt = "fill me in later"
+              ),
+              h3("third Graph : MMRV vs. MMR+V Against Rubella"),
+              img(
+                src = "rub.PNG",
+                height = "100%",
+                width = "90%",
+                algin = "middle",
+                alt = "fill me in later"
+              ),
+              h3("Commentary"),
+              p("The three analyses in this section compare the MMRV
+                vaccine and the MMR + V vaccine in preventing measles,
+                mumps, and rubella. Intuitively, we would assume that the
+                effectiveness of the two kinds of vaccine is equal.
+                However, in the second comparison, ",strong("Summary OR = 0.483"),"
+                and the CI does not contain 1. It suggests that the MMRV
+                vaccine against mumps is less effective than the MMR + V
+                vaccine. It is an interesting finding.")
+            )
+          }
+        }
+      )
     }
-  })
+  )
   
-  
-  #Calculating alpha by the confidence level input
+  ##Calculating alpha by the confidence level input----
   dalpha <- reactive({
     (1 - input$dlevel) / 2
   })
   
-  #Updating Sample Size
+  ##Updating Sample Size----
   dN1 <- reactive({
     as.integer(input$nSamp1)
   })
@@ -798,34 +704,11 @@ server <- function(input, output, session) {
     as.integer(input$nSamp3)
   })
   
-  
-  #population mean plot with true diffmean
-  output$dpopMean  = renderPlot({
-    dfPop <- data.frame(types = rep(c("Pennsylvania_Students", "Out-of-State_Students"), 
-                                    each = 2),
-                        location = rep(c("University Park", "Other Campuses"),2),
-                        samplepercent = c(0.595,0.844,0.405,0.156))
-    
-    ggplot(dfPop,aes(x = location,y = samplepercent, fill = types)) +
-      geom_bar(position = position_fill(),stat="identity", width = 0.3) +
-      scale_y_continuous(labels = percent_format()) +
-      scale_fill_brewer(palette = "Paired")+
-      labs(
-        title = paste0("population proportion(diff) = -24.9%, σ(p(UP)-p(Others))
-                       = ",round(sqrt(0.595*0.405 + 0.844*0.156),3)),
-        y = "Enrollment by Percentage")
-  })
-  
-  
-  #generate 50 new sample
-  
+  #generate 50 new sample----
   UPS50P <- reactive({
     input$newSample
-    # rbinom(n=dN1(), 1, 0.595)
     data.frame(
-      x =
-        do.call(
-          paste0("rbinom"),
+      x = do.call(paste0("rbinom"),
           c(list(n = dN1() * 50), list(1, 0.595)))
     ) %>%
       mutate(idx = rep(1:50, each = dN1()))
@@ -845,11 +728,8 @@ server <- function(input, output, session) {
   
   UWS50P <- reactive({
     input$newSample
-    
     data.frame(
-      x =
-        do.call(
-          paste0("rbinom"),
+      x = do.call(paste0("rbinom"),
           c(list(n = dN2() * 50), list(1, 0.844)))
     ) %>%
       mutate(idx = rep(1:50, each = dN2()))
@@ -865,7 +745,6 @@ server <- function(input, output, session) {
   uws50n <- reactive({
     data.frame(idx = rep(1:50), 
                input$nSamp2-uws50p()[,2])
-    
   })
   
   data50_1 <- reactive({
@@ -880,8 +759,7 @@ server <- function(input, output, session) {
     merge.data.frame(data50_1(), data50_2(), by = "idx")
   })
   
-  
-  #generate 50 new sample (combined sample size)
+  ##generate 50 new sample (combined sample size)----
   UPS50P_3 <- reactive({
     input$newSample
     data.frame(
@@ -924,7 +802,6 @@ server <- function(input, output, session) {
   uws50n_3 <- reactive({
     data.frame(idx = rep(1:50), 
                input$nSamp3-uws50p_3()[,2])
-    
   })
   
   data50_1_3 <- reactive({
@@ -939,7 +816,7 @@ server <- function(input, output, session) {
     merge.data.frame(data50_1_3(),data50_2_3(), by = "idx")
   })
   
-  #calculate the interval
+  ##calculate the interval----
   Intervals <- reactive({
     zvalue = qnorm(((1 - input$dlevel)/2), lower.tail = F)
     sampleRatio = (data50()[,2]*data50()[,5])/(data50()[,3]*data50()[,4])
@@ -976,14 +853,7 @@ server <- function(input, output, session) {
                cover = (lowerbound < 0.35) & (0.35 < upperbound))
   })
   
-  output$show1 <- renderTable({
-    newIntervals()
-  })
-  output$show2 <- renderTable({
-    Intervals()
-  })
-  
-  #default as all the samples are selected
+  ##default as all the samples are selected----
   selected_sample <- 50
   selectedSample <- reactive({
     if (!is.null(input$plot_click)) {
@@ -994,8 +864,7 @@ server <- function(input, output, session) {
     selected_sample
   })
   
-  
-  # selected sample 
+  # selected sample----
   OneSample <- reactive({
     data50() %>%
       filter( idx == selectedSample() )
@@ -1019,7 +888,7 @@ server <- function(input, output, session) {
     colors[ as.character(covers) ]
   })
   
-  #print the CIplot
+  ##print the CIplot----
   output$CIplot <- renderPlot({
     if (input$tabset == "Same Sample Size"){
       validate(
@@ -1085,10 +954,12 @@ server <- function(input, output, session) {
               axis.title.x = element_text(size = 14),
               axis.title.y = element_text(size = 14))
     }
-  })
+  },    
+  alt = "fill me in later",
+  )
   
   
-  # sample display
+  ## sample display----
   output$sampleinfotable1 = renderTable({
     if (input$tabset == "Same Sample Size"){
       validate(
@@ -1171,228 +1042,229 @@ server <- function(input, output, session) {
     }
   })
   
-  
-  #####forestplot
-  
-  makeDatatabletoList <- function(mytable){
-    mylist = c()
-    rnum <- nrow(mytable)
-    for (i in 1:rnum){
-      mylist[[i]] = matrix(as.numeric(mytable[i,]),nrow = 2,byrow = TRUE)
-    }
-    mylist
-  }
-  
-  makeTable <- function(mylist, referencerow=2)
-  {
-    require("rmeta")
-    numstrata <- length(mylist)
-    ntrt <- vector()
-    nctrl <- vector()
-    ptrt <- vector()
-    pctrl <- vector()
-    if (referencerow == 1) {nonreferencerow <- 2}
-    else {nonreferencerow <- 1}
-    for (i in 1:numstrata)
-    {
-      mymatrix <- mylist[[i]]
-      DiseaseUnexposed <- mymatrix[referencerow,1]
-      ControlUnexposed <- mymatrix[referencerow,2]
-      totUnexposed <- DiseaseUnexposed + ControlUnexposed
-      nctrl[i] <- totUnexposed
-      pctrl[i] <- DiseaseUnexposed
-      DiseaseExposed <- mymatrix[nonreferencerow,1]
-      ControlExposed <- mymatrix[nonreferencerow,2]
-      totExposed <- DiseaseExposed + ControlExposed
-      ntrt[i] <- totExposed
-      ptrt[i] <- DiseaseExposed
-    }
-    names <- as.character(seq(1,numstrata))
-    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
-                    names = names,
-                    statistic = "OR")
-    
-    
-    tabletext <- cbind(c("","Study",myMH$names,NA,"Summary"),
-                       c("Treatment","(effective)",ptrt,NA,NA),
-                       c("Treatment","(non-effective)",pctrl, NA,NA),
-                       c("Control","(effective)",(ntrt-ptrt),NA,NA),
-                       c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
-                       c("","OR",format((exp(myMH$logOR)),digits = 3),NA,
-                         format((exp(myMH$logMH)),digits=3)))
-  }
-  
-  
-  makeForestPlot <- function(mylist, referencerow=2)
-  {
-    require("rmeta")
-    numstrata <- length(mylist)
-    ntrt <- vector()
-    nctrl <- vector()
-    ptrt <- vector()
-    pctrl <- vector()
-    if (referencerow == 1) {nonreferencerow <- 2}
-    else {nonreferencerow <- 1}
-    for (i in 1:numstrata)
-    {
-      mymatrix <- mylist[[i]]
-      DiseaseUnexposed <- mymatrix[referencerow,1]
-      ControlUnexposed <- mymatrix[referencerow,2]
-      totUnexposed <- DiseaseUnexposed + ControlUnexposed
-      nctrl[i] <- totUnexposed
-      pctrl[i] <- DiseaseUnexposed
-      DiseaseExposed <- mymatrix[nonreferencerow,1]
-      ControlExposed <- mymatrix[nonreferencerow,2]
-      totExposed <- DiseaseExposed + ControlExposed
-      ntrt[i] <- totExposed
-      ptrt[i] <- DiseaseExposed
-    }
-    names <- as.character(seq(1,numstrata))
-    myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
-                    names = names,
-                    statistic = "OR")
-  }
+  # ##forestplot----
+  # makeDatatabletoList <- function(mytable){
+  #   mylist = c()
+  #   rnum <- nrow(mytable)
+  #   for (i in 1:rnum){
+  #     mylist[[i]] = matrix(as.numeric(mytable[i,]),nrow = 2,byrow = TRUE)
+  #   }
+  #   mylist
+  # }
+  # 
+  # makeTable <- function(mylist, referencerow=2)
+  # {
+  #   require("rmeta")
+  #   numstrata <- length(mylist)
+  #   ntrt <- vector()
+  #   nctrl <- vector()
+  #   ptrt <- vector()
+  #   pctrl <- vector()
+  #   if (referencerow == 1) {nonreferencerow <- 2}
+  #   else {nonreferencerow <- 1}
+  #   for (i in 1:numstrata)
+  #   {
+  #     mymatrix <- mylist[[i]]
+  #     DiseaseUnexposed <- mymatrix[referencerow,1]
+  #     ControlUnexposed <- mymatrix[referencerow,2]
+  #     totUnexposed <- DiseaseUnexposed + ControlUnexposed
+  #     nctrl[i] <- totUnexposed
+  #     pctrl[i] <- DiseaseUnexposed
+  #     DiseaseExposed <- mymatrix[nonreferencerow,1]
+  #     ControlExposed <- mymatrix[nonreferencerow,2]
+  #     totExposed <- DiseaseExposed + ControlExposed
+  #     ntrt[i] <- totExposed
+  #     ptrt[i] <- DiseaseExposed
+  #   }
+  #   names <- as.character(seq(1,numstrata))
+  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
+  #                   names = names,
+  #                   statistic = "OR")
+  #   
+  #   
+  #   tabletext <- cbind(c("","Study",myMH$names,NA,"Summary"),
+  #                      c("Treatment","(effective)",ptrt,NA,NA),
+  #                      c("Treatment","(non-effective)",pctrl, NA,NA),
+  #                      c("Control","(effective)",(ntrt-ptrt),NA,NA),
+  #                      c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
+  #                      c("","OR",format((exp(myMH$logOR)),digits = 3),NA,
+  #                        format((exp(myMH$logMH)),digits=3)))
+  # }
+  # 
+  # 
+  # makeForestPlot <- function(mylist, referencerow=2)
+  # {
+  #   require("rmeta")
+  #   numstrata <- length(mylist)
+  #   ntrt <- vector()
+  #   nctrl <- vector()
+  #   ptrt <- vector()
+  #   pctrl <- vector()
+  #   if (referencerow == 1) {nonreferencerow <- 2}
+  #   else {nonreferencerow <- 1}
+  #   for (i in 1:numstrata)
+  #   {
+  #     mymatrix <- mylist[[i]]
+  #     DiseaseUnexposed <- mymatrix[referencerow,1]
+  #     ControlUnexposed <- mymatrix[referencerow,2]
+  #     totUnexposed <- DiseaseUnexposed + ControlUnexposed
+  #     nctrl[i] <- totUnexposed
+  #     pctrl[i] <- DiseaseUnexposed
+  #     DiseaseExposed <- mymatrix[nonreferencerow,1]
+  #     ControlExposed <- mymatrix[nonreferencerow,2]
+  #     totExposed <- DiseaseExposed + ControlExposed
+  #     ntrt[i] <- totExposed
+  #     ptrt[i] <- DiseaseExposed
+  #   }
+  #   names <- as.character(seq(1,numstrata))
+  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
+  #                   names = names,
+  #                   statistic = "OR")
+  # }
   
   ## Non-Small Cell Lung Cancer Treatment introduction
-  output$nsclc = renderText("About 80% to 85% of lung cancers are non-small cell 
-                            lung cancer (NSCLC). The typical treatments include
-                            chemotherapy, radiation therapy and targeted therapy. 
-                            Gefitinib and Erlotinib are two kinds of medicine used
-                            in NSCLC targeted therapy. In the two comparisons,
-                            Gefitinib represents treatment groups.")
-  
-  # drug 1: Gefitinib vs chemotherapy
-  gvc1 <- matrix(c(42,37,48,53),nrow = 2,byrow = TRUE)
-  gvc2 <- matrix(c(18,12,26,32),nrow = 2,byrow = TRUE)
-  gvc_list = list(gvc1, gvc2)
-  
-  # makeForestPlotForRCTs(gvc_list)
-  output$plot1 = renderUI({
-    img(src = "gvc.PNG", width = "80%", algin = "middle")
-  })
-
-  
-  # drug 2: Gefitinib vs Erlotinib 
-  gve1 <- matrix(c(28,6,22,12),nrow = 2,byrow = TRUE)
-  gve2 <- matrix(c(36,14,38,12),nrow = 2,byrow = TRUE)
-  gve3 <- matrix(c(16,19,21,14),nrow = 2,byrow = TRUE)
-  gve_list = list(gve1, gve2, gve3)
-  
-  #  makeForestPlot(gve_list)
-  output$plot2 = renderUI({
-    img(src = "gve.PNG", width = "80%", algin = "middle")
-  })
-  
-  
+  # output$nsclc = renderText("About 80% to 85% of lung cancers are non-small cell
+  #                           lung cancer (NSCLC). The typical treatments include
+  #                           chemotherapy, radiation therapy and targeted therapy.
+  #                           Gefitinib and Erlotinib are two kinds of medicine used
+  #                           in NSCLC targeted therapy. In the two comparisons,
+  #                           Gefitinib represents treatment groups.")
+  # 
+  # # drug 1: Gefitinib vs chemotherapy
+  # gvc1 <- matrix(c(42,37,48,53),nrow = 2,byrow = TRUE)
+  # gvc2 <- matrix(c(18,12,26,32),nrow = 2,byrow = TRUE)
+  # gvc_list = list(gvc1, gvc2)
+  # 
+  # # makeForestPlotForRCTs(gvc_list)
+  # output$plot1 = renderUI({
+  #   img(src = "gvc.PNG", width = "80%", algin = "middle")
+  # })
+  # 
+  # # drug 2: Gefitinib vs Erlotinib 
+  # gve1 <- matrix(c(28,6,22,12),nrow = 2,byrow = TRUE)
+  # gve2 <- matrix(c(36,14,38,12),nrow = 2,byrow = TRUE)
+  # gve3 <- matrix(c(16,19,21,14),nrow = 2,byrow = TRUE)
+  # gve_list = list(gve1, gve2, gve3)
+  # 
+  # #  makeForestPlot(gve_list)
+  # output$plot2 = renderUI({
+  #   img(src = "gve.PNG", width = "80%", algin = "middle",
+  # alt = "fill me in later")
+  # })
+  # 
   ## Malaria Treatment
-  output$mala = renderText("Artemisinin is a plant-derived compound, isolated from
-                           the Artemisia annua, sweet wormwood a herb employed in
-                           Chinese herbal medicine. This compound (along with its
-                           derivative drugs), is the World Health Organization's
-                           recommended treatment against malaria caused by Plasmodium
-                           falciparum. Quinine, isolated from cinchona bark, is
-                           the first meditation to treat malaria. In the two
-                           comparisons, artesunate-based therapies represent
-                           treatment groups.")
-  
-  
-  #drug 1: Artemisinin-based combination therapies vs. Quinine
-  avq1 <- matrix(c(37,26,2,15),nrow = 2,byrow = TRUE)
-  avq2 <- matrix(c(64,34,2,8),nrow = 2,byrow = TRUE)
-  avq3 <- matrix(c(137,122,1,3),nrow = 2,byrow = TRUE)
-  avq_list = list(avq1, avq2, avq3)
-  output$plot3 = renderUI({
-    img(src = "avq.PNG", width = "85%", algin = "middle")
-  })
-  
-  
-  #drug 2: artemether vs. Quinine
-  amvq1 <- matrix(c(6,10,45,42),nrow = 2,byrow = TRUE)
-  amvq2 <- matrix(c(18,8,71,63),nrow = 2,byrow = TRUE)
-  amvq3 <- matrix(c(11,14,43,35),nrow = 2,byrow = TRUE)
-  amvq4 <- matrix(c(1,2,17,17),nrow = 2,byrow = TRUE)
-  amvq5 <- matrix(c(10,12,73,69),nrow = 2,byrow = TRUE)
-  amvq6 <- matrix(c(59,62,229,226),nrow = 2,byrow = TRUE)
-  amvq7 <- matrix(c(3,2,35,37),nrow = 2,byrow = TRUE)
-  amvq_list = list(amvq1, amvq2, amvq3, amvq4, amvq5, amvq6, amvq7)
-  output$plot4 = renderUI({
-    img(src = "amvq.PNG", width = "85%", algin = "middle")
-  })
-  
-  
+  # output$mala = renderText("Artemisinin is a plant-derived compound, isolated from
+  #                          the Artemisia annua, sweet wormwood a herb employed in
+  #                          Chinese herbal medicine. This compound (along with its
+  #                          derivative drugs), is the World Health Organization's
+  #                          recommended treatment against malaria caused by Plasmodium
+  #                          falciparum. Quinine, isolated from cinchona bark, is
+  #                          the first meditation to treat malaria. In the two
+  #                          comparisons, artesunate-based therapies represent
+  #                          treatment groups.")
+  # 
+  # 
+  # #drug 1: Artemisinin-based combination therapies vs. Quinine
+  # avq1 <- matrix(c(37,26,2,15),nrow = 2,byrow = TRUE)
+  # avq2 <- matrix(c(64,34,2,8),nrow = 2,byrow = TRUE)
+  # avq3 <- matrix(c(137,122,1,3),nrow = 2,byrow = TRUE)
+  # avq_list = list(avq1, avq2, avq3)
+  # output$plot3 = renderUI({
+  #   img(src = "avq.PNG", width = "85%", algin = "middle",
+  # alt = "fill me in later")
+  # })
+  # 
+  # 
+  # #drug 2: artemether vs. Quinine
+  # amvq1 <- matrix(c(6,10,45,42),nrow = 2,byrow = TRUE)
+  # amvq2 <- matrix(c(18,8,71,63),nrow = 2,byrow = TRUE)
+  # amvq3 <- matrix(c(11,14,43,35),nrow = 2,byrow = TRUE)
+  # amvq4 <- matrix(c(1,2,17,17),nrow = 2,byrow = TRUE)
+  # amvq5 <- matrix(c(10,12,73,69),nrow = 2,byrow = TRUE)
+  # amvq6 <- matrix(c(59,62,229,226),nrow = 2,byrow = TRUE)
+  # amvq7 <- matrix(c(3,2,35,37),nrow = 2,byrow = TRUE)
+  # amvq_list = list(amvq1, amvq2, amvq3, amvq4, amvq5, amvq6, amvq7)
+  # output$plot4 = renderUI({
+  #   img(src = "amvq.PNG", width = "85%", algin = "middle",
+  # alt = "fill me in later")
+  # })
+  # 
+  # 
   ## Vaccines Immunogenicity
-  
-  output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV)
-                           vaccine is expected to facilitate universal immunization
-                           against these 4 diseases. Here randomized controlled
-                           trials (RCTs) were conducted to compare single MMRV 
-                           dose with measles-mumps-rubella vaccine with varicella
-                           vaccine (MMR + V). All included studies reported
-                           seroconversion rate as serological response outcome. 
-                           Seroconversion rate was defined as percent of subjects
-                           initially seronegative (with titers \u2264 assay cut-offs),
-                           who developed postvaccination antibody titers above the
-                           assay cut-off levels. In the three comparisons, MMRV
-                           represents treatment groups.")
-  #1: measles
-  mea1 <- matrix(c(289,141,4,1),nrow = 2,byrow = TRUE)
-  mea2 <- matrix(c(1107,540,9,15),nrow = 2,byrow = TRUE)
-  mea3 <- matrix(c(73,68,1,6),nrow = 2,byrow = TRUE)
-  mea4 <- matrix(c(1114,181,29,9),nrow = 2,byrow = TRUE)
-  mea12 <- matrix(c(290,145,12,0),nrow = 2,byrow = TRUE)#contain 0
-  mea5 <- matrix(c(980,349,9,1),nrow = 2,byrow = TRUE)
-  mea6 <- matrix(c(299,106,7,0),nrow = 2,byrow = TRUE)#contain 0
-  mea7 <- matrix(c(2437,841,72,20),nrow = 2,byrow = TRUE)
-  mea8 <- matrix(c(125,113,9,9),nrow = 2,byrow = TRUE)
-  mea9 <- matrix(c(10,7,0,1),nrow = 2,byrow = TRUE)#contain 0
-  mea10 <- matrix(c(633,199,37,14),nrow = 2,byrow = TRUE)
-  mea11 <- matrix(c(294,155,6,1),nrow = 2,byrow = TRUE)
-  mea_list = list(mea1, mea2, mea3, mea4, mea5, mea7, mea8, mea10, mea11)
-  output$plot5 = renderUI({
-    img(src = "mea.PNG", width = "90%", algin = "middle")
-  })
-  
-  #2: mumps
-  mum1 <- matrix(c(287,137,12,4),nrow = 2,byrow = TRUE)
-  mum2 <- matrix(c(927,516,167,28),nrow = 2,byrow = TRUE)
-  mum3 <- matrix(c(70,69,2,4),nrow = 2,byrow = TRUE)
-  mum4 <- matrix(c(992,173,117,9),nrow = 2,byrow = TRUE)
-  mum5 <- matrix(c(292,148,3,2),nrow = 2,byrow = TRUE)
-  mum6 <- matrix(c(1002,350,10,1),nrow = 2,byrow = TRUE)
-  mum7 <- matrix(c(272,101,30,4),nrow = 2,byrow = TRUE)
-  mum8 <- matrix(c(2409,854,100,18),nrow = 2,byrow = TRUE)
-  mum9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)
-  mum10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
-  mum11 <- matrix(c(613,191,37,16),nrow = 2,byrow = TRUE)
-  mum12 <- matrix(c(262,145,33,9),nrow = 2,byrow = TRUE)
-  mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11, 
-                  mum12)
-  
-  output$plot6 = renderUI({
-    img(src = "mum.PNG", width = "90%", algin = "middle")
-  })
-  # makeForestPlotForRCTs(mum_list)
-  
-  #3: rubella
-  rub1 <- matrix(c(288,141,10,0),nrow = 2,byrow = TRUE)#contain 0
-  rub2 <- matrix(c(1114,552,3,3),nrow = 2,byrow = TRUE)
-  rub3 <- matrix(c(73,74,1,0),nrow = 2,byrow = TRUE)#contain 0
-  rub4 <- matrix(c(1148,189,1,0),nrow = 2,byrow = TRUE)#contain 0
-  rub5 <- matrix(c(289,142,15,11),nrow = 2,byrow = TRUE)
-  rub6 <- matrix(c(1004,352,11,4),nrow = 2,byrow = TRUE)
-  rub7 <- matrix(c(303,106,3,0),nrow = 2,byrow = TRUE)#contain 0
-  rub8 <- matrix(c(2501,859,31,7),nrow = 2,byrow = TRUE)
-  rub9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)#contain 0
-  rub10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
-  rub11 <- matrix(c(665,208,2,4),nrow = 2,byrow = TRUE)
-  rub12 <- matrix(c(297,157,1,0),nrow = 2,byrow = TRUE)#contain 0
-  rub_list = list(rub2,rub5, rub6, rub8, rub11)
-  output$plot7 = renderUI({
-    img(src = "rub.PNG", width = "85%", algin = "middle")
-  })
+  # output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV)
+  #                          vaccine is expected to facilitate universal immunization
+  #                          against these 4 diseases. Here randomized controlled
+  #                          trials (RCTs) were conducted to compare single MMRV
+  #                          dose with measles-mumps-rubella vaccine with varicella
+  #                          vaccine (MMR + V). All included studies reported
+  #                          seroconversion rate as serological response outcome.
+  #                          Seroconversion rate was defined as percent of subjects
+  #                          initially seronegative (with titers \u2264 assay cut-offs),
+  #                          who developed postvaccination antibody titers above the
+  #                          assay cut-off levels. In the three comparisons, MMRV
+  #                          represents treatment groups.")
+  # #1: measles
+  # mea1 <- matrix(c(289,141,4,1),nrow = 2,byrow = TRUE)
+  # mea2 <- matrix(c(1107,540,9,15),nrow = 2,byrow = TRUE)
+  # mea3 <- matrix(c(73,68,1,6),nrow = 2,byrow = TRUE)
+  # mea4 <- matrix(c(1114,181,29,9),nrow = 2,byrow = TRUE)
+  # mea12 <- matrix(c(290,145,12,0),nrow = 2,byrow = TRUE)#contain 0
+  # mea5 <- matrix(c(980,349,9,1),nrow = 2,byrow = TRUE)
+  # mea6 <- matrix(c(299,106,7,0),nrow = 2,byrow = TRUE)#contain 0
+  # mea7 <- matrix(c(2437,841,72,20),nrow = 2,byrow = TRUE)
+  # mea8 <- matrix(c(125,113,9,9),nrow = 2,byrow = TRUE)
+  # mea9 <- matrix(c(10,7,0,1),nrow = 2,byrow = TRUE)#contain 0
+  # mea10 <- matrix(c(633,199,37,14),nrow = 2,byrow = TRUE)
+  # mea11 <- matrix(c(294,155,6,1),nrow = 2,byrow = TRUE)
+  # mea_list = list(mea1, mea2, mea3, mea4, mea5, mea7, mea8, mea10, mea11)
+  # output$plot5 = renderUI({
+  #   img(src = "mea.PNG", width = "90%", algin = "middle",
+  # alt = "fill me in later")
+  # })
+  # 
+  # #2: mumps
+  # mum1 <- matrix(c(287,137,12,4),nrow = 2,byrow = TRUE)
+  # mum2 <- matrix(c(927,516,167,28),nrow = 2,byrow = TRUE)
+  # mum3 <- matrix(c(70,69,2,4),nrow = 2,byrow = TRUE)
+  # mum4 <- matrix(c(992,173,117,9),nrow = 2,byrow = TRUE)
+  # mum5 <- matrix(c(292,148,3,2),nrow = 2,byrow = TRUE)
+  # mum6 <- matrix(c(1002,350,10,1),nrow = 2,byrow = TRUE)
+  # mum7 <- matrix(c(272,101,30,4),nrow = 2,byrow = TRUE)
+  # mum8 <- matrix(c(2409,854,100,18),nrow = 2,byrow = TRUE)
+  # mum9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)
+  # mum10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
+  # mum11 <- matrix(c(613,191,37,16),nrow = 2,byrow = TRUE)
+  # mum12 <- matrix(c(262,145,33,9),nrow = 2,byrow = TRUE)
+  # mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11, 
+  #                 mum12)
+  # 
+  # output$plot6 = renderUI({
+  #   img(src = "mum.PNG", width = "90%", algin = "middle", 
+  # alt = "fill me in later")
+  # })
+  # 
+  # #3: rubella
+  # rub1 <- matrix(c(288,141,10,0),nrow = 2,byrow = TRUE)#contain 0
+  # rub2 <- matrix(c(1114,552,3,3),nrow = 2,byrow = TRUE)
+  # rub3 <- matrix(c(73,74,1,0),nrow = 2,byrow = TRUE)#contain 0
+  # rub4 <- matrix(c(1148,189,1,0),nrow = 2,byrow = TRUE)#contain 0
+  # rub5 <- matrix(c(289,142,15,11),nrow = 2,byrow = TRUE)
+  # rub6 <- matrix(c(1004,352,11,4),nrow = 2,byrow = TRUE)
+  # rub7 <- matrix(c(303,106,3,0),nrow = 2,byrow = TRUE)#contain 0
+  # rub8 <- matrix(c(2501,859,31,7),nrow = 2,byrow = TRUE)
+  # rub9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)#contain 0
+  # rub10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
+  # rub11 <- matrix(c(665,208,2,4),nrow = 2,byrow = TRUE)
+  # rub12 <- matrix(c(297,157,1,0),nrow = 2,byrow = TRUE)#contain 0
+  # rub_list = list(rub2,rub5, rub6, rub8, rub11)
+  # output$plot7 = renderUI({
+  #   img(src = "rub.PNG", width = "85%", algin = "middle",
+  # alt = "fill me in later")
+  # })
+ 
+  ##the code upper I don't know what they are aiming, but might be related to the
+  ##plots that should be made in the example page. I comment out them. 
 }
-
-
 
 # Boast App Call ----
 boastUtils::boastApp(ui = ui, server = server)
