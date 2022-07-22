@@ -111,12 +111,12 @@ ui <- list(
           tabName = "prerequisites",
           withMathJax(),
           h2("What is odds ratio?"),
-          p("An odds ratio relates the odds of an event under two different 
+          p("An odds ratio, \\(\\theta\\), relates the odds of an event under two different 
             conditions. 
             For example if two-thirds of women ate vegetables at lunch today 
             (odds of 2 to 1), while only one-third of men ate vegetables 
             (odds of 1 to 2)
-            - then the odds for women are four times as great as the odds for
+            , then the odds for women are four times as great as the odds for
             men
             (so 4 is the odds ratio)."),
           h2("How to calculate the confidence interval of an odds ratio?"),
@@ -170,7 +170,7 @@ ui <- list(
             (log here means natural log). The estimated variance of \\(\\log\\hat
             {\\theta}\\)
             is easy to remember,"),
-          p("\\[\\widehat{V}(\\log\\widehat{\\theta})=\\frac{1}{a}+\\frac{1}{b}+
+          p("\\[\\text{Estimated Variance of }\\log\\widehat{\\theta}=\\frac{1}{a}+\\frac{1}{b}+
              \\frac{1}{c}+\\frac{1}{d}\\]"),
           p("and we get a 95% confidence interval for \\(\\theta\\) by 
             exponentiating the endpoints of"),
@@ -220,12 +220,13 @@ ui <- list(
             {622}= 1.04\\)."),
           p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\).
             "),
-          p("The ratio of the odds of lung cancer in smokers divided by the 
-            odds of lung cancer in non-smokers: \\(\\frac{647}{622}\\big/\\frac{2}
+          p("The odds ratio can be expressed as the odds of lung cancer for smokers 
+            divided by the odds of lung cancer for non-smokers: 
+            \\(\\frac{647}{622}\\big/\\frac{2}
             {27}=14.04\\)."), 
-          p("Here, the odds ratio is greater than 1."),
-          p("Being a smoker is considered to be associated with having lung 
-            cancer since smoking raises the odds of having lung cancer."),
+          p("Here, the odds ratio is greater than 1. Which can lead to a conclusion 
+            that being a smoker is considered to be associated with having lung 
+            cancer."),
         ),
         
         ## Set up an Explore Page----
@@ -263,7 +264,7 @@ ui <- list(
                   wellPanel(
                   sliderInput(
                     inputId = "dlevel",
-                    "Confidence Level",
+                    label = "Confidence Level",
                     min = .10,
                     max = 0.99,
                     value = 0.95,
@@ -368,7 +369,7 @@ ui <- list(
                            choices = c(
                              "Non-Small Cell Lung Cancer Treatment" = "lungCancer",
                              "Malaria Treatment" = "marlaria",
-                             "Vaccines Immunogenicity = vaccines"
+                             "Vaccines Immunogenicity" = "vaccines"
                            ),
                            selected = "lungCancer"
                          ),
@@ -663,7 +664,7 @@ server <- function(input, output, session) {
                 algin = "middle",
                 alt = "fill me in later"
               ),
-              h3("third Graph : MMRV vs. MMR+V Against Rubella"),
+              h3("Third Graph : MMRV vs. MMR+V Against Rubella"),
               img(
                 src = "rub.PNG",
                 height = "100%",
@@ -1052,8 +1053,7 @@ server <- function(input, output, session) {
   #   mylist
   # }
   # 
-  # makeTable <- function(mylist, referencerow=2)
-  # {
+  # makeTable <- function(mylist, referencerow=2) {
   #   require("rmeta")
   #   numstrata <- length(mylist)
   #   ntrt <- vector()
@@ -1077,11 +1077,11 @@ server <- function(input, output, session) {
   #     ptrt[i] <- DiseaseExposed
   #   }
   #   names <- as.character(seq(1,numstrata))
-  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
+  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95,
   #                   names = names,
   #                   statistic = "OR")
-  #   
-  #   
+  # 
+  # 
   #   tabletext <- cbind(c("","Study",myMH$names,NA,"Summary"),
   #                      c("Treatment","(effective)",ptrt,NA,NA),
   #                      c("Treatment","(non-effective)",pctrl, NA,NA),
@@ -1090,8 +1090,8 @@ server <- function(input, output, session) {
   #                      c("","OR",format((exp(myMH$logOR)),digits = 3),NA,
   #                        format((exp(myMH$logMH)),digits=3)))
   # }
-  # 
-  # 
+
+
   # makeForestPlot <- function(mylist, referencerow=2)
   # {
   #   require("rmeta")
@@ -1117,12 +1117,12 @@ server <- function(input, output, session) {
   #     ptrt[i] <- DiseaseExposed
   #   }
   #   names <- as.character(seq(1,numstrata))
-  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95, 
+  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95,
   #                   names = names,
   #                   statistic = "OR")
   # }
-  
-  ## Non-Small Cell Lung Cancer Treatment introduction
+  # 
+  # Non-Small Cell Lung Cancer Treatment introduction
   # output$nsclc = renderText("About 80% to 85% of lung cancers are non-small cell
   #                           lung cancer (NSCLC). The typical treatments include
   #                           chemotherapy, radiation therapy and targeted therapy.
@@ -1140,7 +1140,7 @@ server <- function(input, output, session) {
   #   img(src = "gvc.PNG", width = "80%", algin = "middle")
   # })
   # 
-  # # drug 2: Gefitinib vs Erlotinib 
+  # # drug 2: Gefitinib vs Erlotinib
   # gve1 <- matrix(c(28,6,22,12),nrow = 2,byrow = TRUE)
   # gve2 <- matrix(c(36,14,38,12),nrow = 2,byrow = TRUE)
   # gve3 <- matrix(c(16,19,21,14),nrow = 2,byrow = TRUE)
@@ -1152,7 +1152,7 @@ server <- function(input, output, session) {
   # alt = "fill me in later")
   # })
   # 
-  ## Malaria Treatment
+  # # Malaria Treatment
   # output$mala = renderText("Artemisinin is a plant-derived compound, isolated from
   #                          the Artemisia annua, sweet wormwood a herb employed in
   #                          Chinese herbal medicine. This compound (along with its
@@ -1190,7 +1190,7 @@ server <- function(input, output, session) {
   # })
   # 
   # 
-  ## Vaccines Immunogenicity
+  # # Vaccines Immunogenicity
   # output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV)
   #                          vaccine is expected to facilitate universal immunization
   #                          against these 4 diseases. Here randomized controlled
@@ -1235,11 +1235,11 @@ server <- function(input, output, session) {
   # mum10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
   # mum11 <- matrix(c(613,191,37,16),nrow = 2,byrow = TRUE)
   # mum12 <- matrix(c(262,145,33,9),nrow = 2,byrow = TRUE)
-  # mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11, 
+  # mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11,
   #                 mum12)
   # 
   # output$plot6 = renderUI({
-  #   img(src = "mum.PNG", width = "90%", algin = "middle", 
+  #   img(src = "mum.PNG", width = "90%", algin = "middle",
   # alt = "fill me in later")
   # })
   # 
@@ -1261,9 +1261,9 @@ server <- function(input, output, session) {
   #   img(src = "rub.PNG", width = "85%", algin = "middle",
   # alt = "fill me in later")
   # })
- 
+
   ##the code upper I don't know what they are aiming, but might be related to the
-  ##plots that should be made in the example page. I comment out them. 
+  ##plots that should be made in the example page. I comment out them.
 }
 
 # Boast App Call ----
