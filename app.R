@@ -101,6 +101,9 @@ ui <- list(
             Shravani Samala and Junjie He. Special thanks to Neil Hatfield.",
             br(),
             br(),
+            "Cite this app as:",
+            br(),
+            boastUtils::citeApp(),
             br(),
             br(),
             div(class = "updated", "Last Update: 6/14/2022 by JJH.")
