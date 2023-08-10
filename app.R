@@ -10,8 +10,6 @@ library(scales)
 library(rmeta)
 library(boastUtils)  
 library(DT)
-# Load additional dependencies and setup functions
-# source("global.R")
 
 enrollmentData <- data.frame(
   Pennsylvania = c(24028, 19143),
@@ -32,7 +30,7 @@ ui <- list(
     skin = "yellow",
     ## Create the app header ----
     dashboardHeader(
-      title = "Odds Ratio", # You may use a shortened form of the title here
+      title = "Odds Ratio", 
       titleWidth = 250,
       tags$li(class = "dropdown", actionLink("info", icon("info"))),
       tags$li(
@@ -69,7 +67,7 @@ ui <- list(
         tabItem(
           tabName = "overview",
           withMathJax(),
-          h1("Odds Ratio"), # This should be the full name.
+          h1("Odds Ratio"),
           p(" This app explores confidence intervals for odds ratios and 
             their use in the meta-analysis of real data."),
           h2("Instructions"),
@@ -87,10 +85,10 @@ ui <- list(
           div(
             style = "text-align: center;",
             bsButton(
-              inputId = "go1",
-              label = "Go!",
+              inputId = "goPrereq",
+              label = "Prerequisite",
               size = "large",
-              icon = icon("bolt"),
+              icon = icon("book"),
               style = "default"
             )
           ),
@@ -98,7 +96,8 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p("This app was developed and coded by Jingjun Wang and updated by 
-            Shravani Samala and Junjie He. Special thanks to Neil Hatfield.",
+            Shravani Samala,Junjie He, and Robert Chappell. Special thanks to
+            Neil Hatfield.",
             br(),
             br(),
             "Cite this app as:",
@@ -106,23 +105,21 @@ ui <- list(
             boastUtils::citeApp(),
             br(),
             br(),
-            div(class = "updated", "Last Update: 6/14/2022 by JJH.")
+            div(class = "updated", "Last Updated: 8/11/2022 by RWC.")
           )
         ),
         ## Set up the Prerequisites Page ----
         tabItem(
           tabName = "prerequisites",
           withMathJax(),
-          h2("What is odds ratio?"),
-          p("An odds ratio, \\(\\theta\\), relates the odds of an event under two different 
-            conditions. 
-            For example if two-thirds of women ate vegetables at lunch today 
-            (odds of 2 to 1), while only one-third of men ate vegetables 
-            (odds of 1 to 2)
-            , then the odds for women are four times as great as the odds for
-            men
-            (so 4 is the odds ratio)."),
-          h2("How to calculate the confidence interval of an odds ratio?"),
+          h2("Prerequisites"),
+          tags$strong("What is odds ratio?"),
+          p("An odds ratio, \\(\\theta\\), relates the odds of an event under
+            two different conditions. For example if two-thirds of women ate
+            vegetables at lunch today (odds of 2 to 1), while only one-third of
+            men ate vegetables (odds of 1 to 2), then the odds for women are four
+            times as great as the odds for men (so 4 is the odds ratio)."),
+          tags$strong("How to calculate the confidence interval of an odds ratio?"),
           fluidRow(
             column(
               width = 8,
@@ -180,7 +177,7 @@ ui <- list(
           p("\\[\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
              \\frac{1}{c}+\\frac{1}{d}}\\]"),
           br(),
-          h2("Example"),
+          tags$strong("Example"),
           p("Here is the contingency table from a case-control study of smoking 
             and lung cancer:"),
           br(),
@@ -219,6 +216,7 @@ ui <- list(
               alt = "fill me in later",
             )
           ),
+          br(),
           p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}
             {622}= 1.04\\)."),
           p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\).
@@ -242,8 +240,8 @@ ui <- list(
             Penn State University. Use the slide controls to change the confidence
             level interval as well as the sample sizes taken from University Park
             and the Commonwealth campuses. Observe the difference between confidence
-            intervals for each sample. Check below the plot to see the sample counts,
-            percentages, and odds ratio."),
+            intervals for each sample. Check below the plot to see the sample
+            counts, percentages, and odds ratio."),
           br(), 
           fluidRow(
             column(
@@ -266,7 +264,7 @@ ui <- list(
                   br(),
                   wellPanel(
                   sliderInput(
-                    inputId = "dlevel",
+                    inputId = "dLevel",
                     label = "Confidence Level",
                     min = .10,
                     max = 0.99,
@@ -295,7 +293,7 @@ ui <- list(
                   fluid = TRUE,
                   wellPanel(
                   sliderInput(
-                    inputId = "dlevel1",
+                    inputId = "dLevel1",
                     label = "Confidence Level",
                     min = .10,
                     max = 0.99,
@@ -356,11 +354,11 @@ ui <- list(
           withMathJax(),
           h2("Example"),
           tabPanel(h2("example"),
-                   tags$ul(tags$li("all datasets below are about the comparsion of  medical
-                             therapy or vaccine effectiveness."),
-                           tags$li("choose the dataset to see the odds ratio and related
-                             95% confidence interval to check which thearpy or vaccine
-                             is better.")),
+                   tags$ul(tags$li("All datasets below are about the comparsion
+                                   of  medical therapy or vaccine effectiveness."),
+                           tags$li("Choose the dataset to see the odds ratio and
+                                   related 95% confidence interval to check 
+                                   which thearpy or vaccine is better.")),
                    br(),
                    fluidRow(
                      column(
@@ -474,7 +472,9 @@ ui <- list(
 
 # Define server logic ----
 server <- function(input, output, session) {
-  observeEvent(input$info,{
+  observeEvent(
+    eventExpr = input$info,
+    handlerExpr = {
     sendSweetAlert(
       session = session,
       title = "Instructions",
@@ -484,12 +484,15 @@ server <- function(input, output, session) {
     )
   })
   
-  observeEvent(input$go1,{
+  observeEvent(
+    eventExpr = input$goPrereq,
+    handlerExpr = {
     updateTabItems(
       session = session,
       inputId = "pages",
       selected = "prerequisites")
-  })
+  }
+  )
   
   ##table in the explore page ----
   output$countTable1 <- renderDT(
@@ -555,7 +558,7 @@ server <- function(input, output, session) {
         expr = {
           if (input$sets == "lungCancer") {
             list(
-              h3("data context"),
+              h3("Data Context"),
               p("About 80% to 85% of lung cancers are non-small cell
                  lung cancer (NSCLC). The typical treatments include
                  chemotherapy, radiation therapy and targeted therapy.
@@ -597,7 +600,7 @@ server <- function(input, output, session) {
           }
           else if (input$sets == "marlaria") {
             list(
-              h3("data context"),
+              h3("Data Context"),
               p("Artemisinin is a plant-derived compound, isolated from
                            the Artemisia annua, sweet wormwood a herb employed in
                            Chinese herbal medicine. This compound (along with its
@@ -639,7 +642,7 @@ server <- function(input, output, session) {
           }
           else if (input$sets == "vaccines") {
             list(
-              h3("data context"),
+              h3("Data Context"),
               p("A combined measles-mumps-rubella-varicella (MMRV)
                            vaccine is expected to facilitate universal immunization
                            against these 4 diseases. Here randomized controlled
@@ -692,79 +695,104 @@ server <- function(input, output, session) {
   )
   
   ##Calculating alpha by the confidence level input----
-  dalpha <- reactive({
-    (1 - input$dlevel) / 2
-  })
+  dalpha <- reactive(
+    x = {
+    (1 - input$dLevel) / 2
+  }
+  )
   
   ##Updating Sample Size----
-  dN1 <- reactive({
+  dN1 <- reactive(
+    x = {
     as.integer(input$nSamp1)
-  })
+  }
+  )
   
-  dN2 <- reactive({
+  dN2 <- reactive(
+    x = {
     as.integer(input$nSamp2)
   })
   dN3 <- reactive({
     as.integer(input$nSamp3)
-  })
+  }
+  )
   
   #generate 50 new sample----
-  UPS50P <- reactive({
+  UPS50P <- reactive(
+    x = {
     input$newSample
     data.frame(
       x = do.call(paste0("rbinom"),
           c(list(n = dN1() * 50), list(1, 0.595)))
     ) %>%
       mutate(idx = rep(1:50, each = dN1()))
-  })
+  }
+  )
   
-  ups50p <- reactive({
+  ups50p <- reactive(
+    x = {
     UPS50P() %>%
       group_by(idx) %>%
       summarise(
         Count1 = sum(x))
-  })
+  }
+  )
   
-  ups50n <- reactive({
+  ups50n <- reactive(
+    x = {
     data.frame(idx = rep(1:50), 
                Count2 = input$nSamp1-ups50p()[,2])
-  })
+  }
+  )
   
-  UWS50P <- reactive({
+  UWS50P <- reactive(
+    x = {
     input$newSample
     data.frame(
       x = do.call(paste0("rbinom"),
           c(list(n = dN2() * 50), list(1, 0.844)))
     ) %>%
       mutate(idx = rep(1:50, each = dN2()))
-  })
+  }
+  )
   
-  uws50p <- reactive({
+  uws50p <- reactive(
+    x = {
     UWS50P() %>%
       group_by(idx) %>%
       summarise(
         Count3 = sum(x))
-  })
+  }
+  )
   
-  uws50n <- reactive({
+  uws50n <- reactive(
+    x = {
     data.frame(idx = rep(1:50), 
                input$nSamp2-uws50p()[,2])
-  })
+  }
+  )
   
-  data50_1 <- reactive({
+  data50_1 <- reactive(
+    x = {
     merge(ups50p(),uws50p())
-  })
+  }
+  )
   
-  data50_2 <- reactive({
+  data50_2 <- reactive(
+    x = {
     merge(ups50n(),uws50n())
-  })
+  }
+  )
   
-  data50 <- reactive({
+  data50 <- reactive(
+    x = {
     merge.data.frame(data50_1(), data50_2(), by = "idx")
-  })
+  }
+  )
   
   ##generate 50 new sample (combined sample size)----
-  UPS50P_3 <- reactive({
+  UPS50P_3 <- reactive(
+    x = {
     input$newSample
     data.frame(
       x = do.call(
@@ -774,19 +802,24 @@ server <- function(input, output, session) {
       mutate(idx = rep(1:50, each = dN3()))
   })
   
-  ups50p_3 <- reactive({
+  ups50p_3 <- reactive(
+    x = {
     UPS50P_3() %>%
       group_by(idx) %>%
       summarise(
         Count1 = sum(x))
-  })
+  }
+  )
   
-  ups50n_3 <- reactive({
+  ups50n_3 <- reactive(
+    x = {
     data.frame(idx = rep(1:50), 
                Count2 = input$nSamp3-ups50p_3()[,2])
-  })
+  }
+  )
   
-  UWS50P_3 <- reactive({
+  UWS50P_3 <- reactive(
+    x = {
     input$newSample
     data.frame(
       x = do.call(
@@ -794,35 +827,47 @@ server <- function(input, output, session) {
           c(list(n = dN3() * 50), list(1, 0.844)))
     ) %>%
       mutate(idx = rep(1:50, each = dN3()))
-  })
+  }
+  )
   
-  uws50p_3 <- reactive({
+  uws50p_3 <- reactive(
+    x = {
     UWS50P_3() %>%
       group_by(idx) %>%
       summarise(
         Count3 = sum(x))
-  })
+  }
+  )
   
-  uws50n_3 <- reactive({
+  uws50n_3 <- reactive(
+    x = {
     data.frame(idx = rep(1:50), 
                input$nSamp3-uws50p_3()[,2])
-  })
+  }
+  )
   
-  data50_1_3 <- reactive({
+  data50_1_3 <- reactive(
+    x = {
     merge(ups50p_3(),uws50p_3())
-  })
+  }
+  )
   
-  data50_2_3 <- reactive({
+  data50_2_3 <- reactive(
+    x = {
     merge(ups50n_3(),uws50n_3())
-  })
+  }
+  )
   
-  newdata50 <- reactive({
+  newdata50 <- reactive(
+    x = {
     merge.data.frame(data50_1_3(),data50_2_3(), by = "idx")
-  })
+  }
+  )
   
   ##calculate the interval----
-  Intervals <- reactive({
-    zvalue = qnorm(((1 - input$dlevel)/2), lower.tail = F)
+  Intervals <- reactive(
+    x = {
+    zvalue = qnorm(((1 - input$dLevel)/2), lower.tail = F)
     sampleRatio = (data50()[,2]*data50()[,5])/(data50()[,3]*data50()[,4])
     lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/data50()[,2] + 
                                                       1/data50()[,5] +
@@ -837,10 +882,12 @@ server <- function(input, output, session) {
                lowerbound,
                upperbound,
                cover = (lowerbound < 0.35) & (0.35 < upperbound))
-  })
+  }
+  )
   
-  newIntervals <- reactive({
-    zvalue = qnorm(((1 - input$dlevel1)/2), lower.tail = F)
+  newIntervals <- reactive(
+    x = {
+    zvalue = qnorm(((1 - input$dLevel1)/2), lower.tail = F)
     sampleRatio = (newdata50()[,2]*newdata50()[,5])/(newdata50()[,3]*newdata50()[,4])
     lowerbound = exp(log(sampleRatio) - zvalue*sqrt(1/newdata50()[,2] + 
                                                       1/newdata50()[,5] + 
@@ -855,45 +902,57 @@ server <- function(input, output, session) {
                lowerbound,
                upperbound,
                cover = (lowerbound < 0.35) & (0.35 < upperbound))
-  })
+  }
+  )
   
   ##default as all the samples are selected----
-  selected_sample <- 50
-  selectedSample <- reactive({
+  selSampVal <- 50
+  selectedSample <- reactive(
+    x = {
     if (!is.null(input$plot_click)) {
-      selected_sample <<- round(input$plot_click$y)
-      if (selected_sample < 1) selected_sample <<- 1
-      if (selected_sample > 50) selected_sample <<- 50
+      selSampVal <<- round(input$plot_click$y)
+      if (selSampVal < 1) selSampVal <<- 1
+      if (selSampVal > 50) selSampVal <<- 50
     }
-    selected_sample
-  })
+    selSampVal
+  }
+  )
   
   # selected sample----
-  OneSample <- reactive({
+  OneSample <- reactive(
+    x = {
     data50() %>%
       filter( idx == selectedSample() )
-  })
+  }
+  )
   
-  OneSampleColor <- reactive({
+  OneSampleColor <- reactive(
+    x = {
     colors <- c("TRUE" = "#ff7532", "FALSE" = "red")
     covers <- (Intervals() %>% filter(idx == selectedSample()) )$cover
     colors[ as.character(covers) ]
-  })
+  }
+  )
   
   # selected sample (combined version) 
-  newOneSample <- reactive({
+  newOneSample <- reactive(
+    x = {
     newdata50() %>%
       filter( idx == selectedSample() )
-  })
+  }
+  )
   
-  newOneSampleColor <- reactive({
+  newOneSampleColor <- reactive(
+    x = {
     colors <- c("TRUE" = "#ff7532", "FALSE" = "red")
     covers <- (newIntervals() %>% filter(idx == selectedSample()) )$cover
     colors[ as.character(covers) ]
-  })
+  }
+  )
   
   ##print the CIplot----
-  output$CIplot <- renderPlot({
+  output$CIplot <- renderPlot(
+    expr = {
     if (input$tabset == "Same Sample Size"){
       validate(
         need(is.numeric(input$nSamp3),
@@ -910,14 +969,16 @@ server <- function(input, output, session) {
               size = idx == selectedSample()
           )) +
         theme_bw()+
-        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 1) +
-        geom_hline(yintercept = .35, size = 1.8, colour = "#0B6623", alpha = 1) +
+        geom_hline(yintercept = 1, linewidth = 1.8, colour = "#000000", alpha = 1) +
+        geom_hline(yintercept = .35, linewidth = 1.8, colour = "#0B6623",
+                   alpha = 1) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"),
+                           guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
-        labs(title = paste0(100 * input$dlevel1, "% Confidence Intervals"),
+        labs(title = paste0(100 * input$dLevel1, "% Confidence Intervals"),
              x="",y="") +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
@@ -942,14 +1003,16 @@ server <- function(input, output, session) {
               size = idx == selectedSample()
           )) +
         theme_bw()+
-        geom_hline(yintercept = 1, size = 1.8, colour = "#000000", alpha = 1) +
-        geom_hline(yintercept = .35, size = 1.8, colour = "#0B6623", alpha = 1) +
+        geom_hline(yintercept = 1, linewidth = 1.8, colour = "#000000", alpha = 1) +
+        geom_hline(yintercept = .35, linewidth = 1.8, colour = "#0B6623",
+                   alpha = 1) +
         coord_flip() +
         scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"), guide = FALSE) +
+        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"),
+                           guide = FALSE) +
         scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
         lims(y = c(-0.01,4.55)) +
-        labs(title = paste0(100 * input$dlevel, "% Confidence Intervals"),
+        labs(title = paste0(100 * input$dLevel, "% Confidence Intervals"),
              x = "",y = "") +
         theme(legend.position = "none",
               axis.text.y = element_blank(),
@@ -964,7 +1027,8 @@ server <- function(input, output, session) {
   
   
   ## sample display----
-  output$sampleinfotable1 = renderTable({
+  output$sampleinfotable1 = renderTable(
+    expr = {
     if (input$tabset == "Same Sample Size"){
       validate(
         need(is.numeric(input$nSamp3),
@@ -974,7 +1038,8 @@ server <- function(input, output, session) {
                          percent(newOneSample()[,3]/input$nSamp3), 
                          percent(newOneSample()[,4]/input$nSamp3), 
                          percent(newOneSample()[,5]/input$nSamp3)), ncol = 2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), 
+                       dimnames = list(Campus = c("University Park",
+                                                  "Other Campuses"), 
                                        State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
@@ -988,13 +1053,16 @@ server <- function(input, output, session) {
                          percent(OneSample()[,3]/input$nSamp2), 
                          percent(OneSample()[,4]/input$nSamp1), 
                          percent(OneSample()[,5]/input$nSamp2)), ncol = 2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), 
+                       dimnames = list(Campus = c("University Park",
+                                                  "Other Campuses"), 
                                        State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
-  })
-  output$sampleinfotable2 = renderTable({
+  }
+  )
+  output$sampleinfotable2 = renderTable(
+    expr = {
     if (input$tabset == "Same Sample Size"){
       validate(
         need(is.numeric(input$nSamp3),
@@ -1004,7 +1072,8 @@ server <- function(input, output, session) {
                          newOneSample()[,3],
                          newOneSample()[,4],
                          newOneSample()[,5]), ncol = 2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"), 
+                       dimnames = list(Campus = c("University Park",
+                                                  "Other Campuses"), 
                                        State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
@@ -1018,14 +1087,17 @@ server <- function(input, output, session) {
                          OneSample()[,3],
                          OneSample()[,4],
                          OneSample()[,5]), ncol = 2, 
-                       dimnames = list(Campus = c("University Park","Other Campuses"),
+                       dimnames = list(Campus = c("University Park",
+                                                  "Other Campuses"),
                                        State = c("Penn", "Non-Penn")))
       rownames(ctable) = c("University Park","Other Campuses")
       ctable
     }
-  })
+  }
+  )
   
-  output$sampleinforatio = renderText({
+  output$sampleinforatio = renderText(
+    expr = {
     if (input$tabset == "Combined Sample Size"){
       validate(
         need(is.numeric(input$nSamp3),
@@ -1044,229 +1116,8 @@ server <- function(input, output, session) {
                          (OneSample()[,3]*OneSample()[,4])), 2)
       cratio
     }
-  })
-  
-  # ##forestplot----
-  # makeDatatabletoList <- function(mytable){
-  #   mylist = c()
-  #   rnum <- nrow(mytable)
-  #   for (i in 1:rnum){
-  #     mylist[[i]] = matrix(as.numeric(mytable[i,]),nrow = 2,byrow = TRUE)
-  #   }
-  #   mylist
-  # }
-  # 
-  # makeTable <- function(mylist, referencerow=2) {
-  #   require("rmeta")
-  #   numstrata <- length(mylist)
-  #   ntrt <- vector()
-  #   nctrl <- vector()
-  #   ptrt <- vector()
-  #   pctrl <- vector()
-  #   if (referencerow == 1) {nonreferencerow <- 2}
-  #   else {nonreferencerow <- 1}
-  #   for (i in 1:numstrata)
-  #   {
-  #     mymatrix <- mylist[[i]]
-  #     DiseaseUnexposed <- mymatrix[referencerow,1]
-  #     ControlUnexposed <- mymatrix[referencerow,2]
-  #     totUnexposed <- DiseaseUnexposed + ControlUnexposed
-  #     nctrl[i] <- totUnexposed
-  #     pctrl[i] <- DiseaseUnexposed
-  #     DiseaseExposed <- mymatrix[nonreferencerow,1]
-  #     ControlExposed <- mymatrix[nonreferencerow,2]
-  #     totExposed <- DiseaseExposed + ControlExposed
-  #     ntrt[i] <- totExposed
-  #     ptrt[i] <- DiseaseExposed
-  #   }
-  #   names <- as.character(seq(1,numstrata))
-  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95,
-  #                   names = names,
-  #                   statistic = "OR")
-  # 
-  # 
-  #   tabletext <- cbind(c("","Study",myMH$names,NA,"Summary"),
-  #                      c("Treatment","(effective)",ptrt,NA,NA),
-  #                      c("Treatment","(non-effective)",pctrl, NA,NA),
-  #                      c("Control","(effective)",(ntrt-ptrt),NA,NA),
-  #                      c("Control","(non-effective)",(nctrl-pctrl), NA,NA),
-  #                      c("","OR",format((exp(myMH$logOR)),digits = 3),NA,
-  #                        format((exp(myMH$logMH)),digits=3)))
-  # }
-
-
-  # makeForestPlot <- function(mylist, referencerow=2)
-  # {
-  #   require("rmeta")
-  #   numstrata <- length(mylist)
-  #   ntrt <- vector()
-  #   nctrl <- vector()
-  #   ptrt <- vector()
-  #   pctrl <- vector()
-  #   if (referencerow == 1) {nonreferencerow <- 2}
-  #   else {nonreferencerow <- 1}
-  #   for (i in 1:numstrata)
-  #   {
-  #     mymatrix <- mylist[[i]]
-  #     DiseaseUnexposed <- mymatrix[referencerow,1]
-  #     ControlUnexposed <- mymatrix[referencerow,2]
-  #     totUnexposed <- DiseaseUnexposed + ControlUnexposed
-  #     nctrl[i] <- totUnexposed
-  #     pctrl[i] <- DiseaseUnexposed
-  #     DiseaseExposed <- mymatrix[nonreferencerow,1]
-  #     ControlExposed <- mymatrix[nonreferencerow,2]
-  #     totExposed <- DiseaseExposed + ControlExposed
-  #     ntrt[i] <- totExposed
-  #     ptrt[i] <- DiseaseExposed
-  #   }
-  #   names <- as.character(seq(1,numstrata))
-  #   myMH <- meta.MH(ntrt, nctrl, ptrt, pctrl, conf.level = 0.95,
-  #                   names = names,
-  #                   statistic = "OR")
-  # }
-  # 
-  # Non-Small Cell Lung Cancer Treatment introduction
-  # output$nsclc = renderText("About 80% to 85% of lung cancers are non-small cell
-  #                           lung cancer (NSCLC). The typical treatments include
-  #                           chemotherapy, radiation therapy and targeted therapy.
-  #                           Gefitinib and Erlotinib are two kinds of medicine used
-  #                           in NSCLC targeted therapy. In the two comparisons,
-  #                           Gefitinib represents treatment groups.")
-  # 
-  # # drug 1: Gefitinib vs chemotherapy
-  # gvc1 <- matrix(c(42,37,48,53),nrow = 2,byrow = TRUE)
-  # gvc2 <- matrix(c(18,12,26,32),nrow = 2,byrow = TRUE)
-  # gvc_list = list(gvc1, gvc2)
-  # 
-  # # makeForestPlotForRCTs(gvc_list)
-  # output$plot1 = renderUI({
-  #   img(src = "gvc.PNG", width = "80%", algin = "middle")
-  # })
-  # 
-  # # drug 2: Gefitinib vs Erlotinib
-  # gve1 <- matrix(c(28,6,22,12),nrow = 2,byrow = TRUE)
-  # gve2 <- matrix(c(36,14,38,12),nrow = 2,byrow = TRUE)
-  # gve3 <- matrix(c(16,19,21,14),nrow = 2,byrow = TRUE)
-  # gve_list = list(gve1, gve2, gve3)
-  # 
-  # #  makeForestPlot(gve_list)
-  # output$plot2 = renderUI({
-  #   img(src = "gve.PNG", width = "80%", algin = "middle",
-  # alt = "fill me in later")
-  # })
-  # 
-  # # Malaria Treatment
-  # output$mala = renderText("Artemisinin is a plant-derived compound, isolated from
-  #                          the Artemisia annua, sweet wormwood a herb employed in
-  #                          Chinese herbal medicine. This compound (along with its
-  #                          derivative drugs), is the World Health Organization's
-  #                          recommended treatment against malaria caused by Plasmodium
-  #                          falciparum. Quinine, isolated from cinchona bark, is
-  #                          the first meditation to treat malaria. In the two
-  #                          comparisons, artesunate-based therapies represent
-  #                          treatment groups.")
-  # 
-  # 
-  # #drug 1: Artemisinin-based combination therapies vs. Quinine
-  # avq1 <- matrix(c(37,26,2,15),nrow = 2,byrow = TRUE)
-  # avq2 <- matrix(c(64,34,2,8),nrow = 2,byrow = TRUE)
-  # avq3 <- matrix(c(137,122,1,3),nrow = 2,byrow = TRUE)
-  # avq_list = list(avq1, avq2, avq3)
-  # output$plot3 = renderUI({
-  #   img(src = "avq.PNG", width = "85%", algin = "middle",
-  # alt = "fill me in later")
-  # })
-  # 
-  # 
-  # #drug 2: artemether vs. Quinine
-  # amvq1 <- matrix(c(6,10,45,42),nrow = 2,byrow = TRUE)
-  # amvq2 <- matrix(c(18,8,71,63),nrow = 2,byrow = TRUE)
-  # amvq3 <- matrix(c(11,14,43,35),nrow = 2,byrow = TRUE)
-  # amvq4 <- matrix(c(1,2,17,17),nrow = 2,byrow = TRUE)
-  # amvq5 <- matrix(c(10,12,73,69),nrow = 2,byrow = TRUE)
-  # amvq6 <- matrix(c(59,62,229,226),nrow = 2,byrow = TRUE)
-  # amvq7 <- matrix(c(3,2,35,37),nrow = 2,byrow = TRUE)
-  # amvq_list = list(amvq1, amvq2, amvq3, amvq4, amvq5, amvq6, amvq7)
-  # output$plot4 = renderUI({
-  #   img(src = "amvq.PNG", width = "85%", algin = "middle",
-  # alt = "fill me in later")
-  # })
-  # 
-  # 
-  # # Vaccines Immunogenicity
-  # output$vacc = renderText("A combined measles-mumps-rubella-varicella (MMRV)
-  #                          vaccine is expected to facilitate universal immunization
-  #                          against these 4 diseases. Here randomized controlled
-  #                          trials (RCTs) were conducted to compare single MMRV
-  #                          dose with measles-mumps-rubella vaccine with varicella
-  #                          vaccine (MMR + V). All included studies reported
-  #                          seroconversion rate as serological response outcome.
-  #                          Seroconversion rate was defined as percent of subjects
-  #                          initially seronegative (with titers \u2264 assay cut-offs),
-  #                          who developed postvaccination antibody titers above the
-  #                          assay cut-off levels. In the three comparisons, MMRV
-  #                          represents treatment groups.")
-  # #1: measles
-  # mea1 <- matrix(c(289,141,4,1),nrow = 2,byrow = TRUE)
-  # mea2 <- matrix(c(1107,540,9,15),nrow = 2,byrow = TRUE)
-  # mea3 <- matrix(c(73,68,1,6),nrow = 2,byrow = TRUE)
-  # mea4 <- matrix(c(1114,181,29,9),nrow = 2,byrow = TRUE)
-  # mea12 <- matrix(c(290,145,12,0),nrow = 2,byrow = TRUE)#contain 0
-  # mea5 <- matrix(c(980,349,9,1),nrow = 2,byrow = TRUE)
-  # mea6 <- matrix(c(299,106,7,0),nrow = 2,byrow = TRUE)#contain 0
-  # mea7 <- matrix(c(2437,841,72,20),nrow = 2,byrow = TRUE)
-  # mea8 <- matrix(c(125,113,9,9),nrow = 2,byrow = TRUE)
-  # mea9 <- matrix(c(10,7,0,1),nrow = 2,byrow = TRUE)#contain 0
-  # mea10 <- matrix(c(633,199,37,14),nrow = 2,byrow = TRUE)
-  # mea11 <- matrix(c(294,155,6,1),nrow = 2,byrow = TRUE)
-  # mea_list = list(mea1, mea2, mea3, mea4, mea5, mea7, mea8, mea10, mea11)
-  # output$plot5 = renderUI({
-  #   img(src = "mea.PNG", width = "90%", algin = "middle",
-  # alt = "fill me in later")
-  # })
-  # 
-  # #2: mumps
-  # mum1 <- matrix(c(287,137,12,4),nrow = 2,byrow = TRUE)
-  # mum2 <- matrix(c(927,516,167,28),nrow = 2,byrow = TRUE)
-  # mum3 <- matrix(c(70,69,2,4),nrow = 2,byrow = TRUE)
-  # mum4 <- matrix(c(992,173,117,9),nrow = 2,byrow = TRUE)
-  # mum5 <- matrix(c(292,148,3,2),nrow = 2,byrow = TRUE)
-  # mum6 <- matrix(c(1002,350,10,1),nrow = 2,byrow = TRUE)
-  # mum7 <- matrix(c(272,101,30,4),nrow = 2,byrow = TRUE)
-  # mum8 <- matrix(c(2409,854,100,18),nrow = 2,byrow = TRUE)
-  # mum9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)
-  # mum10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
-  # mum11 <- matrix(c(613,191,37,16),nrow = 2,byrow = TRUE)
-  # mum12 <- matrix(c(262,145,33,9),nrow = 2,byrow = TRUE)
-  # mum_list = list(mum1, mum2, mum3, mum4, mum5, mum6, mum7, mum8, mum9, mum11,
-  #                 mum12)
-  # 
-  # output$plot6 = renderUI({
-  #   img(src = "mum.PNG", width = "90%", algin = "middle",
-  # alt = "fill me in later")
-  # })
-  # 
-  # #3: rubella
-  # rub1 <- matrix(c(288,141,10,0),nrow = 2,byrow = TRUE)#contain 0
-  # rub2 <- matrix(c(1114,552,3,3),nrow = 2,byrow = TRUE)
-  # rub3 <- matrix(c(73,74,1,0),nrow = 2,byrow = TRUE)#contain 0
-  # rub4 <- matrix(c(1148,189,1,0),nrow = 2,byrow = TRUE)#contain 0
-  # rub5 <- matrix(c(289,142,15,11),nrow = 2,byrow = TRUE)
-  # rub6 <- matrix(c(1004,352,11,4),nrow = 2,byrow = TRUE)
-  # rub7 <- matrix(c(303,106,3,0),nrow = 2,byrow = TRUE)#contain 0
-  # rub8 <- matrix(c(2501,859,31,7),nrow = 2,byrow = TRUE)
-  # rub9 <- matrix(c(113,108,20,10),nrow = 2,byrow = TRUE)#contain 0
-  # rub10 <- matrix(c(10,8,0,0),nrow = 2,byrow = TRUE)#contain 0
-  # rub11 <- matrix(c(665,208,2,4),nrow = 2,byrow = TRUE)
-  # rub12 <- matrix(c(297,157,1,0),nrow = 2,byrow = TRUE)#contain 0
-  # rub_list = list(rub2,rub5, rub6, rub8, rub11)
-  # output$plot7 = renderUI({
-  #   img(src = "rub.PNG", width = "85%", algin = "middle",
-  # alt = "fill me in later")
-  # })
-
-  ##the code upper I don't know what they are aiming, but might be related to the
-  ##plots that should be made in the example page. I comment out them.
+  }
+  )
 }
 
 # Boast App Call ----
