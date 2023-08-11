@@ -113,13 +113,14 @@ ui <- list(
           tabName = "prerequisites",
           withMathJax(),
           h2("Prerequisites"),
-          tags$strong("What is odds ratio?"),
+          tags$strong("Odds Ratios"),
           p("An odds ratio, \\(\\theta\\), relates the odds of an event under
             two different conditions. For example if two-thirds of women ate
             vegetables at lunch today (odds of 2 to 1), while only one-third of
             men ate vegetables (odds of 1 to 2), then the odds for women are four
             times as great as the odds for men (so 4 is the odds ratio)."),
-          tags$strong("How to calculate the confidence interval of an odds ratio?"),
+          tags$strong("Approximate Confidence Intervals for Odds Ratios"),
+          br(),
           fluidRow(
             column(
               width = 8,
@@ -151,8 +152,7 @@ ui <- list(
                     align = "center"
                   ), 
                 )
-              ),
-              alt = "fill me in later",
+              )
             )
           ),
           br(),
@@ -163,7 +163,7 @@ ui <- list(
             or product-multinomial sampling with either the row totals and/or 
             column
             totals regarded as fixed."),
-          p("As with the relative risk, the log-odds ratio \\(\\log\\hat
+          p("The log-odds ratio \\(\\log\\hat
             {\\theta}\\)
             has a better normal approximation than \\(\\hat{\\theta}\\) does. 
             Therefore, we usually obtain a confidence interval on the log scale
@@ -176,59 +176,11 @@ ui <- list(
             exponentiating the endpoints of"),
           p("\\[\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
              \\frac{1}{c}+\\frac{1}{d}}\\]"),
-          br(),
-          tags$strong("Example"),
-          p("Here is the contingency table from a case-control study of smoking 
-            and lung cancer:"),
-          br(),
-          fluidRow(
-            column(
-              width = 8,
-              offset = 4,
-              tags$table(
-                rules = "all",
-                border = "1pt",
-                align = "left",
-                width = "500px",
-                targets = "_all",
-                tags$thead(
-                  tags$tr(
-                    tags$th(""),
-                    tags$th("Cancer", style = "text-align: center;"),
-                    tags$th("Non-Cancer", style = "text-align: center;"), 
-                  )
-                ),
-                tags$tbody(
-                  tags$tr(
-                    tags$th("Smoker", style = "text-align: center;"),
-                    tags$td("647"),
-                    tags$td("622"), 
-                    align = "center"
-                  ),
-                  tags$tr(
-                    tags$th("Non-Smoker",style = "text-align: center;"),
-                    tags$td("2"),
-                    tags$td("27"), 
-                    align = "center"
-                  ), 
-                )
-              ),
-              alt = "fill me in later",
-            )
+          p("The final confidence interval for \\(\\theta\\) is"),
+          p(style = "font-size: 18px;", 
+            "\\[ \\hat{\\theta} = e^{\\log\\widehat{\\theta}\\pm1.96\\sqrt{\\frac{1}{a}+\\frac{1}{b}+
+     \\frac{1}{c}+\\frac{1}{d}}} \\]")
           ),
-          br(),
-          p("The odds of lung cancer for smokers is calculated as \\(\\frac{647}
-            {622}= 1.04\\)."),
-          p("The odds of lung cancer for non-smokers is \\(\\frac{2}{27}= 0.07\\).
-            "),
-          p("The odds ratio can be expressed as the odds of lung cancer for smokers 
-            divided by the odds of lung cancer for non-smokers: 
-            \\(\\frac{647}{622}\\big/\\frac{2}
-            {27}=14.04\\)."), 
-          p("Here, the odds ratio is greater than 1. Which can lead to a conclusion 
-            that being a smoker is considered to be associated with having lung 
-            cancer."),
-        ),
         
         ## Set up an Explore Page----
         tabItem(
@@ -266,7 +218,7 @@ ui <- list(
                   sliderInput(
                     inputId = "dLevel",
                     label = "Confidence Level",
-                    min = .10,
+                    min = .50,
                     max = 0.99,
                     value = 0.95,
                     step = 0.01
@@ -322,19 +274,19 @@ ui <- list(
                column(
                  width = 4, 
                  offset = 0,
-                 h3(strong("Sample Counts:")),
+                 h3(strong("Sample Counts")),
                  span(tableOutput("sampleinfotable2"))
                ), 
                column(
                  width = 4,
                 offset = 0,
-                h3(strong("Sample Percentages:")),
+                h3(strong("Sample Percentages")),
                 span(tableOutput("sampleinfotable1"))
                ), 
                column(
                  width = 4,
                  offset = 0,
-                 h3(strong("Sample Odds Ratio:")),
+                 h3(strong("Sample Odds Ratio")),
                  span(textOutput("sampleinforatio"))
                )), 
              br(),
@@ -570,7 +522,11 @@ server <- function(input, output, session) {
                   height = "100%",
                   width = "90%",
                   algin = "middle",
-                  alt = "fill me in later"
+                  alt = "This image contains a table and a confidence interval plot
+                  the table contains six columns (Study, Treatment Effective, 
+                  Treatment Non-Effective, Control Effective, Control Non-Effective,
+                  and Odds Ratio. Below the rows there is a summary row that
+                  contains the total Odds Ratio. There are two studies."
               ),
               h3("Second Graph : Gefitinib vs. Erlotinib"),
               img(
@@ -578,7 +534,12 @@ server <- function(input, output, session) {
                 height = "100%",
                 width = "90%",
                 algin = "middle",
-                alt = "fill me in later"
+                alt = "This image contains a table and a confidence interval plot
+                  the table contains six columns (Study, Treatment Effective, 
+                  Treatment Non-Effective, Control Effective, Control Non-Effective,
+                  and Odds Ratio. Below the rows there is a summary row that
+                  contains the total Odds Ratio. In this case there are three
+                  studies."
               ),
               h3("Commentary"), 
               p("The first analysis in this section generally compares the effect
@@ -953,77 +914,81 @@ server <- function(input, output, session) {
   ##print the CIplot----
   output$CIplot <- renderPlot(
     expr = {
-    if (input$tabset == "Same Sample Size"){
-      validate(
-        need(is.numeric(input$nSamp3),
-             message = "Please input sample size")
-      )
-      ggplot(data = newIntervals()) +
-        geom_pointrange(
-          aes(x = idx, 
-              ymin = lowerbound, 
-              ymax = upperbound, 
-              y = sampleRatio, 
-              colour = cover,
-              alpha = idx == selectedSample(),
-              size = idx == selectedSample()
-          )) +
-        theme_bw()+
-        geom_hline(yintercept = 1, linewidth = 1.8, colour = "#000000", alpha = 1) +
-        geom_hline(yintercept = .35, linewidth = 1.8, colour = "#0B6623",
-                   alpha = 1) +
-        coord_flip() +
-        scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"),
-                           guide = FALSE) +
-        scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
-        lims(y = c(-0.01,4.55)) +
-        labs(title = paste0(100 * input$dLevel1, "% Confidence Intervals"),
-             x="",y="") +
-        theme(legend.position = "none",
-              axis.text.y = element_blank(),
-              axis.ticks.y = element_blank(),
-              plot.title = element_text(size = 18),
-              axis.title.x = element_text(size = 14),
-              axis.title.y = element_text(size = 14))
-    }
-    else{
-      validate(
-        need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
-             message = "Please input sample size")
-      )
-      ggplot(data = Intervals()) +
-        geom_pointrange(
-          aes(x = idx, 
-              ymin = lowerbound,
-              ymax = upperbound,
-              y = sampleRatio,
-              colour = cover,
-              alpha = idx == selectedSample(),
-              size = idx == selectedSample()
-          )) +
-        theme_bw()+
-        geom_hline(yintercept = 1, linewidth = 1.8, colour = "#000000", alpha = 1) +
-        geom_hline(yintercept = .35, linewidth = 1.8, colour = "#0B6623",
-                   alpha = 1) +
-        coord_flip() +
-        scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
-        scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"),
-                           guide = FALSE) +
-        scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
-        lims(y = c(-0.01,4.55)) +
-        labs(title = paste0(100 * input$dLevel, "% Confidence Intervals"),
-             x = "",y = "") +
-        theme(legend.position = "none",
-              axis.text.y = element_blank(),
-              axis.ticks.y = element_blank(),
-              plot.title = element_text(size = 18),
-              axis.title.x = element_text(size = 14),
-              axis.title.y = element_text(size = 14))
-    }
-  },    
-  alt = "fill me in later",
+      if (input$tabset == "Same Sample Size") {
+        validate(
+          need(is.numeric(input$nSamp3),
+               message = "Please input sample size")
+        )
+        ggplot(data = newIntervals()) +
+          geom_pointrange(
+            aes(x = idx,
+                ymin = lowerbound,
+                ymax = upperbound,
+                y = sampleRatio,
+                colour = cover,
+                alpha = idx == selectedSample(),
+                size = idx == selectedSample()
+            )) +
+          theme_bw() +
+          geom_hline(yintercept = 1, linewidth = 1.8, colour = "#000000", alpha = 1) +
+          geom_hline(yintercept = .35, linewidth = 1.8, colour = boastPalette[3],
+                     alpha = 1) +
+          coord_flip() +
+          scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
+          scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"),
+                             guide = FALSE) +
+          scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
+          lims(y = c(-0.01, 4.55)) +
+          labs(title = paste0(100 * input$dLevel1, "% Confidence Intervals"),
+               x = "", y = "") +
+          theme(legend.position = "none",
+                axis.text.x = element_text(size = 14, face = "bold"),
+                axis.text.y = element_text(size = 14, face = "bold"),
+                axis.ticks.y = element_blank(),
+                plot.title = element_text(size = 18),
+                axis.title.x = element_text(size = 14),
+                axis.title.y = element_text(size = 14))
+      } else {
+        validate(
+          need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
+               message = "Please input sample size")
+        )
+        ggplot(data = Intervals()) +
+          geom_pointrange(
+            aes(x = idx,
+                ymin = lowerbound,
+                ymax = upperbound,
+                y = sampleRatio,
+                colour = cover,
+                alpha = idx == selectedSample(),
+                size = idx == selectedSample()
+            )) +
+          theme_bw() +
+          geom_hline(yintercept = 1, linewidth = 1.8, colour = "#000000", alpha = 1) +
+          geom_hline(yintercept = .35, linewidth = 1.8, colour = boastPalette[3], 
+                     alpha = 1) +
+          coord_flip() +
+          scale_size_manual(values = c("TRUE" = 1.5, "FALSE" = .8), guide = FALSE) +
+          scale_color_manual(values = c("FALSE" = "#BC204B", "TRUE" = "#1E407C"),
+                             guide = FALSE) +
+          scale_alpha_manual(values = c("TRUE" = 1, "FALSE" = .5), guide = FALSE) +
+          lims(y = c(-0.01, 4.55)) +
+          labs(title = paste0(100 * input$dLevel, "% Confidence Intervals"),
+               x = "", y = "") +
+          theme(legend.position = "none",
+                axis.text.x = element_text(size = 14, face = "bold"),
+                axis.text.y = element_text(size = 14, face = "bold"),
+                axis.ticks.y = element_blank(),
+                plot.title = element_text(size = 18),
+                axis.title.x = element_text(size = 14),
+                axis.title.y = element_text(size = 14))
+      }
+    },
+    alt = "This is a plot with a confidence interval for every point, the points
+        are listed vertically and you click in the same row as a data point to learn
+        more about it",
   )
+  
   
   
   ## sample display----
