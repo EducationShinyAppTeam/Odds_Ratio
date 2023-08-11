@@ -269,26 +269,10 @@ ui <- list(
               plotOutput("CIplot", height = "600px", click = "plot_click"),
               p("Black vertical line for null theta & green vertical line 
              for true odds ratio. Click on an interval (dot) to show the underlying
-             data", style="text-align: center;"), 
-             fluidRow(
-               column(
-                 width = 4, 
-                 offset = 0,
-                 h3(strong("Sample Counts")),
-                 span(tableOutput("sampleinfotable2"))
-               ), 
-               column(
-                 width = 4,
-                offset = 0,
-                h3(strong("Sample Percentages")),
-                span(tableOutput("sampleinfotable1"))
-               ), 
-               column(
-                 width = 4,
-                 offset = 0,
-                 h3(strong("Sample Odds Ratio")),
-                 span(textOutput("sampleinforatio"))
-               )), 
+             data", style="text-align: center;"),
+              span(tableOutput("sampleinfotable1")),
+             p("Sample Odds Ratio, \\(\\hat{\\theta}\\) =", 
+               textOutput("sampleinforatio")),
              br(),
              bsButton(
                inputId = "newSample", 
