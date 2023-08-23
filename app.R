@@ -269,10 +269,27 @@ ui <- list(
               plotOutput("CIplot", height = "600px", click = "plot_click"),
               p("Black vertical line for null theta & green vertical line 
              for true odds ratio. Click on an interval (dot) to show the underlying
-             data", style="text-align: center;"),
-              span(tableOutput("sampleinfotable1")),
-             p("Sample Odds Ratio, \\(\\hat{\\theta}\\) =", 
-               textOutput("sampleinforatio")),
+             data", style="text-align: center;"), 
+             fluidRow(
+               column(
+                 width = 6, 
+                 offset = 0,
+                 tags$div(style = "text-align: center;",
+                          tags$strong("Sample Counts"),
+                          tableOutput("sampleinfotable2"))
+               ), 
+               column(
+                 width = 6,
+                 offset = 0,
+                 tags$div(style = "text-align: center;",
+                          tags$strong("Sample Percentages"),
+                          tableOutput("sampleinfotable1"))
+               )
+             ),
+             p("Sample Odds Ratio, \\(\\widehat{\\theta}\\) =", textOutput(
+               "sampleinforatio"
+               )
+               ),
              br(),
              bsButton(
                inputId = "newSample", 
@@ -976,74 +993,59 @@ server <- function(input, output, session) {
   
   
   ## sample display----
-  output$sampleinfotable1 = renderTable(
-    expr = {
-    if (input$tabset == "Same Sample Size"){
+  output$sampleinfotable1 = renderTable({
+    if (input$tabset == "Same Sample Size") {
       validate(
         need(is.numeric(input$nSamp3),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(percent(newOneSample()[,2]/input$nSamp3), 
-                         percent(newOneSample()[,3]/input$nSamp3), 
-                         percent(newOneSample()[,4]/input$nSamp3), 
-                         percent(newOneSample()[,5]/input$nSamp3)), ncol = 2, 
-                       dimnames = list(Campus = c("University Park",
-                                                  "Other Campuses"), 
-                                       State = c("Penn", "Non-Penn")))
-      rownames(ctable) = c("University Park","Other Campuses")
-      ctable
-    }
-    else{
+      df <- data.frame(
+        Campus = c("University Park", "Other Campuses"),
+        Penn = percent(newOneSample()[, 2] / input$nSamp3),
+        `Non-Penn` = percent(newOneSample()[, 3] / input$nSamp3)
+      )
+      df
+    } else {
       validate(
-        need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
+        need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(percent(OneSample()[,2]/input$nSamp1), 
-                         percent(OneSample()[,3]/input$nSamp2), 
-                         percent(OneSample()[,4]/input$nSamp1), 
-                         percent(OneSample()[,5]/input$nSamp2)), ncol = 2, 
-                       dimnames = list(Campus = c("University Park",
-                                                  "Other Campuses"), 
-                                       State = c("Penn", "Non-Penn")))
-      rownames(ctable) = c("University Park","Other Campuses")
-      ctable
+      df <- data.frame(
+        Campus = c("University Park", "Other Campuses"),
+        Penn = percent(OneSample()[, 2] / input$nSamp1),
+        `Non-Penn` = percent(OneSample()[, 3] / input$nSamp2)
+      )
+      df
     }
-  }
-  )
-  output$sampleinfotable2 = renderTable(
-    expr = {
-    if (input$tabset == "Same Sample Size"){
+  }, align = "c")
+  
+  output$sampleinfotable2 = renderTable({
+    if (input$tabset == "Same Sample Size") {
       validate(
         need(is.numeric(input$nSamp3),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(newOneSample()[,2], 
-                         newOneSample()[,3],
-                         newOneSample()[,4],
-                         newOneSample()[,5]), ncol = 2, 
-                       dimnames = list(Campus = c("University Park",
-                                                  "Other Campuses"), 
-                                       State = c("Penn", "Non-Penn")))
-      rownames(ctable) = c("University Park","Other Campuses")
-      ctable
-    }
-    else{
+      df <- data.frame(
+        Campus = c("University Park", "Other Campuses"),
+        Penn = newOneSample()[, 2],
+        `Non-Penn` = newOneSample()[, 3]
+      )
+      df
+    } else {
       validate(
-        need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
+        need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
              message = "Please input sample size")
       )
-      ctable <- matrix(c(OneSample()[,2],
-                         OneSample()[,3],
-                         OneSample()[,4],
-                         OneSample()[,5]), ncol = 2, 
-                       dimnames = list(Campus = c("University Park",
-                                                  "Other Campuses"),
-                                       State = c("Penn", "Non-Penn")))
-      rownames(ctable) = c("University Park","Other Campuses")
-      ctable
+      df <- data.frame(
+        Campus = c("University Park", "Other Campuses"),
+        Penn = OneSample()[, 2],
+        `Non-Penn` = OneSample()[, 3]
+      )
+      df
     }
-  }
-  )
+  }, align = "c")
+  
+  
   
   output$sampleinforatio = renderText(
     expr = {
