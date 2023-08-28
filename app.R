@@ -1060,7 +1060,8 @@ output$sampleinfotable2 = renderTable({
   
   
   
-output$sampleinforatio <- renderPrint({
+output$sampleinforatio <- renderPrint(
+  expr = {
   if (input$tabset == "Combined Sample Size") {
     validate(
       need(is.numeric(input$nSamp3),

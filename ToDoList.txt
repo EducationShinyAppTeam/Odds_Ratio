@@ -1,5 +1,5 @@
 # Things Needed for This Version
-1. Fix Table on Explore Page
+1. Make theta hat all in an uiOutput
 2. 
 
 # Ideas for Future Development
