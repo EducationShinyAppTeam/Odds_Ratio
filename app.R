@@ -72,9 +72,8 @@ ui <- list(
             their use in the meta-analysis of real data."),
           h2("Instructions"),
           tags$ol(
-            tags$li("Click on the prerequisites button to review/learn how 
-                    to calculate odds ratio"), 
-            tags$li("Click the go button to enter the explore page."),
+            tags$li("Click on the prerequisites button to review/learn how to 
+                    calculate odds ratio estimates and confidence intervals."),
             tags$li("Explore either the equal sample size or different sample
                     size situation. Then use the slider bars to change the
                     confidence level or sample size(s)."),
@@ -86,7 +85,7 @@ ui <- list(
             style = "text-align: center;",
             bsButton(
               inputId = "goPrereq",
-              label = "Prerequisite",
+              label = "Prerequisites",
               size = "large",
               icon = icon("book"),
               style = "default"
@@ -96,7 +95,7 @@ ui <- list(
           br(),
           h2("Acknowledgements"),
           p("This app was developed and coded by Jingjun Wang and updated by 
-            Shravani Samala,Junjie He, and Robert Chappell. Special thanks to
+            Shravani Samala, Junjie He, and Robert Chappell. Special thanks to
             Neil Hatfield.",
             br(),
             br(),
@@ -189,8 +188,7 @@ ui <- list(
           h2("Residency Status Differences Between Campuses"),
           p("Below are the tables for the counts and percentages of enrollment by
             residency between University Park and the Commonwealth Campuses of 
-            Penn State University. Use the slide controls to change the confidence
-            level interval as well as the sample sizes taken from University Park
+            Penn State University. Use the slide controls to change the confidence level as well as the sample sizes taken from University Park
             and the Commonwealth campuses. Observe the difference between confidence
             intervals for each sample. Check below the plot to see the sample
             counts, percentages, and odds ratio."),
@@ -268,28 +266,26 @@ ui <- list(
               offset = 0,
               plotOutput("CIplot", height = "600px", click = "plot_click"),
               p("Black vertical line for null theta & green vertical line 
-             for true odds ratio. Click on an interval (dot) to show the underlying
-             data", style="text-align: center;"), 
+             for true odds ratio. Click on an interval (dot) to show the
+             underlying data. The first row in tables below are at University Park,
+             and the second at Commonwealth Campuses",
+             style="text-align: center;"), 
              fluidRow(
                column(
                  width = 6, 
                  offset = 0,
-                 tags$div(style = "text-align: center;",
-                          tags$strong("Sample Counts"),
-                          tableOutput("sampleinfotable2"))
+                tags$strong("Sample Counts"),
+                tableOutput("sampleinfotable2")
                ), 
                column(
                  width = 6,
                  offset = 0,
-                 tags$div(style = "text-align: center;",
-                          tags$strong("Sample Percentages"),
-                          tableOutput("sampleinfotable1"))
+                 tags$strong("Sample Percentages"),
+                 tableOutput("sampleinfotable1")
                )
              ),
-             p("Sample Odds Ratio, \\(\\widehat{\\theta}\\) =", textOutput(
-               "sampleinforatio"
-               )
-               ),
+             p("Sample Odds Ratio, \\(\\widehat{\\theta}\\) =", 
+               verbatimTextOutput("sampleinforatio")),
              br(),
              bsButton(
                inputId = "newSample", 
@@ -994,81 +990,95 @@ server <- function(input, output, session) {
   
   ## sample display----
   output$sampleinfotable1 = renderTable({
-    if (input$tabset == "Same Sample Size") {
-      validate(
-        need(is.numeric(input$nSamp3),
-             message = "Please input sample size")
-      )
-      df <- data.frame(
-        Campus = c("University Park", "Other Campuses"),
-        Penn = percent(newOneSample()[, 2] / input$nSamp3),
-        `Non-Penn` = percent(newOneSample()[, 3] / input$nSamp3)
-      )
-      df
-    } else {
-      validate(
-        need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
-             message = "Please input sample size")
-      )
-      df <- data.frame(
-        Campus = c("University Park", "Other Campuses"),
-        Penn = percent(OneSample()[, 2] / input$nSamp1),
-        `Non-Penn` = percent(OneSample()[, 3] / input$nSamp2)
-      )
-      df
-    }
-  }, align = "c")
-  
-  output$sampleinfotable2 = renderTable({
-    if (input$tabset == "Same Sample Size") {
-      validate(
-        need(is.numeric(input$nSamp3),
-             message = "Please input sample size")
-      )
-      df <- data.frame(
-        Campus = c("University Park", "Other Campuses"),
-        Penn = newOneSample()[, 2],
-        `Non-Penn` = newOneSample()[, 3]
-      )
-      df
-    } else {
-      validate(
-        need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
-             message = "Please input sample size")
-      )
-      df <- data.frame(
-        Campus = c("University Park", "Other Campuses"),
-        Penn = OneSample()[, 2],
-        `Non-Penn` = OneSample()[, 3]
-      )
-      df
-    }
-  }, align = "c")
-  
-  
-  
-  output$sampleinforatio = renderText(
-    expr = {
-    if (input$tabset == "Combined Sample Size"){
-      validate(
-        need(is.numeric(input$nSamp3),
-             message = "Please input sample size")
-      )
-      cratio <- round(((newOneSample()[,2])*(newOneSample()[,5]) / 
-                         (newOneSample()[,3]*newOneSample()[,4])), 2)
-      cratio
-    }
-    else{
-      validate(
-        need(is.numeric(input$nSamp1),is.numeric(input$nSamp2),
-             message = "Please input sample size")
-      )
-      cratio <- round(((OneSample()[,2])*(OneSample()[,5]) /
-                         (OneSample()[,3]*OneSample()[,4])), 2)
-      cratio
-    }
+  if (input$tabset == "Same Sample Size") {
+    validate(
+      need(is.numeric(input$nSamp3),
+           message = "Please input sample size")
+    )
+    ctable <- matrix(c(
+      percent(newOneSample()[, 2] / input$nSamp3),
+      percent(newOneSample()[, 3] / input$nSamp3),
+      percent(newOneSample()[, 4] / input$nSamp3),
+      percent(newOneSample()[, 5] / input$nSamp3)
+    ), ncol = 2,
+    dimnames = list(Campus = c("University Park", "Other Campuses"),
+    State = c("Penn", "Non-Penn")))
+    rownames(ctable) <- c("University Park", "Other Campuses")
+    ctable
+  } else {
+    validate(
+      need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
+           message = "Please input sample size")
+    )
+    ctable <- matrix(c(
+      percent(OneSample()[, 2] / input$nSamp1),
+      percent(OneSample()[, 3] / input$nSamp2),
+      percent(OneSample()[, 4] / input$nSamp1),
+      percent(OneSample()[, 5] / input$nSamp2)
+    ), ncol = 2,
+    dimnames = list(Campus = c("University Park", "Other Campuses"),
+    State = c("Penn", "Non-Penn")))
+    rownames(ctable) <- c("University Park", "Other Campuses")
+    ctable
   }
-  )
+}, align = "c")
+
+output$sampleinfotable2 = renderTable({
+  if (input$tabset == "Same Sample Size") {
+    validate(
+      need(is.numeric(input$nSamp3),
+           message = "Please input sample size")
+    )
+    ctable <- matrix(c(
+      newOneSample()[, 2],
+      newOneSample()[, 3],
+      newOneSample()[, 4],
+      newOneSample()[, 5]
+    ), ncol = 2,
+    dimnames = list(Campus = c("University Park", "Other Campuses"),
+    State = c("Penn", "Non-Penn")))
+    rownames(ctable) <- c("University Park", "Other Campuses")
+    ctable
+  } else {
+    validate(
+      need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
+           message = "Please input sample size")
+    )
+    ctable <- matrix(c(
+      OneSample()[, 2],
+      OneSample()[, 3],
+      OneSample()[, 4],
+      OneSample()[, 5]
+    ), ncol = 2,
+    dimnames = list(Campus = c("University Park", "Other Campuses"),
+    State = c("Penn", "Non-Penn")))
+    rownames(ctable) <- c("University Park", "Other Campuses")
+    ctable
+  }
+}, align = "c")
+
+  
+  
+  
+output$sampleinforatio <- renderPrint({
+  if (input$tabset == "Combined Sample Size") {
+    validate(
+      need(is.numeric(input$nSamp3),
+           message = "Please input sample size")
+    )
+    cratio <- round(((newOneSample()[, 2]) * (newOneSample()[, 5]) / 
+                       (newOneSample()[, 3] * newOneSample()[, 4])), 2)
+    cat(cratio)
+  } else {
+    validate(
+      need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
+           message = "Please input sample size")
+    )
+    cratio <- round(((OneSample()[, 2]) * (OneSample()[, 5]) /
+                       (OneSample()[, 3] * OneSample()[, 4])), 2)
+    cat(cratio)
+  }
+})
 }
 
 # Boast App Call ----
