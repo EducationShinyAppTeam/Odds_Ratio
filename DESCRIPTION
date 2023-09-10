@@ -1,0 +1,26 @@
+Title: Odds Ratio
+ShortName: Odds Ratio
+Date: 2019-08-01
+Lifecycle: questioning
+Authors@R: c(
+    person(given = "Jingjun", family = "Wang", role = c("aut", "cre")),
+    person(given = "Shravani", family = "Samala", role = c("ctb")),
+    person(given = "Junjie", family = "He", role = c("ctb")),
+    person(given = "Dennis", family = "Pearl", role = c("aut")),
+    person(given = "Neil", family = "Hatfield", role = c("aut")),
+    person(given = "Robert", family = "Chappell", role = c("ctb"))
+  )
+Chapter: Categorical Data
+Description: This app explores confidence intervals for odds ratios and their use
+              in the meta-analysis of real data.
+LearningObjectives: c(
+    "The student will learn how changing sample sizes changes the odds ratio.",
+    "The student will learn how changing sample sizes affects confidence intervals
+    for odds ratios."
+  )
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/Odds_Ratio 
+BugReports: https://github.com/EducationShinyAppTeam/Odds_Ratio/issues
+License: CC-BY-NC-SA-4.0
+Tags: simulation, real data
+Type: Shiny
