@@ -284,8 +284,7 @@ ui <- list(
                  tableOutput("sampleinfotable1")
                )
              ),
-             p("Sample Odds Ratio, \\(\\widehat{\\theta}\\) =", 
-               verbatimTextOutput("sampleinforatio")),
+             uiOutput("sampleinforatioUi"),
              br(),
              bsButton(
                inputId = "newSample", 
@@ -1060,7 +1059,7 @@ output$sampleinfotable2 = renderTable({
   
   
   
-output$sampleinforatio <- renderPrint(
+output$sampleinforatioUi <- renderUI(
   expr = {
   if (input$tabset == "Combined Sample Size") {
     validate(
@@ -1069,7 +1068,7 @@ output$sampleinforatio <- renderPrint(
     )
     cratio <- round(((newOneSample()[, 2]) * (newOneSample()[, 5]) / 
                        (newOneSample()[, 3] * newOneSample()[, 4])), 2)
-    cat(cratio)
+    p(paste0("Sample Odds Ratio, =", cratio))
   } else {
     validate(
       need(is.numeric(input$nSamp1), is.numeric(input$nSamp2),
@@ -1077,9 +1076,10 @@ output$sampleinforatio <- renderPrint(
     )
     cratio <- round(((OneSample()[, 2]) * (OneSample()[, 5]) /
                        (OneSample()[, 3] * OneSample()[, 4])), 2)
-    cat(cratio)
+    p(paste0("Sample Odds Ratio, =", cratio))
   }
 })
+
 }
 
 # Boast App Call ----
